@@ -1,4 +1,3 @@
-using System;
 using Domain.Models.Authentication;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
