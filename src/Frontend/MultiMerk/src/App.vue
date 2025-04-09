@@ -1,15 +1,11 @@
 <script setup>
 import NavBar from './components/navigation/NavBar.vue';
-import HomeView from './components/views/HomeView.vue';
+import { RouterView } from 'vue-router';
 </script>
 
 <template>
-  <nav>
-    <NavBar />
-  </nav>
-
-  <main>
-    <HomeView />
-  </main>
-
+    <div class="min-h-full">      
+      <NavBar />
+      <RouterView />      
+    </div>
 </template>
