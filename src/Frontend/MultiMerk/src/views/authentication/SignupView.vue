@@ -10,7 +10,7 @@ const password = ref('');
 // submit
 const handleSubmit = async () => {
   try {
-    const response = await axios.post(`${apiUrl}/api/Auth/signup`, {
+    const response = await axios.post(`${apiUrl}/api/auth/signup`, {
       name : username.value,
       email : email.value,
       password : password.value

@@ -1,15 +1,17 @@
+using System.IdentityModel.Tokens.Jwt;
+using System.Security.Claims;
 using Domain.Constants;
 using Domain.Models.Authentication;
 using Domain.Models.Authentication.DTOs;
 using Infrastructure.Data;
-using Infrastructure.Services.Interfaces;
-using Microsoft.AspNetCore.Http;
+using Infrastructure.Services.Token.Interfaces;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 
 namespace WebAPI.Controllers.Authentication;
 
-[Route("api/[controller]")]
+[Route("api/auth/")]
 [ApiController]
 public class AuthController : ControllerBase
 {
@@ -92,6 +94,140 @@ public class AuthController : ControllerBase
         }
     }
 
+    [HttpPost("login")]
+    public async Task<IActionResult> Login(LoginModelDTO model)
+    {
+        try
+        {
+            var user = await _userManager.FindByNameAsync(model.Username);
+            if (user == null)
+            {
+                return BadRequest("User with this username is not registered with us.");
+            }
+            bool isValidPassword = await _userManager.CheckPasswordAsync(user, model.Password);
+            if (isValidPassword == false)
+            {
+                return Unauthorized();
+            }
+
+            // creating the necessary claims
+            List<Claim> authClaims = [
+                    new (ClaimTypes.Name, user.UserName),
+                new (JwtRegisteredClaimNames.Jti, Guid.NewGuid().ToString()), 
+                // unique id for token
+        ];
+
+            var userRoles = await _userManager.GetRolesAsync(user);
+
+            // adding roles to the claims. So that we can get the user role from the token.
+            foreach (var userRole in userRoles)
+            {
+                authClaims.Add(new Claim(ClaimTypes.Role, userRole));
+            }
+
+            // generating access token
+            var token = _tokenService.GenerateAccessToken(authClaims);
+
+            string refreshToken = _tokenService.GenerateRefreshToken();
+
+            //save refreshToken with exp date in the database
+            var tokenInfo = _context.TokenInfos.
+                        FirstOrDefault(a => a.Username == user.UserName);
+
+            // If tokenInfo is null for the user, create a new one
+            if (tokenInfo == null)
+            {
+                var ti = new TokenInfo
+                {
+                    Username = user.UserName,
+                    RefreshToken = refreshToken,
+                    ExpiredAt = DateTime.UtcNow.AddDays(7)
+                };
+                _context.TokenInfos.Add(ti);
+            }
+            // Else, update the refresh token and expiration
+            else
+            {
+                tokenInfo.RefreshToken = refreshToken;
+                tokenInfo.ExpiredAt = DateTime.UtcNow.AddDays(7);
+            }
+
+            await _context.SaveChangesAsync();
+
+            return Ok(new TokenModelDTO
+            {
+                AccessToken = token,
+                RefreshToken = refreshToken
+            });
+        }
+        catch (Exception ex)
+        {
+            _logger.LogError(ex.Message);
+            return Unauthorized();
+        }
+
+    }
+
+    [HttpPost("token/refresh")]
+    [Authorize]
+    public async Task<IActionResult> RefreshToken(TokenModelDTO tokenModel)
+    {
+        try
+        {
+            var principal = _tokenService.GetPrincipalFromExpiredToken(tokenModel.AccessToken);
+            var username = principal.Identity.Name;
+
+            var tokenInfo = _context.TokenInfos.SingleOrDefault(u => u.Username == username);
+            if (tokenInfo == null
+                || tokenInfo.RefreshToken != tokenModel.RefreshToken
+                || tokenInfo.ExpiredAt <= DateTime.UtcNow)
+            {
+                return BadRequest("Invalid refresh token. Please login again.");
+            }
+
+            var newAccessToken = _tokenService.GenerateAccessToken(principal.Claims);
+            var newRefreshToken = _tokenService.GenerateRefreshToken();
+
+            tokenInfo.RefreshToken = newRefreshToken; // rotating the refresh token
+            await _context.SaveChangesAsync();
+
+            return Ok(new TokenModelDTO
+            {
+                AccessToken = newAccessToken,
+                RefreshToken = newRefreshToken
+            });
+        }
+        catch (Exception ex)
+        {
+            _logger.LogError(ex.Message);
+            return StatusCode(StatusCodes.Status500InternalServerError);
+        }
+    }
+
+    [HttpPost("token/revoke")]
+    [Authorize]
+    public async Task<IActionResult> RevokeToken()
+    {
+        try
+        {
+            var username = User.Identity.Name;
+
+            var user = _context.TokenInfos.SingleOrDefault(u => u.Username == username);
+            if (user == null)
+            {
+                return BadRequest();
+            }
+
+            user.RefreshToken = string.Empty;
+            await _context.SaveChangesAsync();
+
+            return Ok(true);
+        }
+        catch (Exception ex)
+        {
+            _logger.LogError(ex.Message);
+            return StatusCode(StatusCodes.Status500InternalServerError);
+        }
+    }
 
 }
-

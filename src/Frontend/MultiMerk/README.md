@@ -27,3 +27,10 @@ npm run dev
 ```sh
 npm run build
 ```
+
+
+<!-- {
+  "name": "flemming",
+  "email": "flemming@flemming",
+  "password": "Password@123"
+} -->
