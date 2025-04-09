@@ -45,12 +45,25 @@ builder.Services.AddAuthentication(options =>
      }
     );
 
+// Allow CORS for your frontend
+builder.Services.AddCors(options =>
+{
+    options.AddPolicy("AllowMultiMerkFrontend", policy =>
+    {
+        policy.WithOrigins("http://localhost:5173") // Vue dev server
+              .AllowAnyHeader()
+              .AllowAnyMethod();
+    });
+});
+
 
 builder.Services.AddAuthorization();
 builder.Services.AddControllers();
 builder.Services.AddOpenApi();
 
 var app = builder.Build();
+
+app.UseCors("AllowMultiMerkFrontend");
 
 app.UseAuthentication();
 app.UseAuthorization();
