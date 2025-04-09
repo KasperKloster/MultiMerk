@@ -1,7 +1,8 @@
 <script setup>
 import axios from 'axios';
-import { ref } from 'vue';
+import { inject, ref } from 'vue';
 
+const apiUrl = inject('apiUrl'); // Inject the apiUrl for API call
 const username = ref('');
 const email = ref('');
 const password = ref('');
@@ -9,7 +10,7 @@ const password = ref('');
 // submit
 const handleSubmit = async () => {
   try {
-    const response = await axios.post('http://localhost:5020/api/Auth/signup', {
+    const response = await axios.post(`${apiUrl}/api/Auth/signup`, {
       name : username.value,
       email : email.value,
       password : password.value
@@ -20,7 +21,6 @@ const handleSubmit = async () => {
   }
 }
 </script>
-
 
 <template>
     <header class="bg-white shadow-sm">
@@ -61,8 +61,8 @@ const handleSubmit = async () => {
                 </div>
               </div>
 
-              <div>
-                <button type="submit" class="flex w-full justify-center rounded-md bg-indigo-600 px-3 py-1.5 text-sm/6 font-semibold text-white shadow-xs hover:bg-indigo-500 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600">Create user</button>
+              <div>                
+                <button type="submit" class="flex w-full justify-center rounded-md bg-indigo-600 px-3 py-1.5 text-sm/6 font-semibold text-white shadow-xs hover:bg-indigo-500 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600 cursor-pointer">Create user</button>
               </div>
             </form>
           </div>

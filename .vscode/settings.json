@@ -1,0 +1,15 @@
+{
+    "dotnet.defaultSolution": "Domain.sln",
+    "sqltools.connections": [
+        {
+            "previewLimit": 50,
+            "server": "localhost",
+            "port": 5432,
+            "driver": "PostgreSQL",
+            "name": "mmultimerk",
+            "database": "mmultimerk",
+            "username": "kasperkloster",
+            "password": "password"
+        }
+    ]
+}
