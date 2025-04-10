@@ -28,9 +28,13 @@ public class AuthService : IAuthService
     public async Task<AuthResult> Signup(SignupModelDTO model)
     {
         try
-        {
-            // Checks if user already exists
-            var existingUser = await _userManager.FindByNameAsync(model.Email);
+        {  
+            // Trim and normalize case before checking
+            string trimmedUsername = model.Name.Trim().ToLower();          
+            string trimmedEmail = model.Email.Trim().ToLower();
+            
+            // Check if any user has BOTH the same username and same email (Multiple users with the same email)
+            var existingUser = _userManager.Users.FirstOrDefault(u => u.UserName != null && u.UserName.ToLower() == trimmedUsername && u.Email!= null && u.Email.ToLower() == trimmedEmail);
             if (existingUser != null)
             {
                 return AuthResult.Fail("User already exists");                
