@@ -6,7 +6,7 @@ public class SignupModelDTO
 {
     [Required]
     [MaxLength(30)]
-    public string Name { get; set; } = string.Empty;
+    public string Username { get; set; } = string.Empty;
 
     [Required]
     [MaxLength(30)]

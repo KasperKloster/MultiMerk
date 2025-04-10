@@ -30,7 +30,7 @@ public class AuthService : IAuthService
         try
         {  
             // Trim and normalize case before checking
-            string trimmedUsername = model.Name.Trim().ToLower();          
+            string trimmedUsername = model.Username.Trim().ToLower();          
             string trimmedEmail = model.Email.Trim().ToLower();
             
             // Check if any user has BOTH the same username and same email (Multiple users with the same email)
@@ -58,8 +58,8 @@ public class AuthService : IAuthService
             {
                 Email = model.Email,
                 SecurityStamp = Guid.NewGuid().ToString(),
-                UserName = model.Email,
-                Name = model.Name,
+                UserName = model.Username,
+                Name = model.Username,
                 EmailConfirmed = true
             };
 
@@ -110,7 +110,8 @@ public class AuthService : IAuthService
             // Creating the necessary claims
             List<Claim> authClaims = [
                 new (ClaimTypes.Name, user.UserName ?? string.Empty),
-                new (JwtRegisteredClaimNames.Jti, Guid.NewGuid().ToString())                
+                new Claim(ClaimTypes.Email, user.Email ?? string.Empty),
+                new (JwtRegisteredClaimNames.Jti, Guid.NewGuid().ToString()), // unique id for toke                
             ];
                 
             var userRoles = await _userManager.GetRolesAsync(user);

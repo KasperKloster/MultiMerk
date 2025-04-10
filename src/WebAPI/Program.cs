@@ -88,3 +88,10 @@ app.MapGet("/", () => "Hello World!");
 await DbSeeder.SeedData(app);
 
 app.Run();
+
+
+// {
+//   "username": "withusername",
+//   "email": "withusername@mail.com",
+//   "password": "Password@123"
+// }
