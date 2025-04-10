@@ -1,7 +1,9 @@
 using System.Text;
+using Application.Authentication.Interfaces;
 using Domain.Models.Authentication;
 using Infrastructure.Data;
 using Infrastructure.Seeder;
+using Infrastructure.Services.Authentication;
 using Infrastructure.Services.Token;
 using Infrastructure.Services.Token.Interfaces;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
@@ -22,6 +24,8 @@ builder.Services.AddIdentity<ApplicationUser, IdentityRole>().AddEntityFramework
 
 // Authentication
 builder.Services.AddScoped<ITokenService, TokenService>();
+builder.Services.AddScoped<IAuthService, AuthService>();
+
 builder.Services.AddAuthentication(options =>
     {
       options.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
@@ -81,6 +85,6 @@ app.UseHttpsRedirection();
 
 app.MapGet("/", () => "Hello World!");
 
-await DbSeeder.SeedData(app);  // Call this method to seed the data
+await DbSeeder.SeedData(app);
 
 app.Run();
