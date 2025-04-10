@@ -2,24 +2,36 @@
 import axios from 'axios';
 import { inject, ref } from 'vue';
 
-const apiUrl = inject('apiUrl'); // Inject the apiUrl for API call
+const apiUrl = inject('apiUrl');
 const username = ref('');
 const email = ref('');
 const password = ref('');
+
+const successMessage = ref('');
+const errorMessage = ref('');
 
 // submit
 const handleSubmit = async () => {
   try {
     const response = await axios.post(`${apiUrl}/api/auth/signup`, {
-      name : username.value,
+      username : username.value,
       email : email.value,
       password : password.value
-    })
-    console.log('Sucess:', response.data)
+    });
+
+    // Set success message
+    successMessage.value = 'User created successfully!';
+    // Clear the form fields
+    username.value = '';
+    email.value = '';
+    password.value = '';
+    
   } catch (err) {
-    console.error('Signup failed:', err)
+    errorMessage.value = 'Signup failed. Please try again..';
+    console.error('Error during signup:', err);    
   }
 }
+
 </script>
 
 <template>
@@ -30,10 +42,16 @@ const handleSubmit = async () => {
     </header>
     <main>
       <div class="mx-auto max-w-7xl px-4 py-6 sm:px-6 lg:px-8">
-
         <div class="flex min-h-full flex-col justify-center my-12 px-6 py-12 lg:px-8 shadow-md rounded-md">
           <div class="sm:mx-auto sm:w-full sm:max-w-sm">    
-            <h2 class="mt-10 text-center text-2xl/9 font-bold tracking-tight text-gray-900">Create user</h2>
+            <h2 class="mt-10 text-center text-2xl/9 font-bold tracking-tight text-gray-900">Create user</h2>            
+            <div v-if="successMessage" class="mb-4 text-green-600 text-center font-semibold text-2xl">              
+              {{ successMessage }}
+            </div>
+
+            <div v-if="errorMessage" class="mb-4 text-red-600 text-center font-semibold text-2xl">              
+              {{ errorMessage }}
+            </div>
           </div>
 
           <div class="mt-10 sm:mx-auto sm:w-full sm:max-w-sm">
@@ -66,9 +84,7 @@ const handleSubmit = async () => {
               </div>
             </form>
           </div>
-        </div>
-        
-
+        </div>        
       </div>
     </main>
 </template>
