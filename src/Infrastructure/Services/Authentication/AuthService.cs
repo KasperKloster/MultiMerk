@@ -105,11 +105,10 @@ public class AuthService : IAuthService
 
             // Creating the necessary claims
             List<Claim> authClaims = [
-                    new (ClaimTypes.Name, user.UserName),
-                new (JwtRegisteredClaimNames.Jti, Guid.NewGuid().ToString()), 
-                // unique id for token
-                ];
-
+                new (ClaimTypes.Name, user.UserName ?? string.Empty),
+                new (JwtRegisteredClaimNames.Jti, Guid.NewGuid().ToString())                
+            ];
+                
             var userRoles = await _userManager.GetRolesAsync(user);
 
             // Adding roles to the claims. So that we can get the user role from the token.

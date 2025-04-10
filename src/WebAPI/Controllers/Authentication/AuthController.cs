@@ -53,8 +53,14 @@ public class AuthController : ControllerBase
 
     [HttpPost("token/revoke")]
     [Authorize]
-    public async Task<IActionResult> RevokeToken(string username)
+    public async Task<IActionResult> RevokeToken()
     {
+        // We are getting the username from token
+        var username = User.Identity?.Name;
+        if (string.IsNullOrEmpty(username)) {
+            return BadRequest("Invalid user");
+        }
+
         var result = await _authService.RevokeToken(username);
         if (!result.Success){
             return BadRequest(result.Message);
