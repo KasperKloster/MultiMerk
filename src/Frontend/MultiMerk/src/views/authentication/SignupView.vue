@@ -1,4 +1,5 @@
 <script setup>
+import Header from '@/components/layout/Header.vue';
 import axios from 'axios';
 import { inject, ref } from 'vue';
 
@@ -35,11 +36,8 @@ const handleSubmit = async () => {
 </script>
 
 <template>
-    <header class="bg-white shadow-sm">
-      <div class="mx-auto max-w-7xl px-4 py-6 sm:px-6 lg:px-8">
-        <h1 class="text-3xl font-bold tracking-tight text-gray-900">Signup</h1>
-      </div>
-    </header>
+    <Header title="Signup" />
+    
     <main>
       <div class="mx-auto max-w-7xl px-4 py-6 sm:px-6 lg:px-8">
         <div class="flex min-h-full flex-col justify-center my-12 px-6 py-12 lg:px-8 shadow-md rounded-md">
