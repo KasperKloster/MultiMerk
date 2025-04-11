@@ -1,11 +1,10 @@
-//  Checks if user is logged in by verifying the JWT token stored in localStorage
+/**
+* Checks if user is logged in by verifying the JWT token stored in localStorage
+*/
+import api from '@/utils/api';
 import { jwtDecode } from "jwt-decode";
 
-/**
- * Checks if the user is logged in by verifying the JWT token in localStorage.
- * @returns {boolean} True if the user is authenticated, otherwise false.
- */
-export function isUserLoggedIn() {
+export async function isUserLoggedIn() {
     // Get token from localStorage
     const token = localStorage.getItem("multimerk_accessToken");    
     // Not token is found
@@ -21,7 +20,7 @@ export function isUserLoggedIn() {
             return true;
         } else {
             // Token is expired
-            return false;
+            return await refreshToken();                    
         }
     } catch (error) {
         // Other errors
@@ -45,8 +44,8 @@ export function getUserRole() {
     }
 }
 
-export function isAuthenticated(){
-    const isAuth = isUserLoggedIn();
+export async function isAuthenticated(){
+    const isAuth = await isUserLoggedIn();
     // Check if user is logged in, redirect to login if not
     if(!isAuth){
         console.warn("User not authenticatd. Redirecting to login...");
@@ -55,4 +54,29 @@ export function isAuthenticated(){
     // Get and return user role if they are authenticated
     const role = getUserRole();
     return role;
+}
+
+export async function refreshToken() {
+    const refreshToken = localStorage.getItem("multimerk_refreshToken"); // Store refresh token separately
+
+    if (!refreshToken) {
+        console.warn("No refresh token found.");
+        return false;
+    }
+
+    try {
+        const response = await api.post("/auth/token/refresh", { token: refreshToken });        
+        if (response.status === 200) {
+            const newAccessToken = response.data;
+            localStorage.setItem("multimerk_accessToken", newAccessToken);
+            console.log("Token refreshed successfully.");
+            return true;
+        } else {
+            console.error("Failed to refresh token:", response.data);
+            return false;
+        }
+    } catch (error) {
+        console.error("Error refreshing token:", error);
+        return false;
+    }
 }

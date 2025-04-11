@@ -1,34 +1,57 @@
 <script setup>
+import api from '@/utils/api';
 import { ref, onMounted } from 'vue';
+import { useRouter } from 'vue-router';
 import { isUserLoggedIn } from '@/utils/isUserLoggedIn';
-
 import { Disclosure, DisclosureButton, DisclosurePanel, Menu, MenuButton, MenuItem, MenuItems } from '@headlessui/vue'
 import { Bars3Icon, BellIcon, XMarkIcon } from '@heroicons/vue/24/outline'
 
 const isLoggedIn = ref(false);
+const router = useRouter();
 // Display this menu to all users
 const navigation = ref([{ name: 'Home', href: '/', current: false }])
 
-onMounted(() => {        
+onMounted(async () => {        
     // Check if the user is logged in, and display content to all user types
-    isLoggedIn.value = isUserLoggedIn();    
+    isLoggedIn.value = await isUserLoggedIn();    
     
     // If the user is not logged in, add additional navigation items    
     if (!isLoggedIn.value) {      
       navigation.value.push(
         { name: 'Signup', href: '/signup', current: false },  
         { name: 'Login', href: '/login', current: false });
-    } 
-    else 
-    {
-      navigation.value.push({ name: 'Dashboard', href: '/dashboard', current: false });
-    }    
+    }
+    // Display for logged in users
+    if (isLoggedIn.value) {           
+      // for all logged in users
+      navigation.value.push({ name: 'Dashboard', href: '/dashboard', current: false });    
+      // for Admin users
 
+    }
 });
+
+// Function to handle logout
+const handleLogout = async () => {
+  try {
+    const response = await api.post(`/auth/token/revoke`);
+    if (response.status === 200) {      
+      // Clear the access token and refresh token from local storage
+      localStorage.removeItem('multimerk_accessToken');
+      localStorage.removeItem('multimerk_refreshToken');
+      // Update the logged-in status
+      isLoggedIn.value = false; 
+      // Redirect to login page after logout
+      router.push('/login'); 
+    }
+    
+  } catch (error) {
+    console.error('Error during logout:', error);
+  }     
+};
 
 </script>
 
-<template>
+<template>  
   <Disclosure as="nav" class="bg-gray-800" v-slot="{ open }">
     <div class="mx-auto max-w-7xl px-2 sm:px-6 lg:px-8">
       <div class="relative flex h-16 items-center justify-between">
@@ -77,9 +100,9 @@ onMounted(() => {
                   </MenuItem>
                   <MenuItem v-slot="{ active }">
                     <a href="#" :class="[active ? 'bg-gray-100 outline-hidden' : '', 'block px-4 py-2 text-sm text-gray-700']">Settings</a>
-                  </MenuItem>
-                  <MenuItem v-slot="{ active }">
-                    <a href="#" :class="[active ? 'bg-gray-100 outline-hidden' : '', 'block px-4 py-2 text-sm text-gray-700']">Sign out</a>
+                  </MenuItem>                  
+                  <MenuItem v-slot="{ active }">                    
+                    <a href="#" :class="[active ? 'bg-gray-100 outline-hidden' : '', 'block px-4 py-2 text-sm text-gray-700']" @click.prevet="handleLogout">Sign out</a>
                   </MenuItem>
                 </MenuItems>
               </transition>
