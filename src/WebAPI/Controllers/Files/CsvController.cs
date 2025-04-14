@@ -16,27 +16,14 @@ public class CsvController : ControllerBase
         _fileService = fileService;
     }
 
-    // [HttpPost("upload")]
-    // public async Task<IActionResult> Upload(IFormFile file)
-    // {
-    //     // Checks if valid extension
-    //     bool isFileExtensionValid = _fileService.IsValidFileExtension(file);
-    //     if (!isFileExtensionValid)
-    //     {
-    //         return BadRequest("Filextension is not valid");
-    //     }
-
-    //     // Checks if file is .csv
-    //     string FileExtension = Path.GetExtension(file.FileName);
-    //     if (FileExtension != ".csv")
-    //     {
-    //         return BadRequest($"{file.FileName} should be an .csv file");
-    //     }
-
-    //     // Getting delimiter
-    //     char delimiter = _fileService.GetDelimiterFromCsv(file);
-
-
-    // }
+    [HttpPost("upload")]
+    public async Task<IActionResult> Upload(IFormFile file)
+    {
+        var result = await _fileService.UploadCsv(file);        
+        if (!result.Success)
+        {
+            return BadRequest(result.Message);
+        }
+        return Ok();
+    }
 }
-

@@ -1,26 +1,62 @@
 using Application.Files.Interfaces;
+using Application.Repositories;
 using Domain.Constants;
+using Domain.Models.Files;
+using Domain.Models.Products;
 using Microsoft.AspNetCore.Http;
-
 
 namespace Application.Files;
 
 public class FileService : IFileService
-{    
+{
     private readonly IFileParser _fileparser;
+    private readonly IProductRepository _productRepository;
 
     public FileService(IFileParser fileparser)
     {
         _fileparser = fileparser;
     }
 
-    public bool IsValidFileExtension(IFormFile file)
+    public async Task<FilesResult> UploadCsv(IFormFile file)
+    {
+        // Checks if valid extension
+        bool isFileExtensionValid = IsValidFileExtension(file);
+        if (!isFileExtensionValid)
+        {
+            return FilesResult.Fail(message: "Invalid file extension.");
+        }
+
+        // Checks if file is .csv
+        string FileExtension = Path.GetExtension(file.FileName);
+        if (FileExtension != ".csv")
+        {
+            return FilesResult.Fail($"{file.FileName} should be an .csv file");
+        }
+
+        // Getting delimiter
+        char delimiter = GetDelimiterFromCsv(file);
+        
+        // Parse / Getting products from .csv
+        List<Product> products = _fileparser.GetProductsFromCsv(file, delimiter);
+        if (products.Count == 0) 
+        {
+            return FilesResult.Fail("No products found in the CSV file.");
+        }
+        
+        // Insert into DB
+        await _productRepository.AddRangeAsync(products);  
+        
+        // return success message
+        return FilesResult.SuccessResult();
+    }
+
+    private static bool IsValidFileExtension(IFormFile file)
     {
         string FileExtension = Path.GetExtension(file.FileName);
         return FileExtensions.Allowed.Contains(FileExtension);
     }
 
-    public char GetDelimiterFromCsv(IFormFile file)
+    private char GetDelimiterFromCsv(IFormFile file)
     {
         char delimiter = _fileparser.GetDelimiterFromCsv(file);
         return delimiter;
