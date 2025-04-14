@@ -1,3 +1,5 @@
+using System.ComponentModel.DataAnnotations;
+
 namespace Domain.Models.Products;
 
 public class Product
@@ -6,6 +8,10 @@ public class Product
     {
         Sku = sku;
     }
-
+    
+    [Required]
+    public int Id { get; set; }
+    
+    [Required]
     public string Sku { get; set; }
 }

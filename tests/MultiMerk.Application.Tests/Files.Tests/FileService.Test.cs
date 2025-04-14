@@ -1,67 +1,89 @@
+using System.Text;
 using Application.Files;
 using Application.Files.Interfaces;
+using Application.Repositories;
+using Domain.Models.Products;
 using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Http.Internal;
 using Moq;
 
 namespace MultiMerk.Application.Tests.Files.Tests;
 public class FileServiceTest
 {
+    private readonly Mock<IFileParser> _fileParserMock;
+    private readonly Mock<IProductRepository> _productRepoMock;
+    private readonly FileService _service;
 
-    
-    // private readonly Mock<IFileParser> _fileParserMock;
-    // private readonly FileService _fileService;
-    // public FileServiceTest()
-    // {
-    //     _fileParserMock = new Mock<IFileParser>();
-    //     _fileService = new FileService(_fileParserMock.Object);
-    // }
+    public FileServiceTest()
+    {
+        _fileParserMock = new Mock<IFileParser>();
+        _productRepoMock = new Mock<IProductRepository>();
+
+        _service = new FileService(_fileParserMock.Object);
+        typeof(FileService)
+            .GetField("_productRepository", System.Reflection.BindingFlags.NonPublic | System.Reflection.BindingFlags.Instance)!
+            .SetValue(_service, _productRepoMock.Object);
+    }
+
+    [Fact]
+    public async Task UploadCsv_ReturnsFail_WhenFileExtensionIsInvalid()
+    {
+        var file = CreateMockFormFile("data", "invalid.txt"); // not in allowed list
+
+        var result = await _service.UploadCsv(file);
+
+        Assert.False(result.Success);
+        Assert.Equal("Invalid file extension.", result.Message);
+    }
+
+    [Fact]
+    public async Task UploadCsv_ReturnsFail_WhenExtensionNotCsv()
+    {
+        var file = CreateMockFormFile("data", "notcsv.xls"); // allowed, but not .csv
+
+        var result = await _service.UploadCsv(file);
+
+        Assert.False(result.Success);
+        Assert.Equal("notcsv.xls should be an .csv file", result.Message);
+    }
+
+    [Fact]
+    public async Task UploadCsv_ReturnsFail_WhenNoProductsFound()
+    {
+        var file = CreateMockFormFile("header1,header2", "valid.csv");
+
+        _fileParserMock.Setup(p => p.GetDelimiterFromCsv(file)).Returns(',');
+        _fileParserMock.Setup(p => p.GetProductsFromCsv(file, ',')).Returns(new List<Product>());
+
+        var result = await _service.UploadCsv(file);
+
+        Assert.False(result.Success);
+        Assert.Equal("No products found in the CSV file.", result.Message);
+    }
 
 
-    // [Theory]
-    // [InlineData("file.csv", true)]
-    // [InlineData("file.xls", true)]
-    // [InlineData("file.txt", false)]
-    // [InlineData("file.exe", false)]
-    // public void IsValidFileExtension_ReturnsExpectedResult(string fileName, bool expectedResult)
-    // {
-    //     // Arrange
-    //     var fileMock = new Mock<IFormFile>();
-    //     fileMock.Setup(f => f.FileName).Returns(fileName);
-    //     // Act
-    //     var result = _fileService.IsValidFileExtension(fileMock.Object);
-    //     // Assert
-    //     Assert.Equal(expectedResult, result);
-    // }
+    [Fact]
+    public async Task UploadCsv_ReturnsSuccess_WhenValidCsvUploaded()
+    {
+        var file = CreateMockFormFile("sku\n12345", "valid.csv");
+        var products = new List<Product> { new Product("LC01-100-200-5") };
 
-    // [Fact]
-    // public void GetDelimiterFromCsv_DelegatesToFileParser()
-    // {
-    //     // Arrange
-    //     var fileMock = new Mock<IFormFile>();
-    //     _fileParserMock.Setup(fp => fp.GetDelimiterFromCsv(It.IsAny<IFormFile>())).Returns(',');
+        _fileParserMock.Setup(p => p.GetDelimiterFromCsv(file)).Returns(',');
+        _fileParserMock.Setup(p => p.GetProductsFromCsv(file, ',')).Returns(products);
+        _productRepoMock.Setup(r => r.AddRangeAsync(products)).Returns(Task.CompletedTask);
 
-    //     // Act
-    //     var result = _fileService.GetDelimiterFromCsv(fileMock.Object);
+        var result = await _service.UploadCsv(file);
 
-    //     // Assert
-    //     Assert.Equal(',', result);
-    //     _fileParserMock.Verify(fp => fp.GetDelimiterFromCsv(fileMock.Object), Times.Once);
-    // }
+        Assert.True(result.Success);
+        Assert.Null(result.Message);
+    }
 
-    // [Fact]
-    // public void GetBadDelimiterFromCsv_DelegatesToFileParser()
-    // {
-    //     // Arrange
-    //     var fileMock = new Mock<IFormFile>();
-    //     _fileParserMock.Setup(fp => fp.GetDelimiterFromCsv(It.IsAny<IFormFile>())).Returns(',');
-
-    //     // Act
-    //     var result = _fileService.GetDelimiterFromCsv(fileMock.Object);
-
-    //     // Assert
-    //     Assert.Equal(',', result);
-    //     _fileParserMock.Verify(fp => fp.GetDelimiterFromCsv(fileMock.Object), Times.Once);
-    // }
+    private IFormFile CreateMockFormFile(string content, string fileName)
+    {
+        var bytes = Encoding.UTF8.GetBytes(content);
+        var stream = new MemoryStream(bytes);
+        return new FormFile(stream, 0, stream.Length, "file", fileName);
+    }
 
 
 }

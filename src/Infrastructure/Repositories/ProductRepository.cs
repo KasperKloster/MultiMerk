@@ -1,4 +1,3 @@
-using System;
 using System.Diagnostics;
 using Application.Repositories;
 using Domain.Models.Products;
@@ -9,7 +8,12 @@ namespace Infrastructure.Repositories;
 public class ProductRepository : IProductRepository
 {
     private readonly AppDbContext _dbContext;
-    
+
+    public ProductRepository(AppDbContext dbContext)
+    {
+        _dbContext = dbContext;
+    }
+
     public async Task AddRangeAsync(IEnumerable<Product> products)
     {
         try

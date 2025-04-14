@@ -1,6 +1,5 @@
 using System.Text;
 using Infrastructure.Files;
-using Xunit;
 using Moq;
 using Microsoft.AspNetCore.Http;
 

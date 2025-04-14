@@ -1,6 +1,4 @@
-using Application.Files;
 using Application.Files.Interfaces;
-using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 
 namespace WebAPI.Controllers.Files;
