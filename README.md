@@ -10,6 +10,10 @@ https://medium.com/codex/securing-the-net-9-app-signup-login-jwt-refresh-tokens-
 https://www.sqlshack.com/setting-up-a-postgresql-database-on-mac/
 http://localhost:5020/scalar/v1
 
+## Testing:
+https://dev.to/tkarropoulos/streamlining-your-tests-with-iclassfixture-in-xunit-1kpo
+
+
 ## Frontend:
 
 https://v2.tailwindcss.com/docs/guides/vue-3-vite
