@@ -4,6 +4,7 @@ using Application.Files;
 using Application.Files.Interfaces;
 using Domain.Models.Authentication;
 using Infrastructure.Data;
+using Infrastructure.Files;
 using Infrastructure.Seeder;
 using Infrastructure.Services.Authentication;
 using Infrastructure.Services.Token;
@@ -53,6 +54,7 @@ builder.Services.AddAuthentication(options =>
 
 // Files
 builder.Services.AddScoped<IFileService, FileService>();
+builder.Services.AddScoped<IFileParser, FileParser>();
 
 // Allow CORS for your frontend
 builder.Services.AddCors(options =>
@@ -93,3 +95,6 @@ app.MapGet("/", () => "Hello World!");
 await DbSeeder.SeedData(app);
 
 app.Run();
+
+// Needed in order to run tests
+public partial class Program {}
