@@ -10,7 +10,6 @@ using Infrastructure.Repositories;
 using Infrastructure.Seeder;
 using Infrastructure.Services.Authentication;
 using Infrastructure.Services.Token;
-using Infrastructure.Services.Token.Interfaces;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;

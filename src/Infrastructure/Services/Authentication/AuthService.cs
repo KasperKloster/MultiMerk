@@ -5,7 +5,6 @@ using Domain.Constants;
 using Domain.Models.Authentication;
 using Domain.Models.Authentication.DTOs;
 using Infrastructure.Data;
-using Infrastructure.Services.Token.Interfaces;
 using Microsoft.AspNetCore.Identity;
 
 namespace Infrastructure.Services.Authentication;
