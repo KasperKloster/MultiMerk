@@ -54,34 +54,71 @@ const handleUpload = async () => {
 </script>
 
 <template>
-    <Header title="Create weeklist" />
+    <Header title="Create new weeklist" />
 
-    <div class="max-w-md mx-auto mt-10 p-6 bg-white rounded-xl shadow-md space-y-4">
-        <h2 class="text-xl font-semibold text-gray-700">Upload CSV File</h2>
-
+    <div class="w-full max-w-5xl mx-auto mt-10 p-6 bg-white rounded-xl shadow-md space-y-4">    
         <form @submit.prevent="handleUpload">
-            <label for="file-upload"
-                class="flex flex-col items-center justify-center w-full h-32 border-2 border-dashed border-gray-300 rounded-lg cursor-pointer bg-gray-50 hover:bg-gray-100 transition">
-                <div class="flex flex-col items-center justify-center pt-5 pb-6">
-                    <svg class="w-8 h-8 mb-2 text-gray-400" fill="none" stroke="currentColor" stroke-width="1.5" viewBox="0 0 24 24">
-                        <path stroke-linecap="round" stroke-linejoin="round" d="M3 16.5V19a2.5 2.5 0 002.5 2.5h13a2.5 2.5 0 002.5-2.5v-2.5M16.5 12.75L12 17.25m0 0l-4.5-4.5M12 17.25V4.5" />
-                    </svg>
-                    <p class="mb-2 text-sm text-gray-500">
-                        <span class="font-semibold">Click to upload</span> or drag and drop
-                    </p>
-                    <p class="text-xs text-gray-400">.xls files only</p>
-                </div>
-                <input id="file-upload" type="file" class="hidden" @change="onFileChange" accept=".xls" />
-            </label>
+            <div class="space-y-12">
+                <div class="border-b border-gray-900/10 pb-12">
+                    <h2 class="text-base/7 font-semibold text-gray-900">List info</h2>
+                    <!-- file info -->
+                    <div class="flex gap-4">
+                        <div class="flex-1">
+                            <label for="weeklist-number" class="block text-sm/6 font-medium text-gray-900">Weeklist number</label>
+                            <div class="mt-2">                                
+                                <input type="text" name="weeklist-number" id="weeklist-number" placeholder="463"
+                                class="block w-full rounded-md bg-white px-3 py-1.5 text-base text-gray-900 
+                                outline-1 -outline-offset-1 outline-gray-300 placeholder:text-gray-400 
+                                focus:outline-2 focus:-outline-offset-2 focus:outline-indigo-600 sm:text-sm/6">
+                            </div>
+                        </div>
 
-            <div v-if="selectedFile" class="mt-4 text-sm text-gray-600">
-                Filename: {{ selectedFile.name }}
-            </div>
-            
-            <button type="submit" :disabled="!selectedFile"
-                class="mt-4 w-full inline-flex justify-center items-center px-4 py-2 bg-indigo-600 hover:bg-indigo-700 text-white text-sm font-medium rounded-md shadow focus:outline-none focus:ring-2 focus:ring-indigo-500 disabled:bg-indigo-300 cursor-pointer">
-                Upload
-            </button>
+                        <div class="flex-1">
+                            <label for="supplier-number" class="block text-sm/6 font-medium text-gray-900">Supplier Number</label>
+                            <div class="mt-2">
+                                <input type="text" name="supplier-number" id="supplier-number" placeholder="E24120400130"
+                                class="block w-full rounded-md bg-white px-3 py-1.5 text-base text-gray-900 
+                                outline-1 -outline-offset-1 outline-gray-300 placeholder:text-gray-400 
+                                focus:outline-2 focus:-outline-offset-2 focus:outline-indigo-600 sm:text-sm/6">
+                            </div>
+                        </div>
+
+                        <div class="flex-1">
+                            <label for="supplier" class="block text-sm/6 font-medium text-gray-900">Supplier</label>
+                            <div class="mt-2">
+                                <input type="text" name="supplier" id="supplier" placeholder="TVC"
+                                class="block w-full rounded-md bg-white px-3 py-1.5 text-base text-gray-900 
+                                outline-1 -outline-offset-1 outline-gray-300 placeholder:text-gray-400 
+                                focus:outline-2 focus:-outline-offset-2 focus:outline-indigo-600 sm:text-sm/6">
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Upload file -->
+                <div class="col-span-full">
+                    <h2 class="text-base/7 font-semibold text-gray-900">Upload weeklist</h2>                
+                    <label for="file-upload" class="flex flex-col items-center justify-center w-full h-32 border-2 border-dashed border-gray-300 rounded-lg cursor-pointer bg-gray-50 hover:bg-gray-100 transition">
+                        <div class="flex flex-col items-center justify-center pt-5 pb-6">
+                            <svg class="w-8 h-8 mb-2 text-gray-400" fill="none" stroke="currentColor" stroke-width="1.5" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" d="M3 16.5V19a2.5 2.5 0 002.5 2.5h13a2.5 2.5 0 002.5-2.5v-2.5M16.5 12.75L12 17.25m0 0l-4.5-4.5M12 17.25V4.5" />
+                            </svg>
+                            <p class="mb-2 text-sm text-gray-500">
+                                <span class="font-semibold">Click to upload</span> or drag and drop
+                            </p>
+                            <p class="text-xs text-gray-400">.xls files only</p>
+                        </div>
+                        <input id="file-upload" type="file" class="hidden" @change="onFileChange" accept=".xls" />
+                    </label>
+                    <div v-if="selectedFile" class="mt-4 text-sm text-gray-600">Filename: {{ selectedFile.name }}</div>
+                </div>            
+                
+                <!-- submit Button -->
+                <button type="submit" :disabled="!selectedFile"
+                    class="mt-4 w-full inline-flex justify-center items-center px-4 py-2 bg-indigo-600 hover:bg-indigo-700 text-white text-sm font-medium rounded-md shadow focus:outline-none focus:ring-2 focus:ring-indigo-500 disabled:bg-indigo-300 cursor-pointer">
+                    Upload
+                </button>      
+            </div>  
         </form>
     </div>  
 </template>
