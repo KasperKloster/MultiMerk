@@ -1,7 +1,10 @@
 <script setup>
+import { inject, ref } from 'vue';
 import { isAuthenticated } from '@/utils/isUserLoggedIn';
 import Header from '@/components/layout/Header.vue';
+import axios from 'axios';
 
+const apiUrl = inject('apiUrl');
 
 // onMounted(() => {
 //     // Check if the user is logged in and get their role
@@ -15,6 +18,37 @@ import Header from '@/components/layout/Header.vue';
 //     // }    
 // });
 
+const selectedFile = ref(null);
+
+const onFileChange = (event) => {
+    const file = event.target.files[0];
+
+    if (file && file.type === 'application/vnd.ms-excel'){
+        selectedFile.value = file;        
+    } else {
+        console.error('Please, upload an .xls file')
+        selectedFile.value = null;
+    }
+}
+
+const handleUpload = async () => {
+    if (!selectedFile.value) return;
+
+    const formData = new FormData();
+    formData.append('file', selectedFile.value);
+
+    try {
+        const response = await axios.post(`${apiUrl}/api/files/weeklist/create`, formData, {
+            headers: {
+                'Content-Type': 'multipart/form-data'
+            }
+        });
+        console.log("Upload success", response.data);
+        
+    } catch (error) {
+        console.error("Upload failed", error);
+    }
+};
 
 
 </script>
@@ -35,24 +69,19 @@ import Header from '@/components/layout/Header.vue';
                     <p class="mb-2 text-sm text-gray-500">
                         <span class="font-semibold">Click to upload</span> or drag and drop
                     </p>
-                    <p class="text-xs text-gray-400">CSV files only</p>
+                    <p class="text-xs text-gray-400">.xls files only</p>
                 </div>
-                <input id="file-upload" type="file" class="hidden" @change="onFileChange" accept=".csv" />
+                <input id="file-upload" type="file" class="hidden" @change="onFileChange" accept=".xls" />
             </label>
 
             <div v-if="selectedFile" class="mt-4 text-sm text-gray-600">
-                Selected: {{ selectedFile.name }}
+                Filename: {{ selectedFile.name }}
             </div>
             
             <button type="submit" :disabled="!selectedFile"
-                class="mt-4 w-full inline-flex justify-center items-center px-4 py-2 bg-indigo-600 hover:bg-indigo-700 text-white text-sm font-medium rounded-md shadow focus:outline-none focus:ring-2 focus:ring-indigo-500 disabled:bg-indigo-300">
+                class="mt-4 w-full inline-flex justify-center items-center px-4 py-2 bg-indigo-600 hover:bg-indigo-700 text-white text-sm font-medium rounded-md shadow focus:outline-none focus:ring-2 focus:ring-indigo-500 disabled:bg-indigo-300 cursor-pointer">
                 Upload
             </button>
         </form>
-    </div>
-  
-
-
-
-
+    </div>  
 </template>

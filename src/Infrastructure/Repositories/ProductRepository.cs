@@ -16,13 +16,7 @@ public class ProductRepository : IProductRepository
 
     public async Task AddRangeAsync(IEnumerable<Product> products)
     {
-        try
-        {
-            _dbContext.Products.AddRange(products);
-            await _dbContext.SaveChangesAsync();
-        } catch(Exception e) {
-            Debug.WriteLine($"Error adding products: {e.Message}");
-        }
-        
+        _dbContext.Products.AddRange(products);
+        await _dbContext.SaveChangesAsync();
     }
 }

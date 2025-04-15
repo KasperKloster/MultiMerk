@@ -2,6 +2,8 @@ brew services start postgresql@14
 dotnet user-secrets init
 dotnet user-secrets set "JWT:secret" "your-32-characters-long-super-strong-jwt-secret-key"
 
+dotnet ef database drop --startup-project src/WebAPI/WebAPI.csproj --project src/Infrastructure --force
+dotnet ef database update --startup-project src/WebAPI/WebAPI.csproj --project src/Infrastructure
 
 ## Backend:
 
@@ -24,3 +26,9 @@ https://vueschool.io/articles/vuejs-tutorials/how-to-use-vue-router-a-complete-t
 #### Other notes
 1. Freelancer create new weeklist. Upload an xls file, with week number, order number, shipping number
 2. Admin gives EAN, from Google Sheet, and uploads an XLS file to drive filename: WEEKNO-SHIPPINGNUMBER-SUPPLIER
+
+
+#
+"default": "Host=127.0.0.1; Port=5432; Database=testing_db; Username=wepack;Password=Luxpack11"
+"default": "Host=localhost; Port=5432; Database=mmultimerk; Username=kasperkloster;Password=password"
+

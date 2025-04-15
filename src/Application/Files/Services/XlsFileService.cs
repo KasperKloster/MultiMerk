@@ -35,7 +35,11 @@ public class XlsFileService : IXlsFileService
         }
 
         // Insert products into DB
-        await _productRepository.AddRangeAsync(products);
+        try{
+            await _productRepository.AddRangeAsync(products);
+        } catch (Exception ex) {
+            return FilesResult.Fail($"An error occured while saving products to database: {ex.Message}");
+        }
 
         // Return success        
         return FilesResult.SuccessResult();
