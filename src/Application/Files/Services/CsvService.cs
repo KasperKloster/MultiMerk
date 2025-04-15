@@ -4,14 +4,14 @@ using Domain.Models.Files;
 using Domain.Models.Products;
 using Microsoft.AspNetCore.Http;
 
-namespace Application.Files;
+namespace Application.Files.Services;
 
-public class FileService : IFileService
+public class CsvService : ICsvService
 {
     private readonly IFileParser _fileparser;
     private readonly IProductRepository _productRepository;
 
-    public FileService(IFileParser fileparser)
+    public CsvService(IFileParser fileparser)
     {
         _fileparser = fileparser;
     }

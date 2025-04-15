@@ -11,12 +11,12 @@ namespace MultiMerk.WebAPI.Tests.Controllers.Tests.Files.Tests.CsvControllers.Te
 
 public class CsvControllerTest
 {
-    private readonly Mock<IFileService> _fileServiceMock;
+    private readonly Mock<ICsvService> _fileServiceMock;
     private readonly CsvController _csvController;
 
     public CsvControllerTest()
     {
-        _fileServiceMock = new Mock<IFileService>();
+        _fileServiceMock = new Mock<ICsvService>();
         _csvController = new CsvController(_fileServiceMock.Object);
     }
 

@@ -3,7 +3,7 @@ using Microsoft.AspNetCore.Http;
 
 namespace Application.Files.Interfaces;
 
-public interface IFileService
+public interface ICsvService
 {
     Task<FilesResult> UploadCsv(IFormFile file);
 }

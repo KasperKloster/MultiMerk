@@ -55,7 +55,7 @@ builder.Services.AddAuthentication(options =>
     );
 
 // Files
-builder.Services.AddScoped<IFileService, FileService>();
+builder.Services.AddScoped<ICsvService, CsvService>();
 builder.Services.AddScoped<IFileParser, FileParser>();
 builder.Services.AddScoped<IProductRepository, ProductRepository>();
 builder.Services.AddScoped<IXlsFileService, XlsFileService>();

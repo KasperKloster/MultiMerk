@@ -1,26 +1,26 @@
 using System.Text;
-using Application.Files;
 using Application.Files.Interfaces;
+using Application.Files.Services;
 using Application.Repositories;
 using Domain.Models.Products;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Http.Internal;
 using Moq;
 
-namespace MultiMerk.Application.Tests.Files.Tests;
-public class FileServiceTest
+namespace MultiMerk.Application.Tests.Files.Tests.Services.Test;
+public class CsvServiceTest
 {
     private readonly Mock<IFileParser> _fileParserMock;
     private readonly Mock<IProductRepository> _productRepoMock;
-    private readonly FileService _service;
+    private readonly CsvService _service;
 
-    public FileServiceTest()
+    public CsvServiceTest()
     {
         _fileParserMock = new Mock<IFileParser>();
         _productRepoMock = new Mock<IProductRepository>();
 
-        _service = new FileService(_fileParserMock.Object);
-        typeof(FileService)
+        _service = new CsvService(_fileParserMock.Object);
+        typeof(CsvService)
             .GetField("_productRepository", System.Reflection.BindingFlags.NonPublic | System.Reflection.BindingFlags.Instance)!
             .SetValue(_service, _productRepoMock.Object);
     }
