@@ -3,6 +3,7 @@ using Domain.Constants;
 using Domain.Models.Products;
 using Microsoft.AspNetCore.Http;
 using Microsoft.VisualBasic.FileIO;
+using NPOI.HSSF.UserModel;
 
 namespace Infrastructure.Files;
 
@@ -69,4 +70,51 @@ public class FileParser : IFileParser
         return products;
     }
 
+    public List<Product> GetProductsFromXls(IFormFile file)
+    {
+        var products = new List<Product>();
+
+        using var stream = file.OpenReadStream();
+        var workbook = new HSSFWorkbook(stream);
+        var sheet = workbook.GetSheetAt(0);
+
+        if (sheet == null)
+        {
+            throw new InvalidDataException("Excel file has no worksheet.");
+        }
+
+        // Assume first row is header
+        var headerRow = sheet.GetRow(0);
+        int skuColumnIndex = -1;
+
+        for (int i = 0; i < headerRow.LastCellNum; i++)
+        {
+            var cell = headerRow.GetCell(i);
+            if (cell != null && cell.StringCellValue.Equals("Sku", StringComparison.OrdinalIgnoreCase))
+            {
+                skuColumnIndex = i;
+                break;
+            }
+        }
+
+        if (skuColumnIndex == -1)
+        {
+            throw new InvalidDataException("Required 'Sku' column not found.");
+        }
+
+        // Loop through the rest of the rows
+        for (int rowIndex = 1; rowIndex <= sheet.LastRowNum; rowIndex++)
+        {
+            var row = sheet.GetRow(rowIndex);
+            if (row == null) continue;
+
+            var cell = row.GetCell(skuColumnIndex);
+            var sku = cell?.ToString();
+            if (!string.IsNullOrWhiteSpace(sku))
+            {
+                products.Add(new Product(sku));
+            }
+        }
+        return products;
+    }
 }

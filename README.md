@@ -20,3 +20,7 @@ https://v2.tailwindcss.com/docs/guides/vue-3-vite
 https://flowbite.com/docs/getting-started/vue/
 https://tailwindcss.com/docs/installation/using-vite
 https://vueschool.io/articles/vuejs-tutorials/how-to-use-vue-router-a-complete-tutorial/
+
+#### Other notes
+1. Freelancer create new weeklist. Upload an xls file, with week number, order number, shipping number
+2. Admin gives EAN, from Google Sheet, and uploads an XLS file to drive filename: WEEKNO-SHIPPINGNUMBER-SUPPLIER

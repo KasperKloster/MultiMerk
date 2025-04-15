@@ -1,6 +1,5 @@
 using Application.Files.Interfaces;
 using Application.Repositories;
-using Domain.Constants;
 using Domain.Models.Files;
 using Domain.Models.Products;
 using Microsoft.AspNetCore.Http;
@@ -20,17 +19,10 @@ public class FileService : IFileService
     public async Task<FilesResult> UploadCsv(IFormFile file)
     {
         // Checks if valid extension
-        bool isFileExtensionValid = IsValidFileExtension(file);
+        bool isFileExtensionValid = HasValidCsvFileExtension(file);
         if (!isFileExtensionValid)
         {
             return FilesResult.Fail(message: "Invalid file extension.");
-        }
-
-        // Checks if file is .csv
-        string FileExtension = Path.GetExtension(file.FileName);
-        if (FileExtension != ".csv")
-        {
-            return FilesResult.Fail($"{file.FileName} should be an .csv file");
         }
 
         // Getting delimiter
@@ -50,10 +42,13 @@ public class FileService : IFileService
         return FilesResult.SuccessResult();
     }
 
-    private static bool IsValidFileExtension(IFormFile file)
+    private static bool HasValidCsvFileExtension(IFormFile file)
     {
         string FileExtension = Path.GetExtension(file.FileName);
-        return FileExtensions.Allowed.Contains(FileExtension);
+        if(FileExtension != ".csv") {
+            return false;
+        }
+        return true;
     }
 
     private char GetDelimiterFromCsv(IFormFile file)

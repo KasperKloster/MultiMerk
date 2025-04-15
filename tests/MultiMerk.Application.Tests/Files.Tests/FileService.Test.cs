@@ -44,7 +44,7 @@ public class FileServiceTest
         var result = await _service.UploadCsv(file);
 
         Assert.False(result.Success);
-        Assert.Equal("notcsv.xls should be an .csv file", result.Message);
+        Assert.Equal("Invalid file extension.", result.Message);
     }
 
     [Fact]

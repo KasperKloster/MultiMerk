@@ -1,16 +1,13 @@
 using Application.Files.Interfaces;
 using Microsoft.AspNetCore.Http;
 using Moq;
-using System.IO;
 using System.Text;
-using System.Threading.Tasks;
-using WebAPI.Controllers.Files;
-using Xunit;
+using WebAPI.Controllers.Files.CsvControllers;
 using Microsoft.AspNetCore.Mvc;
 using Domain.Models.Files;
 
 
-namespace MultiMerk.WebAPI.Tests.Controllers.Tests.Files.Tests;
+namespace MultiMerk.WebAPI.Tests.Controllers.Tests.Files.Tests.CsvControllers.Tests;
 
 public class CsvControllerTest
 {

@@ -1,7 +1,7 @@
 using Application.Files.Interfaces;
 using Microsoft.AspNetCore.Mvc;
 
-namespace WebAPI.Controllers.Files;
+namespace WebAPI.Controllers.Files.CsvControllers;
 
 [Route("api/files/csv/")]
 [ApiController]

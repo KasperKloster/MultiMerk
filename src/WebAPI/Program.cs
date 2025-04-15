@@ -2,6 +2,7 @@ using System.Text;
 using Application.Authentication.Interfaces;
 using Application.Files;
 using Application.Files.Interfaces;
+using Application.Files.Services;
 using Application.Repositories;
 using Domain.Models.Authentication;
 using Infrastructure.Data;
@@ -57,6 +58,7 @@ builder.Services.AddAuthentication(options =>
 builder.Services.AddScoped<IFileService, FileService>();
 builder.Services.AddScoped<IFileParser, FileParser>();
 builder.Services.AddScoped<IProductRepository, ProductRepository>();
+builder.Services.AddScoped<IXlsFileService, XlsFileService>();
 
 
 // Allow CORS for your frontend
