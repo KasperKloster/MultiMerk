@@ -57,9 +57,10 @@ builder.Services.AddAuthentication(options =>
 // Files
 builder.Services.AddScoped<ICsvService, CsvService>();
 builder.Services.AddScoped<IFileParser, FileParser>();
-builder.Services.AddScoped<IProductRepository, ProductRepository>();
 builder.Services.AddScoped<IXlsFileService, XlsFileService>();
-
+// Repositories
+builder.Services.AddScoped<IProductRepository, ProductRepository>();
+builder.Services.AddScoped<IWeeklistRepository, WeeklistRepository>();
 
 // Allow CORS for your frontend
 builder.Services.AddCors(options =>

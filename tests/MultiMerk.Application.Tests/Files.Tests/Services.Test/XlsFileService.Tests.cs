@@ -3,6 +3,7 @@ using Application.Files.Interfaces;
 using Application.Files.Services;
 using Application.Repositories;
 using Domain.Models.Products;
+using Domain.Models.Weeklists;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Http.Internal;
 using Moq;
@@ -12,72 +13,94 @@ namespace MultiMerk.Application.Tests.Files.Tests.Services.Test;
 public class XlsFileServiceTests
 {
     private readonly Mock<IFileParser> _mockParser;
-    private readonly Mock<IProductRepository> _mockRepo;
+    private readonly Mock<IProductRepository> _mockProductRepo;
+    private readonly Mock<IWeeklistRepository> _mockWeeklistRepo;
 
     public XlsFileServiceTests()
     {
         _mockParser = new Mock<IFileParser>();
-        _mockRepo = new Mock<IProductRepository>();
+        _mockProductRepo = new Mock<IProductRepository>();
+        _mockWeeklistRepo = new Mock<IWeeklistRepository>();
     }
 
     [Fact]
     public async Task CreateWeeklist_ShouldFail_WhenFileExtensionIsInvalid()
     {
         // Arrange
-        var service = new XlsFileService(_mockParser.Object, _mockRepo.Object);
+        Weeklist weeklist = CreateMockWeeklist();
+        var service = new XlsFileService(_mockParser.Object, _mockProductRepo.Object, _mockWeeklistRepo.Object);
         var invalidFile = CreateMockFile("test.csv");
 
         // Act
-        var result = await service.CreateWeeklist(invalidFile);
+        var result = await service.CreateWeeklist(invalidFile, weeklist);
 
         // Assert
         Assert.False(result.Success);
         Assert.Equal("Invalid file extension.", result.Message);
-        _mockRepo.Verify(r => r.AddRangeAsync(It.IsAny<List<Product>>()), Times.Never);
+        _mockProductRepo.Verify(r => r.AddRangeAsync(It.IsAny<List<Product>>()), Times.Never);
+        _mockWeeklistRepo.Verify(r => r.AddAsync(It.IsAny<Weeklist>()), Times.Never);
     }
 
     [Fact]
     public async Task CreateWeeklist_ShouldFail_WhenNoProductsFound()
     {
         // Arrange
+        Weeklist weeklist = CreateMockWeeklist();
         _mockParser.Setup(p => p.GetProductsFromXls(It.IsAny<IFormFile>()))
                    .Returns(new List<Product>());
 
-        var service = new XlsFileService(_mockParser.Object, _mockRepo.Object);
+        var service = new XlsFileService(_mockParser.Object, _mockProductRepo.Object, _mockWeeklistRepo.Object);
         var file = CreateMockFile("test.xls");
 
         // Act
-        var result = await service.CreateWeeklist(file);
+        var result = await service.CreateWeeklist(file, weeklist);
 
         // Assert
         Assert.False(result.Success);
         Assert.Equal("No products found in the file.", result.Message);
-        _mockRepo.Verify(r => r.AddRangeAsync(It.IsAny<List<Product>>()), Times.Never);
+        _mockProductRepo.Verify(r => r.AddRangeAsync(It.IsAny<List<Product>>()), Times.Never);
+        _mockWeeklistRepo.Verify(r => r.AddAsync(It.IsAny<Weeklist>()), Times.Never);
     }
 
     [Fact]
     public async Task CreateWeeklist_ShouldSucceed_WhenValidProductsAreParsed()
     {
         // Arrange
+        Weeklist weeklist = CreateMockWeeklist(); // Id = 1
         var products = new List<Product> { new("123"), new("456") };
 
         _mockParser.Setup(p => p.GetProductsFromXls(It.IsAny<IFormFile>()))
-                   .Returns(products);
+                .Returns(products);
 
-        _mockRepo.Setup(r => r.AddRangeAsync(It.IsAny<List<Product>>()))
-                 .Returns(Task.CompletedTask)
-                 .Verifiable();
+        // Simulate EF Core setting Weeklist.Id after AddAsync
+        _mockWeeklistRepo.Setup(r => r.AddAsync(It.IsAny<Weeklist>()))
+                        .Callback<Weeklist>(w => w.Id = 42) // Simulate EF Core setting the ID
+                        .Returns(Task.CompletedTask)
+                        .Verifiable();
 
-        var service = new XlsFileService(_mockParser.Object, _mockRepo.Object);
+        _mockProductRepo.Setup(r => r.AddRangeAsync(It.IsAny<List<Product>>()))
+                        .Callback<IEnumerable<Product>>(prods =>
+                        {
+                            // Assert inside callback that each product has correct WeeklistId set
+                            foreach (var prod in prods)
+                            {
+                                Assert.Equal(42, prod.WeeklistId);
+                            }
+                        })
+                        .Returns(Task.CompletedTask)
+                        .Verifiable();
+
+        var service = new XlsFileService(_mockParser.Object, _mockProductRepo.Object, _mockWeeklistRepo.Object);
         var file = CreateMockFile("test.xls");
 
         // Act
-        var result = await service.CreateWeeklist(file);
+        var result = await service.CreateWeeklist(file, weeklist);
 
         // Assert
         Assert.True(result.Success);
         Assert.Null(result.Message);
-        _mockRepo.Verify(r => r.AddRangeAsync(products), Times.Once);
+        _mockWeeklistRepo.Verify(r => r.AddAsync(weeklist), Times.Once);
+        _mockProductRepo.Verify(r => r.AddRangeAsync(It.IsAny<List<Product>>()), Times.Once);
     }
 
 
@@ -89,6 +112,17 @@ public class XlsFileServiceTests
         {
             Headers = new HeaderDictionary(),
             ContentType = "application/vnd.ms-excel"
+        };
+    }
+
+    private static Weeklist CreateMockWeeklist()
+    {
+        return new Weeklist
+        {
+            Id = 1,
+            Number = 568,
+            OrderNumber = "EX123456",
+            Supplier = "TVC"
         };
     }
 

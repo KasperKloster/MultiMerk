@@ -1,4 +1,3 @@
-using System.Diagnostics;
 using Application.Repositories;
 using Domain.Models.Products;
 using Infrastructure.Data;

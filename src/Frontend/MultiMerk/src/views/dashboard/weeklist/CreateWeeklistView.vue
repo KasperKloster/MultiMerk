@@ -1,6 +1,6 @@
 <script setup>
 import { inject, ref } from 'vue';
-import { isAuthenticated } from '@/utils/isUserLoggedIn';
+// import { isAuthenticated } from '@/utils/isUserLoggedIn';
 import Header from '@/components/layout/Header.vue';
 import axios from 'axios';
 
@@ -34,8 +34,19 @@ const onFileChange = (event) => {
 const handleUpload = async () => {
     if (!selectedFile.value) return;
 
+    // Getting the file
     const formData = new FormData();
     formData.append('file', selectedFile.value);
+
+    // Values from form to weeklist
+    const weeklistNumber = document.getElementById('weeklist-number').value;
+    const orderNumber = document.getElementById('order-number').value;
+    const supplier = document.getElementById('supplier').value;
+
+    // Append extra fields
+    formData.append('Number', weeklistNumber);
+    formData.append('OrderNumber', orderNumber);
+    formData.append('Supplier', supplier);
 
     try {
         const response = await axios.post(`${apiUrl}/api/files/weeklist/create`, formData, {
@@ -66,7 +77,7 @@ const handleUpload = async () => {
                         <div class="flex-1">
                             <label for="weeklist-number" class="block text-sm/6 font-medium text-gray-900">Weeklist number</label>
                             <div class="mt-2">                                
-                                <input type="text" name="weeklist-number" id="weeklist-number" placeholder="463"
+                                <input type="text" name="weeklist-number" id="weeklist-number" placeholder="463" required
                                 class="block w-full rounded-md bg-white px-3 py-1.5 text-base text-gray-900 
                                 outline-1 -outline-offset-1 outline-gray-300 placeholder:text-gray-400 
                                 focus:outline-2 focus:-outline-offset-2 focus:outline-indigo-600 sm:text-sm/6">
@@ -74,9 +85,9 @@ const handleUpload = async () => {
                         </div>
 
                         <div class="flex-1">
-                            <label for="supplier-number" class="block text-sm/6 font-medium text-gray-900">Supplier Number</label>
+                            <label for="order-number" class="block text-sm/6 font-medium text-gray-900">Order Number</label>
                             <div class="mt-2">
-                                <input type="text" name="supplier-number" id="supplier-number" placeholder="E24120400130"
+                                <input type="text" name="order-number" id="order-number" placeholder="E24120400130" required
                                 class="block w-full rounded-md bg-white px-3 py-1.5 text-base text-gray-900 
                                 outline-1 -outline-offset-1 outline-gray-300 placeholder:text-gray-400 
                                 focus:outline-2 focus:-outline-offset-2 focus:outline-indigo-600 sm:text-sm/6">
@@ -86,7 +97,7 @@ const handleUpload = async () => {
                         <div class="flex-1">
                             <label for="supplier" class="block text-sm/6 font-medium text-gray-900">Supplier</label>
                             <div class="mt-2">
-                                <input type="text" name="supplier" id="supplier" placeholder="TVC"
+                                <input type="text" name="supplier" id="supplier" placeholder="TVC" required
                                 class="block w-full rounded-md bg-white px-3 py-1.5 text-base text-gray-900 
                                 outline-1 -outline-offset-1 outline-gray-300 placeholder:text-gray-400 
                                 focus:outline-2 focus:-outline-offset-2 focus:outline-indigo-600 sm:text-sm/6">
@@ -108,7 +119,7 @@ const handleUpload = async () => {
                             </p>
                             <p class="text-xs text-gray-400">.xls files only</p>
                         </div>
-                        <input id="file-upload" type="file" class="hidden" @change="onFileChange" accept=".xls" />
+                        <input required id="file-upload" type="file" class="hidden" @change="onFileChange" accept=".xls" />
                     </label>
                     <div v-if="selectedFile" class="mt-4 text-sm text-gray-600">Filename: {{ selectedFile.name }}</div>
                 </div>            

@@ -1,9 +1,10 @@
 using Domain.Models.Files;
+using Domain.Models.Weeklists;
 using Microsoft.AspNetCore.Http;
 
 namespace Application.Files.Interfaces;
 
 public interface IXlsFileService
 {
-    Task<FilesResult> CreateWeeklist(IFormFile file);
+    Task<FilesResult> CreateWeeklist(IFormFile file, Weeklist weeklist);
 }

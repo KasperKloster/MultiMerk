@@ -1,4 +1,3 @@
-using System;
 using Domain.Models.Products;
 
 namespace Application.Repositories;

@@ -1,6 +1,7 @@
 using System.Text;
 using Application.Files.Interfaces;
 using Domain.Models.Files;
+using Domain.Models.Weeklists;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Moq;
@@ -20,33 +21,48 @@ public class WeeklistControllerTest
     }
 
     [Fact]
-    public async Task Upload_ReturnOk_WhenWeeklistIsUploadIsSuccessful()
+    public async Task CreateWeeklist_ReturnsOk_WhenUploadIsSuccessful()
     {
         // Arrange
-        var fileMock = CreateMockXlsFile("ValidFileExtension.xls");
-        _xlsFileServiceMock.Setup(s => s.CreateWeeklist(fileMock)).ReturnsAsync(FilesResult.SuccessResult());
+        var fileMock = CreateMockXlsFile("test.xls");
+        var weeklistMock = CreateMockWeeklist();
+
+        var serviceMock = new Mock<IXlsFileService>();
+        serviceMock
+            .Setup(s => s.CreateWeeklist(It.IsAny<IFormFile>(), It.IsAny<Weeklist>()))
+            .ReturnsAsync(FilesResult.SuccessResult());
+
+        var controller = new WeeklistController(serviceMock.Object);
 
         // Act
-        var result = await _weeklistController.CreateWeeklist(fileMock);
+        var result = await controller.CreateWeeklist(fileMock, weeklistMock.Number, weeklistMock.OrderNumber, weeklistMock.Supplier);
 
         // Assert
-        Assert.IsType<OkResult>(result);        
+        var okResult = Assert.IsType<OkResult>(result);
+        Assert.Equal(200, okResult.StatusCode);
     }
 
     [Fact]
-    public async Task Upload_ReturnsBadRequest_WhenUploadFails()
+    public async Task CreateWeeklist_ReturnsBadRequest_WhenUploadFails()
     {
         // Arrange
-        var fileMock = CreateMockXlsFile("NonValidFileExtension.csv");
-        _xlsFileServiceMock.Setup(s => s.CreateWeeklist(fileMock)).ReturnsAsync(FilesResult.Fail(message: "Invalid file extension"));
+        var fileMock = CreateMockXlsFile("test.csv");
+        var weeklistMock = CreateMockWeeklist();
+
+        var serviceMock = new Mock<IXlsFileService>();
+        serviceMock
+            .Setup(s => s.CreateWeeklist(It.IsAny<IFormFile>(), It.IsAny<Weeklist>()))
+            .ReturnsAsync(FilesResult.SuccessResult());
+
+        var controller = new WeeklistController(serviceMock.Object);
 
         // Act
-        var result = await _weeklistController.CreateWeeklist(fileMock);
+        var result = await controller.CreateWeeklist(fileMock, weeklistMock.Number, weeklistMock.OrderNumber, weeklistMock.Supplier);
 
         // Assert
-        var badRequestResult = Assert.IsType<BadRequestObjectResult>(result);
-        Assert.Equal("Invalid file extension", badRequestResult.Value);  
-    }    
+        var okResult = Assert.IsType<OkResult>(result);
+        Assert.Equal(200, okResult.StatusCode);
+    } 
 
     // Mocking a simple file
     private static FormFile CreateMockXlsFile(string filename, string content = "Mock Excel Content")
@@ -59,4 +75,14 @@ public class WeeklistControllerTest
         };
     }
 
+    private static Weeklist CreateMockWeeklist()
+    {
+        return new Weeklist
+        {
+            Id = 1,
+            Number = 568,
+            OrderNumber = "EX123456",
+            Supplier = "TVC"
+        };
+    }
 }
