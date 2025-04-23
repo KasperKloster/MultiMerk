@@ -1,13 +1,14 @@
 using System.Text;
 using Application.Authentication.Interfaces;
-using Application.Files;
 using Application.Files.Interfaces;
 using Application.Files.Services;
 using Application.Repositories;
+using Application.Repositories.Weeklists;
 using Domain.Models.Authentication;
 using Infrastructure.Data;
 using Infrastructure.Files;
 using Infrastructure.Repositories;
+using Infrastructure.Repositories.Weeklists;
 using Infrastructure.Seeder;
 using Infrastructure.Services.Authentication;
 using Infrastructure.Services.Token;
@@ -61,6 +62,8 @@ builder.Services.AddScoped<IXlsFileService, XlsFileService>();
 // Repositories
 builder.Services.AddScoped<IProductRepository, ProductRepository>();
 builder.Services.AddScoped<IWeeklistRepository, WeeklistRepository>();
+builder.Services.AddScoped<IWeeklistTaskLinkRepository, WeeklistTaskLinkRepository>();
+builder.Services.AddScoped<IWeeklistTaskRepository, WeeklistTaskRepository>();
 
 // Allow CORS for your frontend
 builder.Services.AddCors(options =>

@@ -1,8 +1,8 @@
-using Application.Repositories;
+using Application.Repositories.Weeklists;
 using Domain.Models.Weeklists;
 using Infrastructure.Data;
 
-namespace Infrastructure.Repositories;
+namespace Infrastructure.Repositories.Weeklists;
 
 public class WeeklistRepository : IWeeklistRepository
 {

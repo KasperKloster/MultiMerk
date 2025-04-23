@@ -2,6 +2,7 @@ using System.Text;
 using Application.Files.Interfaces;
 using Application.Files.Services;
 using Application.Repositories;
+using Application.Repositories.Weeklists;
 using Domain.Models.Products;
 using Domain.Models.Weeklists;
 using Microsoft.AspNetCore.Http;
@@ -16,11 +17,17 @@ public class XlsFileServiceTests
     private readonly Mock<IProductRepository> _mockProductRepo;
     private readonly Mock<IWeeklistRepository> _mockWeeklistRepo;
 
+    private readonly Mock<IWeeklistTaskRepository> _mockWeeklistTaskRepository;
+
+
+
+
     public XlsFileServiceTests()
     {
         _mockParser = new Mock<IFileParser>();
         _mockProductRepo = new Mock<IProductRepository>();
         _mockWeeklistRepo = new Mock<IWeeklistRepository>();
+        _mockWeeklistTaskRepository = new Mock<IWeeklistTaskRepository>();
     }
 
     [Fact]
@@ -28,7 +35,7 @@ public class XlsFileServiceTests
     {
         // Arrange
         Weeklist weeklist = CreateMockWeeklist();
-        var service = new XlsFileService(_mockParser.Object, _mockProductRepo.Object, _mockWeeklistRepo.Object);
+        var service = new XlsFileService(_mockParser.Object, _mockProductRepo.Object, _mockWeeklistRepo.Object, _mockWeeklistTaskRepository.Object);
         var invalidFile = CreateMockFile("test.csv");
 
         // Act
@@ -49,7 +56,8 @@ public class XlsFileServiceTests
         _mockParser.Setup(p => p.GetProductsFromXls(It.IsAny<IFormFile>()))
                    .Returns(new List<Product>());
 
-        var service = new XlsFileService(_mockParser.Object, _mockProductRepo.Object, _mockWeeklistRepo.Object);
+        var service = new XlsFileService(_mockParser.Object, _mockProductRepo.Object, _mockWeeklistRepo.Object, _mockWeeklistTaskRepository.Object);
+
         var file = CreateMockFile("test.xls");
 
         // Act
@@ -89,8 +97,8 @@ public class XlsFileServiceTests
                         })
                         .Returns(Task.CompletedTask)
                         .Verifiable();
-
-        var service = new XlsFileService(_mockParser.Object, _mockProductRepo.Object, _mockWeeklistRepo.Object);
+        
+        var service = new XlsFileService(_mockParser.Object, _mockProductRepo.Object, _mockWeeklistRepo.Object, _mockWeeklistTaskRepository.Object);        
         var file = CreateMockFile("test.xls");
 
         // Act

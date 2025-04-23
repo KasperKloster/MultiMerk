@@ -3,6 +3,7 @@ using System;
 using Infrastructure.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 
@@ -11,9 +12,11 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 namespace Infrastructure.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    partial class AppDbContextModelSnapshot : ModelSnapshot
+    [Migration("20250423091732_WeeklistTaskLink")]
+    partial class WeeklistTaskLink
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -202,42 +205,12 @@ namespace Infrastructure.Migrations
                         new
                         {
                             Id = 1,
-                            Name = "Assign EAN"
+                            Name = "Give EAN"
                         },
                         new
                         {
                             Id = 2,
-                            Name = "Create AI content list"
-                        },
-                        new
-                        {
-                            Id = 3,
-                            Name = "Assign location"
-                        },
-                        new
-                        {
-                            Id = 4,
-                            Name = "Assign correct quantity"
-                        },
-                        new
-                        {
-                            Id = 5,
-                            Name = "Upload AI content"
-                        },
-                        new
-                        {
-                            Id = 6,
-                            Name = "Create final list"
-                        },
-                        new
-                        {
-                            Id = 7,
-                            Name = "Import product list"
-                        },
-                        new
-                        {
-                            Id = 8,
-                            Name = "Create translations"
+                            Name = "Prepare for AI"
                         });
                 });
 

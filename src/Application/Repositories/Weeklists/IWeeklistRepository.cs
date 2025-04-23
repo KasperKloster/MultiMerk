@@ -1,6 +1,6 @@
 using Domain.Models.Weeklists;
 
-namespace Application.Repositories;
+namespace Application.Repositories.Weeklists;
 
 public interface IWeeklistRepository
 {

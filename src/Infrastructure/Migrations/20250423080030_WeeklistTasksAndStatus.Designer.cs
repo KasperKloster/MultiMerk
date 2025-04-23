@@ -3,6 +3,7 @@ using System;
 using Infrastructure.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 
@@ -11,9 +12,11 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 namespace Infrastructure.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    partial class AppDbContextModelSnapshot : ModelSnapshot
+    [Migration("20250423080030_WeeklistTasksAndStatus")]
+    partial class WeeklistTasksAndStatus
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -162,26 +165,6 @@ namespace Infrastructure.Migrations
                     b.ToTable("Weeklists");
                 });
 
-            modelBuilder.Entity("Domain.Models.Weeklists.WeeklistTaskLinks.WeeklistTaskLink", b =>
-                {
-                    b.Property<int>("WeeklistId")
-                        .HasColumnType("integer");
-
-                    b.Property<int>("WeeklistTaskId")
-                        .HasColumnType("integer");
-
-                    b.Property<int>("WeeklistTaskStatusId")
-                        .HasColumnType("integer");
-
-                    b.HasKey("WeeklistId", "WeeklistTaskId");
-
-                    b.HasIndex("WeeklistTaskId");
-
-                    b.HasIndex("WeeklistTaskStatusId");
-
-                    b.ToTable("WeeklistTaskLinks");
-                });
-
             modelBuilder.Entity("Domain.Models.Weeklists.WeeklistTasks.WeeklistTask", b =>
                 {
                     b.Property<int>("Id")
@@ -202,42 +185,12 @@ namespace Infrastructure.Migrations
                         new
                         {
                             Id = 1,
-                            Name = "Assign EAN"
+                            Name = "Give EAN"
                         },
                         new
                         {
                             Id = 2,
-                            Name = "Create AI content list"
-                        },
-                        new
-                        {
-                            Id = 3,
-                            Name = "Assign location"
-                        },
-                        new
-                        {
-                            Id = 4,
-                            Name = "Assign correct quantity"
-                        },
-                        new
-                        {
-                            Id = 5,
-                            Name = "Upload AI content"
-                        },
-                        new
-                        {
-                            Id = 6,
-                            Name = "Create final list"
-                        },
-                        new
-                        {
-                            Id = 7,
-                            Name = "Import product list"
-                        },
-                        new
-                        {
-                            Id = 8,
-                            Name = "Create translations"
+                            Name = "Prepare for AI"
                         });
                 });
 
@@ -266,7 +219,7 @@ namespace Infrastructure.Migrations
                         new
                         {
                             Id = 2,
-                            Status = "Ready"
+                            Status = "Not started"
                         },
                         new
                         {
@@ -422,33 +375,6 @@ namespace Infrastructure.Migrations
                     b.Navigation("Weeklist");
                 });
 
-            modelBuilder.Entity("Domain.Models.Weeklists.WeeklistTaskLinks.WeeklistTaskLink", b =>
-                {
-                    b.HasOne("Domain.Models.Weeklists.Weeklist", "Weeklist")
-                        .WithMany("WeeklistTaskLinks")
-                        .HasForeignKey("WeeklistId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.HasOne("Domain.Models.Weeklists.WeeklistTasks.WeeklistTask", "WeeklistTask")
-                        .WithMany()
-                        .HasForeignKey("WeeklistTaskId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.HasOne("Domain.Models.Weeklists.WeeklistTasks.WeeklistTaskStatus", "WeeklistTaskStatus")
-                        .WithMany()
-                        .HasForeignKey("WeeklistTaskStatusId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("Weeklist");
-
-                    b.Navigation("WeeklistTask");
-
-                    b.Navigation("WeeklistTaskStatus");
-                });
-
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRoleClaim<string>", b =>
                 {
                     b.HasOne("Microsoft.AspNetCore.Identity.IdentityRole", null)
@@ -503,8 +429,6 @@ namespace Infrastructure.Migrations
             modelBuilder.Entity("Domain.Models.Weeklists.Weeklist", b =>
                 {
                     b.Navigation("Products");
-
-                    b.Navigation("WeeklistTaskLinks");
                 });
 #pragma warning restore 612, 618
         }
