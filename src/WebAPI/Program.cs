@@ -21,7 +21,7 @@ using Scalar.AspNetCore;
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
-string connectionString = builder.Configuration.GetConnectionString("default");
+string connectionString = builder.Configuration.GetConnectionString("default")!;
 
 builder.Services.AddDbContext<AppDbContext>(options => options.UseNpgsql(connectionString));
 
@@ -62,8 +62,8 @@ builder.Services.AddScoped<IXlsFileService, XlsFileService>();
 // Repositories
 builder.Services.AddScoped<IProductRepository, ProductRepository>();
 builder.Services.AddScoped<IWeeklistRepository, WeeklistRepository>();
-builder.Services.AddScoped<IWeeklistTaskLinkRepository, WeeklistTaskLinkRepository>();
 builder.Services.AddScoped<IWeeklistTaskRepository, WeeklistTaskRepository>();
+builder.Services.AddScoped<IWeeklistTaskLinkRepository, WeeklistTaskLinkRepository>();
 
 // Allow CORS for your frontend
 builder.Services.AddCors(options =>

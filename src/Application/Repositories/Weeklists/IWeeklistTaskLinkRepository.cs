@@ -4,5 +4,5 @@ namespace Application.Repositories.Weeklists;
 
 public interface IWeeklistTaskLinkRepository
 {
-    Task AddWeeklistTaskLinksAsync(List<WeeklistTaskLink> taskLinks);
+    Task AddWeeklistTaskLinksAsync(List<WeeklistTaskLink> taskLinks);    
 }

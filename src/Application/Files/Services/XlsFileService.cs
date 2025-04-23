@@ -1,3 +1,4 @@
+using System.Diagnostics;
 using Application.Files.Interfaces;
 using Application.Repositories;
 using Application.Repositories.Weeklists;
@@ -18,12 +19,13 @@ public class XlsFileService : IXlsFileService
     private readonly IWeeklistTaskRepository _weeklistTaskRepository;
     private readonly IWeeklistTaskLinkRepository _weeklistTaskLinkRepository;
 
-    public XlsFileService(IFileParser fileparser, IProductRepository productRepository, IWeeklistRepository weeklistRepository, IWeeklistTaskRepository weeklistTaskRepository)
+    public XlsFileService(IFileParser fileparser, IProductRepository productRepository, IWeeklistRepository weeklistRepository, IWeeklistTaskRepository weeklistTaskRepository, IWeeklistTaskLinkRepository weeklistTaskLinkRepository)
     {
         _fileparser = fileparser;
         _productRepository = productRepository;
         _weeklistRepository = weeklistRepository;
         _weeklistTaskRepository = weeklistTaskRepository;
+        _weeklistTaskLinkRepository = weeklistTaskLinkRepository;
     }
 
     public async Task<FilesResult> CreateWeeklist(IFormFile file, Weeklist weeklist)
@@ -75,15 +77,18 @@ public class XlsFileService : IXlsFileService
             return FilesResult.Fail($"An error occured while getting all WeeklistTasks: {ex.Message}");
         }
         
-        // Default status ID (e.g., "Awaiting" = 1)
-        int defaultStatusId = 1;
         // Map all Weeklisttasks to WeeklistTaskLink
+        
+        // All task should be "Awaiting". Except the first task, that should be "Ready"
+        int defaultStatusId = 1; // Default status ID - "Awaiting".
+        int firstTaskId = 1; // WeeklistTask: Give EAN
+        int readyStatusId = 2; // WeeklistTaskStatus: Ready                
         List<WeeklistTaskLink> weeklistTaskLinks = allWeeklistTasks.Select(task => new WeeklistTaskLink{
             WeeklistId = weeklist.Id,
             WeeklistTaskId = task.Id,
-            WeeklistTaskStatusId = defaultStatusId
+            WeeklistTaskStatusId = task.Id == firstTaskId ? readyStatusId : defaultStatusId
         }).ToList();
-
+            
         // Save WeeklistTaskLinks
         try
         {
@@ -91,9 +96,8 @@ public class XlsFileService : IXlsFileService
         }
         catch (Exception ex)
         {
-            return FilesResult.Fail($"An error occurred while saving WeeklistTaskLinks: {ex.Message}\nInner: {ex.InnerException?.Message}");
+            return FilesResult.Fail($"An error occurred while saving WeeklistTaskLinks: {ex.Message}");
         }
-
 
         // Return success        
         return FilesResult.SuccessResult();
