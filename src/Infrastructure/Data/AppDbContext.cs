@@ -15,8 +15,7 @@ public class AppDbContext : IdentityDbContext<ApplicationUser>
     }
     
     // Authentication
-    public DbSet<TokenInfo> TokenInfos { get; set; } = null!;
-    
+    public DbSet<TokenInfo> TokenInfos { get; set; } = null!;    
     // Weeklists and tasks
     public DbSet<Weeklist> Weeklists { get; set; } = null!;
     public DbSet<WeeklistTask> WeeklistTasks { get; set; } = null!;
@@ -57,7 +56,7 @@ public class AppDbContext : IdentityDbContext<ApplicationUser>
             new WeeklistTaskStatus { Id = 4, Status = "Done" }
         );           
 
-        // WeeklistTaskLink
+        // WeeklistTaskLink Relation
         modelBuilder.Entity<WeeklistTaskLink>()
             .HasKey(t => new { t.WeeklistId, t.WeeklistTaskId });
 
@@ -75,6 +74,5 @@ public class AppDbContext : IdentityDbContext<ApplicationUser>
             .HasOne(x => x.WeeklistTaskStatus)
             .WithMany()
             .HasForeignKey(x => x.WeeklistTaskStatusId);
-
     }
 }
