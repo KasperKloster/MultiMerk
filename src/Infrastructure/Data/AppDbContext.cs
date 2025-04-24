@@ -28,6 +28,16 @@ public class AppDbContext : IdentityDbContext<ApplicationUser>
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
         base.OnModelCreating(modelBuilder);
+        
+        // Unique index on SKU
+        modelBuilder.Entity<Product>()
+            .HasIndex(p => p.Sku)
+            .IsUnique();
+
+        // Unique index on WeeklistNumber
+        modelBuilder.Entity<Weeklist>()
+            .HasIndex(w => w.Number)
+            .IsUnique();
 
         // Product -> Weeklist relationship
         modelBuilder.Entity<Product>()
@@ -56,7 +66,7 @@ public class AppDbContext : IdentityDbContext<ApplicationUser>
             new WeeklistTaskStatus { Id = 4, Status = "Done" }
         );           
 
-        // WeeklistTaskLink Relation
+        // WeeklistTaskLink Relation / Join weeklist with tasks, status
         modelBuilder.Entity<WeeklistTaskLink>()
             .HasKey(t => new { t.WeeklistId, t.WeeklistTaskId });
 
