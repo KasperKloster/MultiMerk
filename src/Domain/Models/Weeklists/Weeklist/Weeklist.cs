@@ -2,7 +2,7 @@ using System.ComponentModel.DataAnnotations;
 using Domain.Models.Products;
 using Domain.Models.Weeklists.WeeklistTaskLinks;
 
-namespace Domain.Models.Weeklists;
+namespace Domain.Models.Weeklists.Entities;
 
 public class Weeklist
 {

@@ -1,8 +1,8 @@
-using System.Diagnostics;
 using Application.Repositories.Weeklists;
-using Domain.Models.Weeklists;
+using Domain.Models.Weeklists.Entities;
 using Domain.Models.Weeklists.WeeklistTaskLinks;
 using Infrastructure.Data;
+using Microsoft.EntityFrameworkCore;
 
 namespace Infrastructure.Repositories.Weeklists;
 
@@ -14,10 +14,21 @@ public class WeeklistRepository : IWeeklistRepository
     {
         _dbContext = dbContext;        
     }
+    public async Task<List<Weeklist>> GetAllWeeklists()
+    {
+        return await _dbContext.Weeklists
+            .Include(w => w.WeeklistTaskLinks)
+                .ThenInclude(link => link.WeeklistTask)
+            .Include(w => w.WeeklistTaskLinks)
+                .ThenInclude(link => link.WeeklistTaskStatus)
+            .ToListAsync();        
+        // return await _dbContext.Weeklists.ToListAsync();
+    }
 
     public async Task AddAsync(Weeklist weeklist)
     {
         await _dbContext.Weeklists.AddAsync(weeklist);
         await _dbContext.SaveChangesAsync();
     }
+
 }

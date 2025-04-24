@@ -4,6 +4,7 @@ using Application.Files.Interfaces;
 using Application.Files.Services;
 using Application.Repositories;
 using Application.Repositories.Weeklists;
+using Application.Services.Weeklists;
 using Domain.Models.Authentication;
 using Infrastructure.Data;
 using Infrastructure.Files;
@@ -64,6 +65,8 @@ builder.Services.AddScoped<IProductRepository, ProductRepository>();
 builder.Services.AddScoped<IWeeklistRepository, WeeklistRepository>();
 builder.Services.AddScoped<IWeeklistTaskRepository, WeeklistTaskRepository>();
 builder.Services.AddScoped<IWeeklistTaskLinkRepository, WeeklistTaskLinkRepository>();
+// Services
+builder.Services.AddScoped<WeeklistService>();
 
 // Allow CORS for your frontend
 builder.Services.AddCors(options =>

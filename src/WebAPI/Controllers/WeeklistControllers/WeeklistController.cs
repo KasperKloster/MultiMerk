@@ -1,5 +1,6 @@
 using Application.Files.Interfaces;
-using Domain.Models.Weeklists;
+using Application.Services.Weeklists;
+using Domain.Models.Weeklists.Entities;
 using Microsoft.AspNetCore.Mvc;
 
 namespace WebAPI.Controllers.WeeklistControllers
@@ -9,13 +10,27 @@ namespace WebAPI.Controllers.WeeklistControllers
     public class WeeklistController : ControllerBase
     {
         private readonly IXlsFileService _xlsFileService;
+        private readonly WeeklistService _weeklistService;
 
-        public WeeklistController(IXlsFileService xlsFileService)
+        public WeeklistController(IXlsFileService xlsFileService, WeeklistService weeklistService)
         {
             _xlsFileService = xlsFileService;
+            _weeklistService = weeklistService;
         }
 
-        [HttpPost("create")]        
+        [HttpGet("all")]
+        public async Task<IActionResult> GetAllWeeklists()
+        {
+            try{
+                var weeklists = await _weeklistService.GetAllWeeklistsAsync();            
+                return Ok(weeklists);
+            } catch (Exception ex)
+            {
+                return BadRequest(ex.Message);
+            }
+        }
+
+        [HttpPost("create")]
         public async Task <IActionResult> CreateWeeklist ([FromForm] IFormFile file, [FromForm] int Number, [FromForm] string OrderNumber, [FromForm] string Supplier)
         {
             // Instantiate weeklist object with the parameters received from the form

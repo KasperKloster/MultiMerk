@@ -1,5 +1,5 @@
 using System.ComponentModel.DataAnnotations;
-using Domain.Models.Weeklists;
+using Domain.Models.Weeklists.Entities;
 
 namespace Domain.Models.Products;
 

@@ -4,7 +4,7 @@ using Application.Files.Services;
 using Application.Repositories;
 using Application.Repositories.Weeklists;
 using Domain.Models.Products;
-using Domain.Models.Weeklists;
+using Domain.Models.Weeklists.Entities;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Http.Internal;
 using Moq;
