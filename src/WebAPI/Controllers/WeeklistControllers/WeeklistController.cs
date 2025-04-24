@@ -2,9 +2,9 @@ using Application.Files.Interfaces;
 using Domain.Models.Weeklists;
 using Microsoft.AspNetCore.Mvc;
 
-namespace WebAPI.Controllers.Files.XlsControllers
+namespace WebAPI.Controllers.WeeklistControllers
 {
-    [Route("api/files/weeklist/")]
+    [Route("api/weeklist/")]
     [ApiController]
     public class WeeklistController : ControllerBase
     {

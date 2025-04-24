@@ -5,7 +5,7 @@ using Domain.Models.Weeklists;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Moq;
-using WebAPI.Controllers.Files.XlsControllers;
+using WebAPI.Controllers.WeeklistControllers;
 
 namespace MultiMerk.WebAPI.Tests.Controllers.Tests.Files.Tests.XlsControllers.Tests;
 

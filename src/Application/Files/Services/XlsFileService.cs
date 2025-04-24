@@ -1,4 +1,3 @@
-using System.Diagnostics;
 using Application.Files.Interfaces;
 using Application.Repositories;
 using Application.Repositories.Weeklists;
@@ -78,7 +77,6 @@ public class XlsFileService : IXlsFileService
         }
         
         // Map all Weeklisttasks to WeeklistTaskLink
-        
         // All task should be "Awaiting". Except the first task, that should be "Ready"
         int defaultStatusId = 1; // Default status ID - "Awaiting".
         int firstTaskId = 1; // WeeklistTask: Give EAN

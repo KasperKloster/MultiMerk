@@ -49,7 +49,7 @@ const handleUpload = async () => {
     formData.append('Supplier', supplier);
 
     try {
-        const response = await axios.post(`${apiUrl}/api/files/weeklist/create`, formData, {
+        const response = await axios.post(`${apiUrl}/api/weeklist/create`, formData, {
             headers: {
                 'Content-Type': 'multipart/form-data'
             }
