@@ -5,6 +5,8 @@ using Application.Repositories;
 using Application.Repositories.Weeklists;
 using Domain.Entities.Products;
 using Domain.Entities.Weeklists.Entities;
+using Domain.Entities.Weeklists.WeeklistTaskLinks;
+using Domain.Entities.Weeklists.WeeklistTasks;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Http.Internal;
 using Moq;
@@ -14,7 +16,7 @@ namespace MultiMerk.Application.Tests.Files.Tests.Services.Test;
 public class XlsFileServiceTests
 {
     private readonly Mock<IFileParser> _mockParser = new();
-    private readonly Mock<IProductRepository> _mockProductRepo = new();    
+    private readonly Mock<IProductRepository> _mockProductRepo = new();
     private readonly Mock<IWeeklistRepository> _mockWeeklistRepo = new();
     private readonly Mock<IWeeklistTaskRepository> _mockWeeklistTaskRepository = new();
     private readonly Mock<IWeeklistTaskLinkRepository> _mockWeeklistTaskLinkRepository = new();
@@ -25,12 +27,12 @@ public class XlsFileServiceTests
         // Arrange
         Weeklist weeklist = CreateMockWeeklist();
         var service = new XlsFileService(
-            _mockParser.Object, 
-            _mockProductRepo.Object, 
-            _mockWeeklistRepo.Object, 
-            _mockWeeklistTaskRepository.Object, 
+            _mockParser.Object,
+            _mockProductRepo.Object,
+            _mockWeeklistRepo.Object,
+            _mockWeeklistTaskRepository.Object,
             _mockWeeklistTaskLinkRepository.Object);
-        
+
         var invalidFile = CreateMockFile("test.csv");
 
         // Act
@@ -52,10 +54,10 @@ public class XlsFileServiceTests
                    .Returns(new List<Product>());
 
         var service = new XlsFileService(
-            _mockParser.Object, 
-            _mockProductRepo.Object, 
-            _mockWeeklistRepo.Object, 
-            _mockWeeklistTaskRepository.Object, 
+            _mockParser.Object,
+            _mockProductRepo.Object,
+            _mockWeeklistRepo.Object,
+            _mockWeeklistTaskRepository.Object,
             _mockWeeklistTaskLinkRepository.Object);
 
         var file = CreateMockFile("test.xls");
@@ -97,12 +99,24 @@ public class XlsFileServiceTests
                         })
                         .Returns(Task.CompletedTask)
                         .Verifiable();
-        
+
+        var tasks = new List<WeeklistTask>
+            {
+                new WeeklistTask { Id = 1, Name = "Give EAN" },
+                new WeeklistTask { Id = 2, Name = "Check Stock" }
+            };
+        _mockWeeklistTaskRepository.Setup(r => r.GetAllAsync())
+            .ReturnsAsync(tasks);
+
+        _mockWeeklistTaskLinkRepository.Setup(r => r.AddWeeklistTaskLinksAsync(It.IsAny<List<WeeklistTaskLink>>()))
+            .Returns(Task.CompletedTask)
+            .Verifiable();
+
         var service = new XlsFileService(
-            _mockParser.Object, 
-            _mockProductRepo.Object, 
-            _mockWeeklistRepo.Object, 
-            _mockWeeklistTaskRepository.Object, 
+            _mockParser.Object,
+            _mockProductRepo.Object,
+            _mockWeeklistRepo.Object,
+            _mockWeeklistTaskRepository.Object,
             _mockWeeklistTaskLinkRepository.Object);
 
         var file = CreateMockFile("test.xls");
@@ -115,6 +129,7 @@ public class XlsFileServiceTests
         Assert.Null(result.Message);
         _mockWeeklistRepo.Verify(r => r.AddAsync(weeklist), Times.Once);
         _mockProductRepo.Verify(r => r.AddRangeAsync(It.IsAny<List<Product>>()), Times.Once);
+        _mockWeeklistTaskLinkRepository.Verify(r => r.AddWeeklistTaskLinksAsync(It.IsAny<List<WeeklistTaskLink>>()), Times.Once);
     }
 
 
