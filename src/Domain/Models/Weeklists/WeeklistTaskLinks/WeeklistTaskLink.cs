@@ -1,3 +1,4 @@
+using Domain.Models.Weeklists.Entities;
 using Domain.Models.Weeklists.WeeklistTasks;
 
 namespace Domain.Models.Weeklists.WeeklistTaskLinks;
@@ -5,6 +6,7 @@ namespace Domain.Models.Weeklists.WeeklistTaskLinks;
 public class WeeklistTaskLink
 {
     public int WeeklistId { get; set; }
+    
     public Weeklist? Weeklist { get; set; }
 
     public int WeeklistTaskId { get; set; }

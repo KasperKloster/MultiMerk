@@ -1,6 +1,6 @@
 using Domain.Models.Authentication;
 using Domain.Models.Products;
-using Domain.Models.Weeklists;
+using Domain.Models.Weeklists.Entities;
 using Domain.Models.Weeklists.WeeklistTaskLinks;
 using Domain.Models.Weeklists.WeeklistTasks;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
@@ -15,8 +15,7 @@ public class AppDbContext : IdentityDbContext<ApplicationUser>
     }
     
     // Authentication
-    public DbSet<TokenInfo> TokenInfos { get; set; } = null!;
-    
+    public DbSet<TokenInfo> TokenInfos { get; set; } = null!;    
     // Weeklists and tasks
     public DbSet<Weeklist> Weeklists { get; set; } = null!;
     public DbSet<WeeklistTask> WeeklistTasks { get; set; } = null!;
@@ -29,6 +28,16 @@ public class AppDbContext : IdentityDbContext<ApplicationUser>
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
         base.OnModelCreating(modelBuilder);
+        
+        // Unique index on SKU
+        modelBuilder.Entity<Product>()
+            .HasIndex(p => p.Sku)
+            .IsUnique();
+
+        // Unique index on WeeklistNumber
+        modelBuilder.Entity<Weeklist>()
+            .HasIndex(w => w.Number)
+            .IsUnique();
 
         // Product -> Weeklist relationship
         modelBuilder.Entity<Product>()
@@ -57,7 +66,7 @@ public class AppDbContext : IdentityDbContext<ApplicationUser>
             new WeeklistTaskStatus { Id = 4, Status = "Done" }
         );           
 
-        // WeeklistTaskLink
+        // WeeklistTaskLink Relation / Join weeklist with tasks, status
         modelBuilder.Entity<WeeklistTaskLink>()
             .HasKey(t => new { t.WeeklistId, t.WeeklistTaskId });
 
@@ -75,6 +84,5 @@ public class AppDbContext : IdentityDbContext<ApplicationUser>
             .HasOne(x => x.WeeklistTaskStatus)
             .WithMany()
             .HasForeignKey(x => x.WeeklistTaskStatusId);
-
     }
 }

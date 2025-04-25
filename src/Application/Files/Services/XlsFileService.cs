@@ -3,7 +3,7 @@ using Application.Repositories;
 using Application.Repositories.Weeklists;
 using Domain.Models.Files;
 using Domain.Models.Products;
-using Domain.Models.Weeklists;
+using Domain.Models.Weeklists.Entities;
 using Domain.Models.Weeklists.WeeklistTaskLinks;
 using Domain.Models.Weeklists.WeeklistTasks;
 using Microsoft.AspNetCore.Http;

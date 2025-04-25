@@ -1,7 +1,8 @@
 using System.Text;
 using Application.Files.Interfaces;
+using Application.Services.Weeklists;
 using Domain.Models.Files;
-using Domain.Models.Weeklists;
+using Domain.Models.Weeklists.Entities;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Moq;
@@ -11,13 +12,16 @@ namespace MultiMerk.WebAPI.Tests.Controllers.Tests.Files.Tests.XlsControllers.Te
 
 public class WeeklistControllerTest
 {
-    private readonly Mock<IXlsFileService> _xlsFileServiceMock;    
+    private readonly Mock<IXlsFileService> _xlsFileServiceMock;
+    private readonly Mock<WeeklistService> _weeklistServiceMock;
     private readonly WeeklistController _weeklistController;
 
     public WeeklistControllerTest()
     {
         _xlsFileServiceMock = new Mock<IXlsFileService>();
-        _weeklistController = new WeeklistController(_xlsFileServiceMock.Object);
+        _weeklistServiceMock = new Mock<WeeklistService>(null!); // Pass null if you don't test it here
+
+        _weeklistController = new WeeklistController(_xlsFileServiceMock.Object, _weeklistServiceMock.Object);
     }
 
     [Fact]
@@ -27,15 +31,12 @@ public class WeeklistControllerTest
         var fileMock = CreateMockXlsFile("test.xls");
         var weeklistMock = CreateMockWeeklist();
 
-        var serviceMock = new Mock<IXlsFileService>();
-        serviceMock
+        _xlsFileServiceMock
             .Setup(s => s.CreateWeeklist(It.IsAny<IFormFile>(), It.IsAny<Weeklist>()))
             .ReturnsAsync(FilesResult.SuccessResult());
 
-        var controller = new WeeklistController(serviceMock.Object);
-
         // Act
-        var result = await controller.CreateWeeklist(fileMock, weeklistMock.Number, weeklistMock.OrderNumber, weeklistMock.Supplier);
+        var result = await _weeklistController.CreateWeeklist(fileMock, weeklistMock.Number, weeklistMock.OrderNumber, weeklistMock.Supplier);
 
         // Assert
         var okResult = Assert.IsType<OkResult>(result);
@@ -46,25 +47,22 @@ public class WeeklistControllerTest
     public async Task CreateWeeklist_ReturnsBadRequest_WhenUploadFails()
     {
         // Arrange
-        var fileMock = CreateMockXlsFile("test.csv");
+        var fileMock = CreateMockXlsFile("bad.xls");
         var weeklistMock = CreateMockWeeklist();
 
-        var serviceMock = new Mock<IXlsFileService>();
-        serviceMock
+        _xlsFileServiceMock
             .Setup(s => s.CreateWeeklist(It.IsAny<IFormFile>(), It.IsAny<Weeklist>()))
-            .ReturnsAsync(FilesResult.SuccessResult());
-
-        var controller = new WeeklistController(serviceMock.Object);
+            .ReturnsAsync(FilesResult.Fail("Upload failed"));
 
         // Act
-        var result = await controller.CreateWeeklist(fileMock, weeklistMock.Number, weeklistMock.OrderNumber, weeklistMock.Supplier);
+        var result = await _weeklistController.CreateWeeklist(fileMock, weeklistMock.Number, weeklistMock.OrderNumber, weeklistMock.Supplier);
 
         // Assert
-        var okResult = Assert.IsType<OkResult>(result);
-        Assert.Equal(200, okResult.StatusCode);
-    } 
+        var badRequest = Assert.IsType<BadRequestObjectResult>(result);
+        Assert.Equal(400, badRequest.StatusCode);
+        Assert.Equal("Upload failed", badRequest.Value);
+    }
 
-    // Mocking a simple file
     private static FormFile CreateMockXlsFile(string filename, string content = "Mock Excel Content")
     {
         var stream = new MemoryStream(Encoding.UTF8.GetBytes(content));

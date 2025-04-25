@@ -5,6 +5,8 @@ import Header from '@/components/layout/Header.vue';
 import axios from 'axios';
 
 const apiUrl = inject('apiUrl');
+const successMessage = ref('');
+const errorMessage = ref('');
 
 // onMounted(() => {
 //     // Check if the user is logged in and get their role
@@ -26,6 +28,7 @@ const onFileChange = (event) => {
     if (file && file.type === 'application/vnd.ms-excel'){
         selectedFile.value = file;        
     } else {
+        errorMessage.value = 'Please, upload an .xls file..';
         console.error('Please, upload an .xls file')
         selectedFile.value = null;
     }
@@ -54,10 +57,17 @@ const handleUpload = async () => {
                 'Content-Type': 'multipart/form-data'
             }
         });
-        console.log("Upload success", response.data);
+        successMessage.value = `Weeklist ${weeklistNumber} has been created`
+        console.info("Upload success");        
+        // Reset form
+        weeklistNumber.value = '';
+        orderNumber.value = '';
+        supplier.value = '';
+        selectedFile.value = null;
         
     } catch (error) {
-        console.error("Upload failed", error);
+        errorMessage.value = `Upload failed: ${error.response.data}`;
+        console.error("Upload failed", error.response.data);
     }
 };
 
@@ -108,7 +118,7 @@ const handleUpload = async () => {
 
                 <!-- Upload file -->
                 <div class="col-span-full">
-                    <h2 class="text-base/7 font-semibold text-gray-900">Upload weeklist</h2>                
+                    <h3 class="text-base/7 font-semibold text-gray-900">Upload weeklist file</h3>                
                     <label for="file-upload" class="flex flex-col items-center justify-center w-full h-32 border-2 border-dashed border-gray-300 rounded-lg cursor-pointer bg-gray-50 hover:bg-gray-100 transition">
                         <div class="flex flex-col items-center justify-center pt-5 pb-6">
                             <svg class="w-8 h-8 mb-2 text-gray-400" fill="none" stroke="currentColor" stroke-width="1.5" viewBox="0 0 24 24">
@@ -122,13 +132,20 @@ const handleUpload = async () => {
                         <input required id="file-upload" type="file" class="hidden" @change="onFileChange" accept=".xls" />
                     </label>
                     <div v-if="selectedFile" class="mt-4 text-sm text-gray-600">Filename: {{ selectedFile.name }}</div>
-                </div>            
-                
+                </div> 
+
+                <!-- User messages -->
+                <div>
+                    <p v-if="successMessage" class="text-base/1 text-emerald-500 font-semibold">{{ successMessage }}</p>                    
+                    <p v-if="errorMessage" class="text-base/1 text-red-400 font-semibold">{{ errorMessage }}</p>
+                </div>
+
                 <!-- submit Button -->
                 <button type="submit" :disabled="!selectedFile"
-                    class="mt-4 w-full inline-flex justify-center items-center px-4 py-2 bg-indigo-600 hover:bg-indigo-700 text-white text-sm font-medium rounded-md shadow focus:outline-none focus:ring-2 focus:ring-indigo-500 disabled:bg-indigo-300 cursor-pointer">
+                    class="w-full inline-flex justify-center items-center px-4 py-2 bg-indigo-600 hover:bg-indigo-700 text-white text-sm font-medium rounded-md shadow focus:outline-none focus:ring-2 focus:ring-indigo-500 disabled:bg-indigo-300 cursor-pointer">
                     Upload
-                </button>      
+                </button>
+
             </div>  
         </form>
     </div>  
