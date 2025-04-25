@@ -1,3 +1,4 @@
+using Domain.Entities.Authentication;
 using Domain.Entities.Weeklists.Entities;
 using Domain.Entities.Weeklists.WeeklistTasks;
 
@@ -14,4 +15,7 @@ public class WeeklistTaskLink
 
     public int WeeklistTaskStatusId { get; set; }
     public WeeklistTaskStatus? WeeklistTaskStatus { get; set; }
+
+    public string? AssignedUserId { get; set; }
+    public ApplicationUser? AssignedUser { get; set; }
 }
