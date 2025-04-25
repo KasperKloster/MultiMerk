@@ -1,5 +1,5 @@
-using Domain.Models.Authentication;
-using Domain.Models.Authentication.DTOs;
+using Domain.Entities.Authentication;
+using Domain.Entities.Authentication.DTOs;
 
 namespace Application.Authentication.Interfaces;
 

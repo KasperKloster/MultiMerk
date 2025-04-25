@@ -2,8 +2,8 @@ using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
 using Application.Authentication.Interfaces;
 using Domain.Constants;
-using Domain.Models.Authentication;
-using Domain.Models.Authentication.DTOs;
+using Domain.Entities.Authentication;
+using Domain.Entities.Authentication.DTOs;
 using Infrastructure.Data;
 using Microsoft.AspNetCore.Identity;
 

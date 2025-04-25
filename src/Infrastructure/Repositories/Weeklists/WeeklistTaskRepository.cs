@@ -1,6 +1,6 @@
 using Microsoft.EntityFrameworkCore;
 using Application.Repositories.Weeklists;
-using Domain.Models.Weeklists.WeeklistTasks;
+using Domain.Entities.Weeklists.WeeklistTasks;
 using Infrastructure.Data;
 
 namespace Infrastructure.Repositories.Weeklists;

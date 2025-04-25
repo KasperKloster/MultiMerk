@@ -5,7 +5,7 @@ using Application.Files.Services;
 using Application.Repositories;
 using Application.Repositories.Weeklists;
 using Application.Services.Weeklists;
-using Domain.Models.Authentication;
+using Domain.Entities.Authentication;
 using Infrastructure.Data;
 using Infrastructure.Files;
 using Infrastructure.Repositories;

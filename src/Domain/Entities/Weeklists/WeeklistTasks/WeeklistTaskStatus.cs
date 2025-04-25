@@ -1,6 +1,6 @@
 using System.ComponentModel.DataAnnotations;
 
-namespace Domain.Models.Weeklists.WeeklistTasks;
+namespace Domain.Entities.Weeklists.WeeklistTasks;
 
 public class WeeklistTaskStatus
 {

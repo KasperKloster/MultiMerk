@@ -1,6 +1,6 @@
 using Application.Files.Interfaces;
 using Application.Services.Weeklists;
-using Domain.Models.Weeklists.Entities;
+using Domain.Entities.Weeklists.Entities;
 using Microsoft.AspNetCore.Mvc;
 
 namespace WebAPI.Controllers.WeeklistControllers

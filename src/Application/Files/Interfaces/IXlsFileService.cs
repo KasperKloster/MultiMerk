@@ -1,5 +1,5 @@
-using Domain.Models.Files;
-using Domain.Models.Weeklists.Entities;
+using Domain.Entities.Files;
+using Domain.Entities.Weeklists.Entities;
 using Microsoft.AspNetCore.Http;
 
 namespace Application.Files.Interfaces;

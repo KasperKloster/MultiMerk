@@ -1,7 +1,7 @@
-using Domain.Models.Weeklists.Entities;
-using Domain.Models.Weeklists.WeeklistTasks;
+using Domain.Entities.Weeklists.Entities;
+using Domain.Entities.Weeklists.WeeklistTasks;
 
-namespace Domain.Models.Weeklists.WeeklistTaskLinks;
+namespace Domain.Entities.Weeklists.WeeklistTaskLinks;
 
 public class WeeklistTaskLink
 {

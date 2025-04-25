@@ -1,6 +1,6 @@
 using System.ComponentModel.DataAnnotations;
 
-namespace Domain.Models.Authentication.DTOs;
+namespace Domain.Entities.Authentication.DTOs;
 public class TokenModelDTO
 {
     [Required]

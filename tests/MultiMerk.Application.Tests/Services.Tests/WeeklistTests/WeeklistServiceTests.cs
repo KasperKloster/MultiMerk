@@ -1,8 +1,8 @@
 using Application.Repositories.Weeklists;
 using Application.Services.Weeklists;
-using Domain.Models.Weeklists.Entities;
-using Domain.Models.Weeklists.WeeklistTaskLinks;
-using Domain.Models.Weeklists.WeeklistTasks;
+using Domain.Entities.Weeklists.Entities;
+using Domain.Entities.Weeklists.WeeklistTaskLinks;
+using Domain.Entities.Weeklists.WeeklistTasks;
 using Moq;
 
 namespace MultiMerk.Application.Tests.Services.Tests.WeeklistTests;

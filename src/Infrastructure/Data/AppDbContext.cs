@@ -1,8 +1,8 @@
-using Domain.Models.Authentication;
-using Domain.Models.Products;
-using Domain.Models.Weeklists.Entities;
-using Domain.Models.Weeklists.WeeklistTaskLinks;
-using Domain.Models.Weeklists.WeeklistTasks;
+using Domain.Entities.Authentication;
+using Domain.Entities.Products;
+using Domain.Entities.Weeklists.Entities;
+using Domain.Entities.Weeklists.WeeklistTaskLinks;
+using Domain.Entities.Weeklists.WeeklistTasks;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
 

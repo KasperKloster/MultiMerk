@@ -1,8 +1,8 @@
 using System.ComponentModel.DataAnnotations;
-using Domain.Models.Products;
-using Domain.Models.Weeklists.WeeklistTaskLinks;
+using Domain.Entities.Products;
+using Domain.Entities.Weeklists.WeeklistTaskLinks;
 
-namespace Domain.Models.Weeklists.Entities;
+namespace Domain.Entities.Weeklists.Entities;
 
 public class Weeklist
 {

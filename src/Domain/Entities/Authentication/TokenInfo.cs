@@ -1,7 +1,7 @@
 using System;
 using System.ComponentModel.DataAnnotations;
 
-namespace Domain.Models.Authentication;
+namespace Domain.Entities.Authentication;
 
 public class TokenInfo
 {

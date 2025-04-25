@@ -1,6 +1,6 @@
-using Domain.Models.Authentication.DTOs;
+using Domain.Entities.Authentication.DTOs;
 
-namespace Domain.Models.Authentication;
+namespace Domain.Entities.Authentication;
 
 public class AuthResult
 {

@@ -1,6 +1,5 @@
 using Application.Repositories.Weeklists;
-using Domain.Models.Weeklists.Entities;
-using Domain.Models.Weeklists.WeeklistTaskLinks;
+using Domain.Entities.Weeklists.Entities;
 using Infrastructure.Data;
 using Microsoft.EntityFrameworkCore;
 
@@ -21,8 +20,7 @@ public class WeeklistRepository : IWeeklistRepository
                 .ThenInclude(link => link.WeeklistTask)
             .Include(w => w.WeeklistTaskLinks)
                 .ThenInclude(link => link.WeeklistTaskStatus)
-            .ToListAsync();        
-        // return await _dbContext.Weeklists.ToListAsync();
+            .ToListAsync();
     }
 
     public async Task AddAsync(Weeklist weeklist)

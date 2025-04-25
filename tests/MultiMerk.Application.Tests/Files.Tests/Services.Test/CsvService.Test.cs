@@ -2,7 +2,7 @@ using System.Text;
 using Application.Files.Interfaces;
 using Application.Files.Services;
 using Application.Repositories;
-using Domain.Models.Products;
+using Domain.Entities.Products;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Http.Internal;
 using Moq;

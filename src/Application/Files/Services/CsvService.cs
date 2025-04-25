@@ -1,7 +1,7 @@
 using Application.Files.Interfaces;
 using Application.Repositories;
-using Domain.Models.Files;
-using Domain.Models.Products;
+using Domain.Entities.Files;
+using Domain.Entities.Products;
 using Microsoft.AspNetCore.Http;
 
 namespace Application.Files.Services;

@@ -1,6 +1,6 @@
 using Application.Files.Interfaces;
 using Domain.Constants;
-using Domain.Models.Products;
+using Domain.Entities.Products;
 using Microsoft.AspNetCore.Http;
 using Microsoft.VisualBasic.FileIO;
 using NPOI.HSSF.UserModel;

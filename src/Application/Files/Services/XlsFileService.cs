@@ -1,11 +1,11 @@
 using Application.Files.Interfaces;
 using Application.Repositories;
 using Application.Repositories.Weeklists;
-using Domain.Models.Files;
-using Domain.Models.Products;
-using Domain.Models.Weeklists.Entities;
-using Domain.Models.Weeklists.WeeklistTaskLinks;
-using Domain.Models.Weeklists.WeeklistTasks;
+using Domain.Entities.Files;
+using Domain.Entities.Products;
+using Domain.Entities.Weeklists.Entities;
+using Domain.Entities.Weeklists.WeeklistTaskLinks;
+using Domain.Entities.Weeklists.WeeklistTasks;
 using Microsoft.AspNetCore.Http;
 
 namespace Application.Files.Services;

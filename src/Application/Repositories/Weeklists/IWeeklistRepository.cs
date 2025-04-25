@@ -1,4 +1,4 @@
-using Domain.Models.Weeklists.Entities;
+using Domain.Entities.Weeklists.Entities;
 
 namespace Application.Repositories.Weeklists;
 

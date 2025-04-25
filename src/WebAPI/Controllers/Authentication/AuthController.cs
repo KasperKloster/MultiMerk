@@ -1,5 +1,5 @@
 using Application.Authentication.Interfaces;
-using Domain.Models.Authentication.DTOs;
+using Domain.Entities.Authentication.DTOs;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 

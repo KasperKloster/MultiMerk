@@ -1,8 +1,8 @@
 using System.Text;
 using Application.Files.Interfaces;
 using Application.Services.Weeklists;
-using Domain.Models.Files;
-using Domain.Models.Weeklists.Entities;
+using Domain.Entities.Files;
+using Domain.Entities.Weeklists.Entities;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Moq;

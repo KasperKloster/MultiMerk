@@ -1,4 +1,4 @@
-using Domain.Models.Products;
+using Domain.Entities.Products;
 
 namespace Application.Repositories;
 

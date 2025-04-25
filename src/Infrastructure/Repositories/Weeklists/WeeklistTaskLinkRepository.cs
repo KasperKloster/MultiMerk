@@ -1,5 +1,5 @@
 using Application.Repositories.Weeklists;
-using Domain.Models.Weeklists.WeeklistTaskLinks;
+using Domain.Entities.Weeklists.WeeklistTaskLinks;
 using Infrastructure.Data;
 
 namespace Infrastructure.Repositories.Weeklists;

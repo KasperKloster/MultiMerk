@@ -1,4 +1,4 @@
-namespace Domain.Models.Files;
+namespace Domain.Entities.Files;
 
 public class FilesResult
 {

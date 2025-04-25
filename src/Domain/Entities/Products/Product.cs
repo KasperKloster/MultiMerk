@@ -1,7 +1,7 @@
 using System.ComponentModel.DataAnnotations;
-using Domain.Models.Weeklists.Entities;
+using Domain.Entities.Weeklists.Entities;
 
-namespace Domain.Models.Products;
+namespace Domain.Entities.Products;
 
 public class Product
 {

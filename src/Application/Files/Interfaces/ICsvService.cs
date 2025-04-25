@@ -1,4 +1,4 @@
-using Domain.Models.Files;
+using Domain.Entities.Files;
 using Microsoft.AspNetCore.Http;
 
 namespace Application.Files.Interfaces;
