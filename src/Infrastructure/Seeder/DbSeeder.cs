@@ -11,76 +11,72 @@ public class DbSeeder
 {
     public static async Task SeedData(IApplicationBuilder app)
     {
-        // Create a scoped service provider to resolve dependencies
-        using var scope = app.ApplicationServices.CreateScope();        
-        // Resolve the logger service
+        using var scope = app.ApplicationServices.CreateScope();
         var logger = scope.ServiceProvider.GetRequiredService<ILogger<DbSeeder>>();
 
         try
         {
-            // resolve other dependencies
-            var userManager = scope.ServiceProvider.GetService<UserManager<ApplicationUser>>();
-            var roleManager = scope.ServiceProvider.GetService<RoleManager<IdentityRole>>();
+            var userManager = scope.ServiceProvider.GetRequiredService<UserManager<ApplicationUser>>();
+            var roleManager = scope.ServiceProvider.GetRequiredService<RoleManager<IdentityRole>>();
 
-            // Check if any users exist to prevent duplicate seeding
-            if (userManager.Users.Any() == false)
+            var rolesAndUsers = new Dictionary<string, (string Email, string Password)>
             {
-                var user = new ApplicationUser
-                {
-                    Name = "Admin",
-                    UserName = "admin@gmail.com",
-                    Email = "admin@gmail.com",
-                    EmailConfirmed = true,
-                    SecurityStamp = Guid.NewGuid().ToString()
-                };
+                { Roles.Admin,             ("admin@gmail.com", "Admin@123") },
+                { Roles.User,              ("user@gmail.com", "User@123") },
+                { Roles.Freelancer,        ("freelancer@gmail.com", "Freelancer@123") },
+                { Roles.Writer,            ("writer@gmail.com", "Writer@123") },
+                { Roles.WarehouseWorker,   ("worker@gmail.com", "Worker@123") },
+                { Roles.WarehouseManager,  ("manager@gmail.com", "Manager@123") },
+            };
 
-                // Create Admin role if it doesn't exist
-                if ((await roleManager.RoleExistsAsync(Roles.Admin)) == false)
+            // Step 1: Seed Roles
+            foreach (var role in rolesAndUsers.Keys)
+            {
+                if (!await roleManager.RoleExistsAsync(role))
                 {
-                    logger.LogInformation("Admin role is creating");
-                    var roleResult = await roleManager
-                      .CreateAsync(new IdentityRole(Roles.Admin));
+                    var result = await roleManager.CreateAsync(new IdentityRole(role));
+                    if (result.Succeeded)
+                        logger.LogInformation($"Role '{role}' created.");
+                    else
+                        logger.LogError($"Failed to create role '{role}': {string.Join(", ", result.Errors.Select(e => e.Description))}");
+                }
+            }
 
-                    if (roleResult.Succeeded == false)
+            // Step 2: Seed Users
+            foreach (var (role, (email, password)) in rolesAndUsers)
+            {
+                if (await userManager.FindByEmailAsync(email) == null)
+                {
+                    var user = new ApplicationUser
                     {
-                        var roleErros = roleResult.Errors.Select(e => e.Description);
-                        logger.LogError($"Failed to create admin role. Errors : {string.Join(",", roleErros)}");
+                        Name = role + " User",
+                        UserName = email,
+                        Email = email,
+                        EmailConfirmed = true,
+                        SecurityStamp = Guid.NewGuid().ToString()
+                    };
 
-                        return;
+                    var createUserResult = await userManager.CreateAsync(user, password);
+                    if (!createUserResult.Succeeded)
+                    {
+                        logger.LogError($"Failed to create user for role '{role}': {string.Join(", ", createUserResult.Errors.Select(e => e.Description))}");
+                        continue;
                     }
-                    logger.LogInformation("Admin role is created");
+
+                    var addRoleResult = await userManager.AddToRoleAsync(user, role);
+                    if (!addRoleResult.Succeeded)
+                    {
+                        logger.LogError($"Failed to assign role '{role}' to user '{email}': {string.Join(", ", addRoleResult.Errors.Select(e => e.Description))}");
+                        continue;
+                    }
+
+                    logger.LogInformation($"User '{email}' created and assigned to role '{role}'.");
                 }
-
-                // Attempt to create admin user
-                var createUserResult = await userManager
-                      .CreateAsync(user: user, password: "Admin@123");
-
-                // Validate user creation
-                if (createUserResult.Succeeded == false)
-                {
-                    var errors = createUserResult.Errors.Select(e => e.Description);
-                    logger.LogError(
-                        $"Failed to create admin user. Errors: {string.Join(", ", errors)}"
-                    );
-                    return;
-                }
-
-                // adding role to user
-                var addUserToRoleResult = await userManager
-                                .AddToRoleAsync(user: user, role: Roles.Admin);
-
-                if (addUserToRoleResult.Succeeded == false)
-                {
-                    var errors = addUserToRoleResult.Errors.Select(e => e.Description);
-                    logger.LogError($"Failed to add admin role to user. Errors : {string.Join(",", errors)}");
-                }
-                logger.LogInformation("Admin user is created");
             }
         }
-
         catch (Exception ex)
         {
-            logger.LogCritical(ex.Message);
+            logger.LogCritical($"Seeding failed: {ex.Message}");
         }
     }
 }

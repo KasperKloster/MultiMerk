@@ -21,6 +21,7 @@ public class AppDbContext : IdentityDbContext<ApplicationUser>
     public DbSet<WeeklistTask> WeeklistTasks { get; set; } = null!;
     public DbSet<WeeklistTaskStatus> WeeklistTaskStatus { get; set; } = null!;
     public DbSet<WeeklistTaskLink> WeeklistTaskLinks { get; set; } = null!;
+    public DbSet<WeeklistTaskAssignment> WeeklistTaskAssignments { get; set; } = null!;
     
     // Products
     public DbSet<Product> Products { get; set; } = null!;
@@ -84,5 +85,20 @@ public class AppDbContext : IdentityDbContext<ApplicationUser>
             .HasOne(x => x.WeeklistTaskStatus)
             .WithMany()
             .HasForeignKey(x => x.WeeklistTaskStatusId);
+
+        // WeeklistTaskAssignment: User to WeeklistTask
+        modelBuilder.Entity<WeeklistTaskAssignment>()
+            .HasKey(wta => new { wta.ApplicationUserId, wta.WeeklistTaskId });
+
+        // Optional: relationships
+        modelBuilder.Entity<WeeklistTaskAssignment>()
+            .HasOne(wta => wta.ApplicationUser)
+            .WithMany(u => u.WeeklistTaskAssignments)
+            .HasForeignKey(wta => wta.ApplicationUserId);
+
+        modelBuilder.Entity<WeeklistTaskAssignment>()
+            .HasOne(wta => wta.WeeklistTask)
+            .WithMany(t => t.AssignedUsers)
+            .HasForeignKey(wta => wta.WeeklistTaskId);        
     }
 }
