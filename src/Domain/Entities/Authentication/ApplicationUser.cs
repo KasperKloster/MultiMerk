@@ -6,7 +6,5 @@ namespace Domain.Entities.Authentication;
 
 public class ApplicationUser : IdentityUser
 {
-    public string Name { get; set; } = string.Empty;
-
-    public ICollection<WeeklistTaskAssignment> WeeklistTaskAssignments { get; set; } = new List<WeeklistTaskAssignment>();
+    public string Name { get; set; } = string.Empty;    
 }

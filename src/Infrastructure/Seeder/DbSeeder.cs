@@ -19,14 +19,14 @@ public class DbSeeder
             var userManager = scope.ServiceProvider.GetRequiredService<UserManager<ApplicationUser>>();
             var roleManager = scope.ServiceProvider.GetRequiredService<RoleManager<IdentityRole>>();
 
-            var rolesAndUsers = new Dictionary<string, (string Email, string Password)>
+            var rolesAndUsers = new Dictionary<string, (string Username, string Email, string Password)>
             {
-                { Roles.Admin,             ("admin@gmail.com", "Admin@123") },
-                { Roles.User,              ("user@gmail.com", "User@123") },
-                { Roles.Freelancer,        ("freelancer@gmail.com", "Freelancer@123") },
-                { Roles.Writer,            ("writer@gmail.com", "Writer@123") },
-                { Roles.WarehouseWorker,   ("worker@gmail.com", "Worker@123") },
-                { Roles.WarehouseManager,  ("manager@gmail.com", "Manager@123") },
+                { Roles.Admin,             ("Admin", "admin@gmail.com", "Admin@123") },
+                { Roles.User,              ("User", "user@gmail.com", "User@123") },
+                { Roles.Freelancer,        ("Freelancer", "freelancer@gmail.com", "Freelancer@123") },
+                { Roles.Writer,            ("Writer", "writer@gmail.com", "Writer@123") },
+                { Roles.WarehouseWorker,   ("WarehouseWorker","worker@gmail.com", "Worker@123") },
+                { Roles.WarehouseManager,  ("WarehouseManager","manager@gmail.com", "Manager@123") },
             };
 
             // Step 1: Seed Roles
@@ -43,14 +43,16 @@ public class DbSeeder
             }
 
             // Step 2: Seed Users
-            foreach (var (role, (email, password)) in rolesAndUsers)
+            int i = 1;
+            foreach (var (role, (username, email, password)) in rolesAndUsers)
             {
                 if (await userManager.FindByEmailAsync(email) == null)
                 {
                     var user = new ApplicationUser
-                    {
+                    {                         
+                        Id = $"00000000-0000-0000-0000-00000000000{i++}",                       
                         Name = role + " User",
-                        UserName = email,
+                        UserName = username,
                         Email = email,
                         EmailConfirmed = true,
                         SecurityStamp = Guid.NewGuid().ToString()

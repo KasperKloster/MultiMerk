@@ -12,8 +12,8 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 namespace Infrastructure.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    [Migration("20250425125218_WeeklistTaskAssignments")]
-    partial class WeeklistTaskAssignments
+    [Migration("20250428192721_WeeklistTaskLinkSeederAgain")]
+    partial class WeeklistTaskLinkSeederAgain
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -142,6 +142,26 @@ namespace Infrastructure.Migrations
                     b.HasIndex("WeeklistId");
 
                     b.ToTable("Products");
+
+                    b.HasData(
+                        new
+                        {
+                            Id = 1,
+                            Sku = "LC01-1001-1",
+                            WeeklistId = 1
+                        },
+                        new
+                        {
+                            Id = 2,
+                            Sku = "LC01-1001-2",
+                            WeeklistId = 1
+                        },
+                        new
+                        {
+                            Id = 3,
+                            Sku = "LC02-2002-1",
+                            WeeklistId = 2
+                        });
                 });
 
             modelBuilder.Entity("Domain.Entities.Weeklists.Entities.Weeklist", b =>
@@ -169,6 +189,22 @@ namespace Infrastructure.Migrations
                         .IsUnique();
 
                     b.ToTable("Weeklists");
+
+                    b.HasData(
+                        new
+                        {
+                            Id = 1,
+                            Number = 101,
+                            OrderNumber = "E123",
+                            Supplier = "TVC"
+                        },
+                        new
+                        {
+                            Id = 2,
+                            Number = 102,
+                            OrderNumber = "E321",
+                            Supplier = "TVC"
+                        });
                 });
 
             modelBuilder.Entity("Domain.Entities.Weeklists.WeeklistTaskLinks.WeeklistTaskLink", b =>
@@ -194,6 +230,104 @@ namespace Infrastructure.Migrations
                     b.HasIndex("WeeklistTaskStatusId");
 
                     b.ToTable("WeeklistTaskLinks");
+
+                    b.HasData(
+                        new
+                        {
+                            WeeklistId = 1,
+                            WeeklistTaskId = 1,
+                            WeeklistTaskStatusId = 2
+                        },
+                        new
+                        {
+                            WeeklistId = 1,
+                            WeeklistTaskId = 2,
+                            WeeklistTaskStatusId = 1
+                        },
+                        new
+                        {
+                            WeeklistId = 1,
+                            WeeklistTaskId = 3,
+                            WeeklistTaskStatusId = 1
+                        },
+                        new
+                        {
+                            WeeklistId = 1,
+                            WeeklistTaskId = 4,
+                            WeeklistTaskStatusId = 1
+                        },
+                        new
+                        {
+                            WeeklistId = 1,
+                            WeeklistTaskId = 5,
+                            WeeklistTaskStatusId = 1
+                        },
+                        new
+                        {
+                            WeeklistId = 1,
+                            WeeklistTaskId = 6,
+                            WeeklistTaskStatusId = 1
+                        },
+                        new
+                        {
+                            WeeklistId = 1,
+                            WeeklistTaskId = 7,
+                            WeeklistTaskStatusId = 1
+                        },
+                        new
+                        {
+                            WeeklistId = 1,
+                            WeeklistTaskId = 8,
+                            WeeklistTaskStatusId = 1
+                        },
+                        new
+                        {
+                            WeeklistId = 2,
+                            WeeklistTaskId = 1,
+                            WeeklistTaskStatusId = 4
+                        },
+                        new
+                        {
+                            WeeklistId = 2,
+                            WeeklistTaskId = 2,
+                            WeeklistTaskStatusId = 4
+                        },
+                        new
+                        {
+                            WeeklistId = 2,
+                            WeeklistTaskId = 3,
+                            WeeklistTaskStatusId = 4
+                        },
+                        new
+                        {
+                            WeeklistId = 2,
+                            WeeklistTaskId = 4,
+                            WeeklistTaskStatusId = 4
+                        },
+                        new
+                        {
+                            WeeklistId = 2,
+                            WeeklistTaskId = 5,
+                            WeeklistTaskStatusId = 4
+                        },
+                        new
+                        {
+                            WeeklistId = 2,
+                            WeeklistTaskId = 6,
+                            WeeklistTaskStatusId = 4
+                        },
+                        new
+                        {
+                            WeeklistId = 2,
+                            WeeklistTaskId = 7,
+                            WeeklistTaskStatusId = 3
+                        },
+                        new
+                        {
+                            WeeklistId = 2,
+                            WeeklistTaskId = 8,
+                            WeeklistTaskStatusId = 1
+                        });
                 });
 
             modelBuilder.Entity("Domain.Entities.Weeklists.WeeklistTasks.WeeklistTask", b =>

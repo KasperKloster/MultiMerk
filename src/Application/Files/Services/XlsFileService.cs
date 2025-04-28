@@ -86,7 +86,11 @@ public class XlsFileService : IXlsFileService
             WeeklistTaskId = task.Id,
             WeeklistTaskStatusId = task.Id == firstTaskId ? readyStatusId : defaultStatusId
         }).ToList();
-            
+
+        // Assign first with role
+        
+
+
         // Save WeeklistTaskLinks
         try
         {

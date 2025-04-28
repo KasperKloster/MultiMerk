@@ -3,6 +3,7 @@ using System;
 using Infrastructure.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 
@@ -11,9 +12,11 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 namespace Infrastructure.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    partial class AppDbContextModelSnapshot : ModelSnapshot
+    [Migration("20250428202851_WeeklistTaskAssignmentUpdate")]
+    partial class WeeklistTaskAssignmentUpdate
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -410,10 +413,15 @@ namespace Infrastructure.Migrations
 
                     NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
 
+                    b.Property<string>("ApplicationUserId")
+                        .HasColumnType("text");
+
                     b.Property<int>("WeeklistTaskId")
                         .HasColumnType("integer");
 
                     b.HasKey("Id");
+
+                    b.HasIndex("ApplicationUserId");
 
                     b.HasIndex("WeeklistTaskId");
 
@@ -678,8 +686,12 @@ namespace Infrastructure.Migrations
 
             modelBuilder.Entity("Domain.Entities.Weeklists.WeeklistTasks.WeeklistTaskAssignment", b =>
                 {
+                    b.HasOne("Domain.Entities.Authentication.ApplicationUser", null)
+                        .WithMany("WeeklistTaskAssignments")
+                        .HasForeignKey("ApplicationUserId");
+
                     b.HasOne("Domain.Entities.Weeklists.WeeklistTasks.WeeklistTask", "WeeklistTask")
-                        .WithMany()
+                        .WithMany("AssignedUsers")
                         .HasForeignKey("WeeklistTaskId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
@@ -738,11 +750,21 @@ namespace Infrastructure.Migrations
                         .IsRequired();
                 });
 
+            modelBuilder.Entity("Domain.Entities.Authentication.ApplicationUser", b =>
+                {
+                    b.Navigation("WeeklistTaskAssignments");
+                });
+
             modelBuilder.Entity("Domain.Entities.Weeklists.Entities.Weeklist", b =>
                 {
                     b.Navigation("Products");
 
                     b.Navigation("WeeklistTaskLinks");
+                });
+
+            modelBuilder.Entity("Domain.Entities.Weeklists.WeeklistTasks.WeeklistTask", b =>
+                {
+                    b.Navigation("AssignedUsers");
                 });
 #pragma warning restore 612, 618
         }
