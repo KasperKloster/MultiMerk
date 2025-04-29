@@ -1,30 +1,52 @@
 using Application.DTOs.Weeklists;
+using Application.Files.Interfaces;
+using Application.Repositories;
 using Application.Repositories.Weeklists;
+using Application.Services.Interfaces.Weeklists;
+using Domain.Entities.Files;
+using Domain.Entities.Weeklists.Entities;
+using Domain.Entities.Weeklists.Factories;
+using Domain.Entities.Weeklists.WeeklistTasks;
+using Microsoft.AspNetCore.Http;
 
 namespace Application.Services.Weeklists;
 
-public class WeeklistService
+public class WeeklistService : IWeeklistService
 {
     private readonly IWeeklistRepository _weeklistRepository;
+    private readonly IXlsFileService _xlsFileService;
+    private readonly IProductRepository _productRepository;
+    private readonly IWeeklistTaskRepository _weeklistTaskRepository;
+    private readonly IWeeklistTaskLinkRepository _weeklistTaskLinkRepository;
+    private readonly IWeeklistUserRoleAssignmentRepository _weeklistUserRoleAssignmentRepository;
 
-    public WeeklistService(IWeeklistRepository weeklistRepository)
+    public WeeklistService(IWeeklistRepository weeklistRepository, IXlsFileService xlsFileService, IProductRepository productRepository, IWeeklistTaskRepository weeklistTaskRepository, IWeeklistTaskLinkRepository weeklistTaskLinkRepository, IWeeklistUserRoleAssignmentRepository weeklistUserRoleAssignmentRepository)
     {
         _weeklistRepository = weeklistRepository;
+        _xlsFileService = xlsFileService;
+        _productRepository = productRepository;
+        _weeklistTaskRepository = weeklistTaskRepository;
+        _weeklistTaskLinkRepository = weeklistTaskLinkRepository;
+        _weeklistUserRoleAssignmentRepository = weeklistUserRoleAssignmentRepository;
     }
 
     public async Task<List<WeeklistDto>> GetAllWeeklistsAsync()
     {
-        try{
+        try
+        {
             var weeklists = await _weeklistRepository.GetAllWeeklists();
 
-            List<WeeklistDto> weeklistsDtos = weeklists.Select(w => new WeeklistDto {
+            List<WeeklistDto> weeklistsDtos = weeklists.Select(w => new WeeklistDto
+            {
                 Id = w.Id,
                 Number = w.Number,
                 OrderNumber = w.OrderNumber,
                 Supplier = w.Supplier,
-                WeeklistTasks = w.WeeklistTaskLinks.Select(link => new WeeklistTaskLinkDto{
+                WeeklistTasks = w.WeeklistTaskLinks.Select(link => new WeeklistTaskLinkDto
+                {
                     WeeklistTaskId = link.WeeklistTaskId,
-                    WeeklistTask = link.WeeklistTask != null ? new WeeklistTaskDto{
+                    WeeklistTask = link.WeeklistTask != null ? new WeeklistTaskDto
+                    {
                         Id = link.WeeklistTask.Id,
                         Name = link.WeeklistTask.Name
                     } : null,
@@ -38,12 +60,100 @@ public class WeeklistService
             }).ToList();
 
             return weeklistsDtos;
-        
-        } catch (Exception ex)
+
+        }
+        catch (Exception ex)
         {
             throw new Exception("Could not fetch weeklists", ex);
         }
-
-        
     }
+
+    public async Task<FilesResult> CreateWeeklist(IFormFile file, Weeklist weeklist)
+    {
+        FilesResult result;
+        try
+        {
+            result = await _xlsFileService.GetProductsFromXls(file);
+            if (!result.Success)
+            {
+                return result;
+            }
+            // If no products are found
+            if (result.Products == null || result.Products.Count == 0)
+            {
+                return FilesResult.Fail("No products found in the file.");
+            }
+        }
+        catch (Exception ex)
+        {
+            return FilesResult.Fail($"An error occured while getting products from .xls: {ex.Message}");
+        }
+
+        // Insert weeklist first into DB, so we can get the ID
+        try
+        {
+            await _weeklistRepository.AddAsync(weeklist);
+        }
+        catch (Exception ex)
+        {
+            return FilesResult.Fail($"An error occured while saving weeklist to database: {ex.Message}");
+        }
+
+        // Associate products with the saved weeklist
+        foreach (var product in result.Products)
+        {
+            product.WeeklistId = weeklist.Id; // Assign foreign key
+        }
+
+        // Insert products into DB
+        try
+        {
+            await _productRepository.AddRangeAsync(result.Products);
+        }
+        catch (Exception ex)
+        {
+            return FilesResult.Fail($"An error occured while saving products to database: {ex.Message}");
+        }
+
+        // Getting all Weeklisttasks
+        List<WeeklistTask> allWeeklistTasks;
+        try
+        {
+            allWeeklistTasks = await _weeklistTaskRepository.GetAllAsync();
+        }
+        catch (Exception ex)
+        {
+            return FilesResult.Fail($"An error occured while getting all WeeklistTasks: {ex.Message}");
+        }        
+
+        // Map all Weeklisttasks to WeeklistTaskLink
+        // var roleAssignments = await _weeklistUserRoleAssignmentRepository.GetAsync();
+
+
+        // All task should have status "Awaiting". Except the first task, that should be "Ready"
+        // int defaultStatusId = 1; // Default status ID - "Awaiting".
+        // int firstTaskId = 1; // WeeklistTask: Give EAN
+        // int readyStatusId = 2; // WeeklistTaskStatus: Ready          
+        var weeklistTaskLinks = WeeklistTaskLinkFactory.CreateLinks(
+            weeklist.Id,
+            allWeeklistTasks,
+            firstTaskId: 1,
+            readyStatusId: 2,
+            defaultStatusId: 1
+        );
+
+        // Save WeeklistTaskLinks
+        try
+        {
+            await _weeklistTaskLinkRepository.AddWeeklistTaskLinksAsync(weeklistTaskLinks);
+        }
+        catch (Exception ex)
+        {
+            return FilesResult.Fail($"An error occurred while saving WeeklistTaskLinks: {ex.Message}");
+        }
+
+        // Return success        
+        return FilesResult.SuccessResult();
+    }
+
 }

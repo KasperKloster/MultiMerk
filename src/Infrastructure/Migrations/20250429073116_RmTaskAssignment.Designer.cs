@@ -12,8 +12,8 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 namespace Infrastructure.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    [Migration("20250428191848_WeeklistTaskSeeder")]
-    partial class WeeklistTaskSeeder
+    [Migration("20250429073116_RmTaskAssignment")]
+    partial class RmTaskAssignment
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -230,6 +230,120 @@ namespace Infrastructure.Migrations
                     b.HasIndex("WeeklistTaskStatusId");
 
                     b.ToTable("WeeklistTaskLinks");
+
+                    b.HasData(
+                        new
+                        {
+                            WeeklistId = 1,
+                            WeeklistTaskId = 1,
+                            AssignedUserId = "00000000-0000-0000-0000-000000000001",
+                            WeeklistTaskStatusId = 2
+                        },
+                        new
+                        {
+                            WeeklistId = 1,
+                            WeeklistTaskId = 2,
+                            AssignedUserId = "00000000-0000-0000-0000-000000000004",
+                            WeeklistTaskStatusId = 1
+                        },
+                        new
+                        {
+                            WeeklistId = 1,
+                            WeeklistTaskId = 3,
+                            AssignedUserId = "00000000-0000-0000-0000-000000000005",
+                            WeeklistTaskStatusId = 1
+                        },
+                        new
+                        {
+                            WeeklistId = 1,
+                            WeeklistTaskId = 4,
+                            AssignedUserId = "00000000-0000-0000-0000-000000000005",
+                            WeeklistTaskStatusId = 1
+                        },
+                        new
+                        {
+                            WeeklistId = 1,
+                            WeeklistTaskId = 5,
+                            AssignedUserId = "00000000-0000-0000-0000-000000000004",
+                            WeeklistTaskStatusId = 1
+                        },
+                        new
+                        {
+                            WeeklistId = 1,
+                            WeeklistTaskId = 6,
+                            AssignedUserId = "00000000-0000-0000-0000-000000000001",
+                            WeeklistTaskStatusId = 1
+                        },
+                        new
+                        {
+                            WeeklistId = 1,
+                            WeeklistTaskId = 7,
+                            AssignedUserId = "00000000-0000-0000-0000-000000000001",
+                            WeeklistTaskStatusId = 1
+                        },
+                        new
+                        {
+                            WeeklistId = 1,
+                            WeeklistTaskId = 8,
+                            AssignedUserId = "00000000-0000-0000-0000-000000000001",
+                            WeeklistTaskStatusId = 1
+                        },
+                        new
+                        {
+                            WeeklistId = 2,
+                            WeeklistTaskId = 1,
+                            AssignedUserId = "00000000-0000-0000-0000-000000000001",
+                            WeeklistTaskStatusId = 4
+                        },
+                        new
+                        {
+                            WeeklistId = 2,
+                            WeeklistTaskId = 2,
+                            AssignedUserId = "00000000-0000-0000-0000-000000000004",
+                            WeeklistTaskStatusId = 4
+                        },
+                        new
+                        {
+                            WeeklistId = 2,
+                            WeeklistTaskId = 3,
+                            AssignedUserId = "00000000-0000-0000-0000-000000000005",
+                            WeeklistTaskStatusId = 4
+                        },
+                        new
+                        {
+                            WeeklistId = 2,
+                            WeeklistTaskId = 4,
+                            AssignedUserId = "00000000-0000-0000-0000-000000000005",
+                            WeeklistTaskStatusId = 4
+                        },
+                        new
+                        {
+                            WeeklistId = 2,
+                            WeeklistTaskId = 5,
+                            AssignedUserId = "00000000-0000-0000-0000-000000000004",
+                            WeeklistTaskStatusId = 4
+                        },
+                        new
+                        {
+                            WeeklistId = 2,
+                            WeeklistTaskId = 6,
+                            AssignedUserId = "00000000-0000-0000-0000-000000000001",
+                            WeeklistTaskStatusId = 4
+                        },
+                        new
+                        {
+                            WeeklistId = 2,
+                            WeeklistTaskId = 7,
+                            AssignedUserId = "00000000-0000-0000-0000-000000000001",
+                            WeeklistTaskStatusId = 3
+                        },
+                        new
+                        {
+                            WeeklistId = 2,
+                            WeeklistTaskId = 8,
+                            AssignedUserId = "00000000-0000-0000-0000-000000000001",
+                            WeeklistTaskStatusId = 1
+                        });
                 });
 
             modelBuilder.Entity("Domain.Entities.Weeklists.WeeklistTasks.WeeklistTask", b =>
@@ -289,21 +403,6 @@ namespace Infrastructure.Migrations
                             Id = 8,
                             Name = "Create translations"
                         });
-                });
-
-            modelBuilder.Entity("Domain.Entities.Weeklists.WeeklistTasks.WeeklistTaskAssignment", b =>
-                {
-                    b.Property<string>("ApplicationUserId")
-                        .HasColumnType("text");
-
-                    b.Property<int>("WeeklistTaskId")
-                        .HasColumnType("integer");
-
-                    b.HasKey("ApplicationUserId", "WeeklistTaskId");
-
-                    b.HasIndex("WeeklistTaskId");
-
-                    b.ToTable("WeeklistTaskAssignments");
                 });
 
             modelBuilder.Entity("Domain.Entities.Weeklists.WeeklistTasks.WeeklistTaskStatus", b =>
@@ -520,25 +619,6 @@ namespace Infrastructure.Migrations
                     b.Navigation("WeeklistTaskStatus");
                 });
 
-            modelBuilder.Entity("Domain.Entities.Weeklists.WeeklistTasks.WeeklistTaskAssignment", b =>
-                {
-                    b.HasOne("Domain.Entities.Authentication.ApplicationUser", "ApplicationUser")
-                        .WithMany("WeeklistTaskAssignments")
-                        .HasForeignKey("ApplicationUserId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.HasOne("Domain.Entities.Weeklists.WeeklistTasks.WeeklistTask", "WeeklistTask")
-                        .WithMany("AssignedUsers")
-                        .HasForeignKey("WeeklistTaskId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("ApplicationUser");
-
-                    b.Navigation("WeeklistTask");
-                });
-
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRoleClaim<string>", b =>
                 {
                     b.HasOne("Microsoft.AspNetCore.Identity.IdentityRole", null)
@@ -590,21 +670,11 @@ namespace Infrastructure.Migrations
                         .IsRequired();
                 });
 
-            modelBuilder.Entity("Domain.Entities.Authentication.ApplicationUser", b =>
-                {
-                    b.Navigation("WeeklistTaskAssignments");
-                });
-
             modelBuilder.Entity("Domain.Entities.Weeklists.Entities.Weeklist", b =>
                 {
                     b.Navigation("Products");
 
                     b.Navigation("WeeklistTaskLinks");
-                });
-
-            modelBuilder.Entity("Domain.Entities.Weeklists.WeeklistTasks.WeeklistTask", b =>
-                {
-                    b.Navigation("AssignedUsers");
                 });
 #pragma warning restore 612, 618
         }

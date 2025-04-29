@@ -7,7 +7,7 @@ namespace Domain.Entities.Weeklists.WeeklistTaskLinks;
 public class WeeklistTaskLink
 {
     public int WeeklistId { get; set; }
-    
+ 
     public Weeklist? Weeklist { get; set; }
 
     public int WeeklistTaskId { get; set; }

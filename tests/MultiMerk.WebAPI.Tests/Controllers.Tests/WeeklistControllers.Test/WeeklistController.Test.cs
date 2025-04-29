@@ -1,5 +1,6 @@
 using System.Text;
 using Application.Files.Interfaces;
+using Application.Services.Interfaces.Weeklists;
 using Application.Services.Weeklists;
 using Domain.Entities.Files;
 using Domain.Entities.Weeklists.Entities;
@@ -12,16 +13,13 @@ namespace MultiMerk.WebAPI.Tests.Controllers.Tests.Files.Tests.XlsControllers.Te
 
 public class WeeklistControllerTest
 {
-    private readonly Mock<IXlsFileService> _xlsFileServiceMock;
-    private readonly Mock<WeeklistService> _weeklistServiceMock;
+    private readonly Mock<IWeeklistService> _weeklistServiceMock;
     private readonly WeeklistController _weeklistController;
 
     public WeeklistControllerTest()
     {
-        _xlsFileServiceMock = new Mock<IXlsFileService>();
-        _weeklistServiceMock = new Mock<WeeklistService>(null!); // Pass null if you don't test it here
-
-        _weeklistController = new WeeklistController(_xlsFileServiceMock.Object, _weeklistServiceMock.Object);
+        _weeklistServiceMock = new Mock<IWeeklistService>();
+        _weeklistController = new WeeklistController(_weeklistServiceMock.Object);
     }
 
     [Fact]
@@ -31,7 +29,7 @@ public class WeeklistControllerTest
         var fileMock = CreateMockXlsFile("test.xls");
         var weeklistMock = CreateMockWeeklist();
 
-        _xlsFileServiceMock
+        _weeklistServiceMock
             .Setup(s => s.CreateWeeklist(It.IsAny<IFormFile>(), It.IsAny<Weeklist>()))
             .ReturnsAsync(FilesResult.SuccessResult());
 
@@ -50,7 +48,7 @@ public class WeeklistControllerTest
         var fileMock = CreateMockXlsFile("bad.xls");
         var weeklistMock = CreateMockWeeklist();
 
-        _xlsFileServiceMock
+        _weeklistServiceMock
             .Setup(s => s.CreateWeeklist(It.IsAny<IFormFile>(), It.IsAny<Weeklist>()))
             .ReturnsAsync(FilesResult.Fail("Upload failed"));
 

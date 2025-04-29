@@ -1,4 +1,5 @@
 using Application.Files.Interfaces;
+using Application.Services.Interfaces.Weeklists;
 using Application.Services.Weeklists;
 using Domain.Entities.Weeklists.Entities;
 using Microsoft.AspNetCore.Mvc;
@@ -8,13 +9,10 @@ namespace WebAPI.Controllers.WeeklistControllers
     [Route("api/weeklist/")]
     [ApiController]
     public class WeeklistController : ControllerBase
-    {
-        private readonly IXlsFileService _xlsFileService;
-        private readonly WeeklistService _weeklistService;
-
-        public WeeklistController(IXlsFileService xlsFileService, WeeklistService weeklistService)
+    {        
+        private readonly IWeeklistService _weeklistService;
+        public WeeklistController(IWeeklistService weeklistService)
         {
-            _xlsFileService = xlsFileService;
             _weeklistService = weeklistService;
         }
 
@@ -42,7 +40,7 @@ namespace WebAPI.Controllers.WeeklistControllers
             };
             
             // Send to service to create the weeklist
-            var result = await _xlsFileService.CreateWeeklist(file, weeklist);
+            var result = await _weeklistService.CreateWeeklist(file, weeklist);            
             
             // Handle the result
             if (!result.Success) {

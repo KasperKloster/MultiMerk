@@ -5,62 +5,60 @@ using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
 namespace Infrastructure.Seeder;
 
-public class WeeklistTaskAssignmentSeeder
+public class WeeklistTaskUserRoleAssignmentSeeder
 {
-    public static void Seed(EntityTypeBuilder<WeeklistTaskAssignment> builder)
+    public static void Seed(EntityTypeBuilder<WeeklistTaskUserRoleAssignment> builder)
     {
-        var assignments = new List<WeeklistTaskAssignment>
-        {
-            new WeeklistTaskAssignment
-            {
+        var userRoleAssignments = new List<WeeklistTaskUserRoleAssignment> {
+            new WeeklistTaskUserRoleAssignment{
                 Id = 1,
                 UserRole = Roles.Admin,
                 WeeklistTaskId = 1
             },
-            new WeeklistTaskAssignment
+            new WeeklistTaskUserRoleAssignment
             {
                 Id = 2,
                 UserRole = Roles.Writer,
                 WeeklistTaskId = 2
             },
-            new WeeklistTaskAssignment
+            new WeeklistTaskUserRoleAssignment
             {
                 Id = 3,
                 UserRole = Roles.WarehouseWorker,
                 WeeklistTaskId = 3
             },
-            new WeeklistTaskAssignment
+            new WeeklistTaskUserRoleAssignment
             {
                 Id = 4,
                 UserRole = Roles.WarehouseWorker,
                 WeeklistTaskId = 4
             },
-            new WeeklistTaskAssignment
+            new WeeklistTaskUserRoleAssignment
             {
                 Id = 5,
                 UserRole = Roles.Writer,
                 WeeklistTaskId = 5
-            },     
-            new WeeklistTaskAssignment
+            },
+            new WeeklistTaskUserRoleAssignment
             {
                 Id = 6,
                 UserRole = Roles.Admin,
                 WeeklistTaskId = 6
             },
-            new WeeklistTaskAssignment
+            new WeeklistTaskUserRoleAssignment
             {
                 Id = 7,
                 UserRole = Roles.Admin,
                 WeeklistTaskId = 7
             },
-            new WeeklistTaskAssignment
+            new WeeklistTaskUserRoleAssignment
             {
                 Id = 8,
                 UserRole = Roles.Admin,
                 WeeklistTaskId = 8
-            },                        
+            },
         };
+        builder.HasData(userRoleAssignments);
 
-        builder.HasData(assignments);
     }
 }
