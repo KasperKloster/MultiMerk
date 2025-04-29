@@ -54,7 +54,8 @@ builder.Services.AddAuthentication(options =>
          ValidAudience = builder.Configuration["JWT:ValidAudience"],
          ValidIssuer = builder.Configuration["JWT:ValidIssuer"],
          ClockSkew = TimeSpan.Zero,
-         IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(builder.Configuration["JWT:secret"]))
+         IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(builder.Configuration["JWT:secret"])),
+         RoleClaimType = "role"
        };
      }
     );
@@ -77,12 +78,12 @@ builder.Services.AddScoped<IWeeklistService, WeeklistService>();
 // Allow CORS for your frontend
 builder.Services.AddCors(options =>
 {
-    options.AddPolicy("AllowMultiMerkFrontend", policy =>
-    {
-        policy.WithOrigins("http://localhost:5173") // Vue dev server
-              .AllowAnyHeader()
-              .AllowAnyMethod();
-    });
+  options.AddPolicy("AllowMultiMerkFrontend", policy =>
+  {
+    policy.WithOrigins("http://localhost:5173") // Vue dev server
+            .AllowAnyHeader()
+            .AllowAnyMethod();
+  });
 });
 
 
@@ -92,27 +93,34 @@ builder.Services.AddOpenApi();
 
 var app = builder.Build();
 
-app.UseCors("AllowMultiMerkFrontend");
-
-app.UseAuthentication();
-app.UseAuthorization();
-app.UseHttpsRedirection();
-app.MapControllers();
-
-// Configure the HTTP request pipeline.
+// Only in development: enable Swagger and Scalar API docs
 if (app.Environment.IsDevelopment())
 {
   app.MapOpenApi();
   app.MapScalarApiReference();
 }
 
+// Redirect HTTP to HTTPS before any auth logic
 app.UseHttpsRedirection();
-
+// CORS must come before authentication
+app.UseCors("AllowMultiMerkFrontend");
+// Authentication before authorization
+app.UseAuthentication();
+app.UseAuthorization();
+// Controllers (routing)
+app.MapControllers();
+// Optional test endpoint
 app.MapGet("/", () => "Hello World!");
-
+// Migrate database at startup
+using (var scope = app.Services.CreateScope())
+{
+  var dbContext = scope.ServiceProvider.GetRequiredService<AppDbContext>();
+  await dbContext.Database.MigrateAsync();
+}
+// Seed initial user data
 await DbSeeder.SeedData(app);
 
 app.Run();
 
 // Needed in order to run tests
-public partial class Program {}
+public partial class Program { }

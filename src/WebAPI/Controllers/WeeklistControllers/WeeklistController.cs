@@ -1,7 +1,8 @@
-using Application.Files.Interfaces;
+using System.Security.Claims;
 using Application.Services.Interfaces.Weeklists;
-using Application.Services.Weeklists;
+using Domain.Constants;
 using Domain.Entities.Weeklists.Entities;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace WebAPI.Controllers.WeeklistControllers
@@ -15,8 +16,9 @@ namespace WebAPI.Controllers.WeeklistControllers
         {
             _weeklistService = weeklistService;
         }
-
+        
         [HttpGet("all")]
+        // [Authorize(Roles = Roles.Admin)]                
         public async Task<IActionResult> GetAllWeeklists()
         {
             try{
@@ -27,8 +29,7 @@ namespace WebAPI.Controllers.WeeklistControllers
                 return BadRequest(ex.Message);
             }
         }
-
-        [HttpPost("create")]
+                
         public async Task <IActionResult> CreateWeeklist ([FromForm] IFormFile file, [FromForm] int Number, [FromForm] string OrderNumber, [FromForm] string Supplier)
         {
             // Instantiate weeklist object with the parameters received from the form

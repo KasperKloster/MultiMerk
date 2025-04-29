@@ -6,7 +6,7 @@ const api = axios.create({
 
 // Attach access token to requests
 api.interceptors.request.use(config => {
-    const token = localStorage.getItem("multimerk_accessToken");
+    const token = localStorage.getItem("multimerk_accessToken");    
     if (token) {        
         config.headers.Authorization = `Bearer ${token}`;
     }

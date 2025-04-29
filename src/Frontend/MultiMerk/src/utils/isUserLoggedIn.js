@@ -57,18 +57,24 @@ export function getUserRole() {
 }
 
 export async function refreshToken() {
-    const refreshToken = localStorage.getItem("multimerk_refreshToken"); // Store refresh token separately
+    const accessToken = localStorage.getItem("multimerk_accessToken");
+    const refreshToken = localStorage.getItem("multimerk_refreshToken");
 
-    if (!refreshToken) {
-        console.warn("No refresh token found.");
+    if (!refreshToken || !accessToken) {
+        console.warn("Missing token(s).");
         return false;
     }
 
     try {
-        const response = await api.post("/auth/token/refresh", { token: refreshToken });        
+        const response = await api.post("/auth/token/refresh", {
+            accessToken: accessToken,
+            refreshToken: refreshToken
+        });
+
         if (response.status === 200) {
-            const newAccessToken = response.data;
-            localStorage.setItem("multimerk_accessToken", newAccessToken);
+            const newToken = response.data;
+            localStorage.setItem("multimerk_accessToken", newToken.accessToken);
+            localStorage.setItem("multimerk_refreshToken", newToken.refreshToken);
             console.log("Token refreshed successfully.");
             return true;
         } else {

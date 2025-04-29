@@ -38,9 +38,8 @@ public class AuthController : ControllerBase
         return Ok(result.Token);
     }
 
-    [HttpPost("token/refresh")]
-    [Authorize]
-    public async Task<IActionResult> RefreshToken(TokenModelDTO tokenModel)
+    [HttpPost("token/refresh")]    
+    public async Task<IActionResult> RefreshToken([FromBody] TokenModelDTO tokenModel)
     {
         var result = await _authService.RefreshToken(tokenModel);
                 
