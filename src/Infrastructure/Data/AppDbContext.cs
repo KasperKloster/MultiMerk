@@ -21,8 +21,8 @@ public class AppDbContext : IdentityDbContext<ApplicationUser>
     public DbSet<Weeklist> Weeklists { get; set; } = null!;
     public DbSet<WeeklistTask> WeeklistTasks { get; set; } = null!;
     public DbSet<WeeklistTaskStatus> WeeklistTaskStatus { get; set; } = null!;
-    public DbSet<WeeklistTaskLink> WeeklistTaskLinks { get; set; } = null!;    
-    
+    public DbSet<WeeklistTaskLink> WeeklistTaskLinks { get; set; } = null!;
+    public DbSet<WeeklistTaskUserRoleAssignment> WeeklistTaskUserRoleAssignments { get; set; } = null!;
     // Products
     public DbSet<Product> Products { get; set; } = null!;
 
@@ -66,6 +66,13 @@ public class AppDbContext : IdentityDbContext<ApplicationUser>
             .WithMany()
             .HasForeignKey(x => x.WeeklistTaskStatusId);    
 
+        // WeeklistTaskUserRoleAssignment
+        modelBuilder.Entity<WeeklistTaskUserRoleAssignment>()
+        .HasOne(x => x.WeeklistTask)
+        .WithMany(t => t.UserRoleAssignments)
+        .HasForeignKey(x => x.WeeklistTaskId)
+        .OnDelete(DeleteBehavior.Cascade);
+
         // Seed database
         ApplySeeders(modelBuilder);
     }
@@ -78,6 +85,7 @@ public class AppDbContext : IdentityDbContext<ApplicationUser>
         WeeklistTaskSeeder.Seed(modelBuilder.Entity<WeeklistTask>());
         WeeklistTaskStatusSeeder.Seed(modelBuilder.Entity<WeeklistTaskStatus>());
         WeeklistTaskLinkSeeder.Seed(modelBuilder.Entity<WeeklistTaskLink>());        
+        WeeklistTaskUserRoleAssignmentSeeder.Seed(modelBuilder.Entity<WeeklistTaskUserRoleAssignment>());
         
         // Seed products
         ProductSeeder.Seed(modelBuilder.Entity<Product>());
