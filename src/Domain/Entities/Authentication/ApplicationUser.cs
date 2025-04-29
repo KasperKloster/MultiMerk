@@ -1,5 +1,3 @@
-using System;
-using Domain.Entities.Weeklists.WeeklistTasks;
 using Microsoft.AspNetCore.Identity;
 
 namespace Domain.Entities.Authentication;

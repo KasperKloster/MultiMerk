@@ -20,6 +20,8 @@ public class WeeklistRepository : IWeeklistRepository
                 .ThenInclude(link => link.WeeklistTask)
             .Include(w => w.WeeklistTaskLinks)
                 .ThenInclude(link => link.WeeklistTaskStatus)
+            .Include(w => w.WeeklistTaskLinks)
+                .ThenInclude(link => link.AssignedUser)                
             .ToListAsync();
     }
 

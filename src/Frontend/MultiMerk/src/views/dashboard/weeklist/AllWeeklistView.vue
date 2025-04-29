@@ -93,8 +93,8 @@ onMounted(async () => {
                                     }"
                                     ></div> {{task.status?.status}}                                
                                 </div>
-                                <div class="py-3">
-                                    <p class="font-small text-gray-500"> leslie@flowbite.com</p>
+                                <div class="py-3">                                    
+                                    <p class="font-small text-gray-500"><em>Owner: </em>{{ task.assignedUser?.name }}</p>
                                 </div>
                                 
                                 <div>
