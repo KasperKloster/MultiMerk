@@ -66,6 +66,8 @@ builder.Services.AddScoped<IProductRepository, ProductRepository>();
 builder.Services.AddScoped<IWeeklistRepository, WeeklistRepository>();
 builder.Services.AddScoped<IWeeklistTaskRepository, WeeklistTaskRepository>();
 builder.Services.AddScoped<IWeeklistTaskLinkRepository, WeeklistTaskLinkRepository>();
+builder.Services.AddScoped<IWeeklistUserRoleAssignmentRepository, WeeklistUserRoleAssignmentRepository>();
+
 // Services
 builder.Services.AddScoped<IWeeklistService, WeeklistService>();
 

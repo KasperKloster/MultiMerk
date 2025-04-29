@@ -21,12 +21,15 @@ public class WeeklistServiceTests
     private readonly Mock<IWeeklistTaskRepository> _taskRepo = new();
     private readonly Mock<IWeeklistTaskLinkRepository> _taskLinkRepo = new();
 
+    private readonly Mock<IWeeklistUserRoleAssignmentRepository> _weeklistUserRoleAssignmentRepo = new();
+
     private WeeklistService CreateService() => new(
         _weeklistRepo.Object,
         _xlsFileService.Object,
         _productRepo.Object,
         _taskRepo.Object,
-        _taskLinkRepo.Object
+        _taskLinkRepo.Object,
+        _weeklistUserRoleAssignmentRepo.Object
     );
 
     private static IFormFile CreateMockFile(string name = "test.xls")

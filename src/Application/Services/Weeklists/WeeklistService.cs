@@ -5,7 +5,7 @@ using Application.Repositories.Weeklists;
 using Application.Services.Interfaces.Weeklists;
 using Domain.Entities.Files;
 using Domain.Entities.Weeklists.Entities;
-using Domain.Entities.Weeklists.WeeklistTaskLinks;
+using Domain.Entities.Weeklists.Factories;
 using Domain.Entities.Weeklists.WeeklistTasks;
 using Microsoft.AspNetCore.Http;
 
@@ -18,15 +18,16 @@ public class WeeklistService : IWeeklistService
     private readonly IProductRepository _productRepository;
     private readonly IWeeklistTaskRepository _weeklistTaskRepository;
     private readonly IWeeklistTaskLinkRepository _weeklistTaskLinkRepository;
+    private readonly IWeeklistUserRoleAssignmentRepository _weeklistUserRoleAssignmentRepository;
 
-    public WeeklistService(IWeeklistRepository weeklistRepository, IXlsFileService xlsFileService, IProductRepository productRepository, IWeeklistTaskRepository weeklistTaskRepository, IWeeklistTaskLinkRepository weeklistTaskLinkRepository)
+    public WeeklistService(IWeeklistRepository weeklistRepository, IXlsFileService xlsFileService, IProductRepository productRepository, IWeeklistTaskRepository weeklistTaskRepository, IWeeklistTaskLinkRepository weeklistTaskLinkRepository, IWeeklistUserRoleAssignmentRepository weeklistUserRoleAssignmentRepository)
     {
         _weeklistRepository = weeklistRepository;
         _xlsFileService = xlsFileService;
-
         _productRepository = productRepository;
         _weeklistTaskRepository = weeklistTaskRepository;
         _weeklistTaskLinkRepository = weeklistTaskLinkRepository;
+        _weeklistUserRoleAssignmentRepository = weeklistUserRoleAssignmentRepository;
     }
 
     public async Task<List<WeeklistDto>> GetAllWeeklistsAsync()
@@ -77,7 +78,7 @@ public class WeeklistService : IWeeklistService
             {
                 return result;
             }
-
+            // If no products are found
             if (result.Products == null || result.Products.Count == 0)
             {
                 return FilesResult.Fail("No products found in the file.");
@@ -123,23 +124,23 @@ public class WeeklistService : IWeeklistService
         catch (Exception ex)
         {
             return FilesResult.Fail($"An error occured while getting all WeeklistTasks: {ex.Message}");
-        }
+        }        
 
         // Map all Weeklisttasks to WeeklistTaskLink
-        // All task should be "Awaiting". Except the first task, that should be "Ready"
-        int defaultStatusId = 1; // Default status ID - "Awaiting".
-        int firstTaskId = 1; // WeeklistTask: Give EAN
-        int readyStatusId = 2; // WeeklistTaskStatus: Ready                
-        List<WeeklistTaskLink> weeklistTaskLinks = allWeeklistTasks.Select(task => new WeeklistTaskLink
-        {
-            WeeklistId = weeklist.Id,
-            WeeklistTaskId = task.Id,
-            WeeklistTaskStatusId = task.Id == firstTaskId ? readyStatusId : defaultStatusId
-        }).ToList();
-
-        // Assign first with role
+        // var roleAssignments = await _weeklistUserRoleAssignmentRepository.GetAsync();
 
 
+        // All task should have status "Awaiting". Except the first task, that should be "Ready"
+        // int defaultStatusId = 1; // Default status ID - "Awaiting".
+        // int firstTaskId = 1; // WeeklistTask: Give EAN
+        // int readyStatusId = 2; // WeeklistTaskStatus: Ready          
+        var weeklistTaskLinks = WeeklistTaskLinkFactory.CreateLinks(
+            weeklist.Id,
+            allWeeklistTasks,
+            firstTaskId: 1,
+            readyStatusId: 2,
+            defaultStatusId: 1
+        );
 
         // Save WeeklistTaskLinks
         try
