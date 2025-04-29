@@ -21,8 +21,7 @@ public class AppDbContext : IdentityDbContext<ApplicationUser>
     public DbSet<Weeklist> Weeklists { get; set; } = null!;
     public DbSet<WeeklistTask> WeeklistTasks { get; set; } = null!;
     public DbSet<WeeklistTaskStatus> WeeklistTaskStatus { get; set; } = null!;
-    public DbSet<WeeklistTaskLink> WeeklistTaskLinks { get; set; } = null!;
-    public DbSet<WeeklistTaskAssignment> WeeklistTaskAssignments { get; set; } = null!;
+    public DbSet<WeeklistTaskLink> WeeklistTaskLinks { get; set; } = null!;    
     
     // Products
     public DbSet<Product> Products { get; set; } = null!;
@@ -78,8 +77,7 @@ public class AppDbContext : IdentityDbContext<ApplicationUser>
         WeeklistSeeder.Seed(modelBuilder.Entity<Weeklist>());
         WeeklistTaskSeeder.Seed(modelBuilder.Entity<WeeklistTask>());
         WeeklistTaskStatusSeeder.Seed(modelBuilder.Entity<WeeklistTaskStatus>());
-        WeeklistTaskLinkSeeder.Seed(modelBuilder.Entity<WeeklistTaskLink>());
-        WeeklistTaskAssignmentSeeder.Seed(modelBuilder.Entity<WeeklistTaskAssignment>());
+        WeeklistTaskLinkSeeder.Seed(modelBuilder.Entity<WeeklistTaskLink>());        
         
         // Seed products
         ProductSeeder.Seed(modelBuilder.Entity<Product>());

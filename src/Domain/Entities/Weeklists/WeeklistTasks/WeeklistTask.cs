@@ -8,7 +8,5 @@ public class WeeklistTask
     public int Id { get; set; }
     
     [Required]
-    public string Name { get; set; } = string.Empty;
-
-    // public ICollection<WeeklistTaskAssignment> AssignedUsers { get; set; } = new List<WeeklistTaskAssignment>();
+    public string Name { get; set; } = string.Empty;    
 }
