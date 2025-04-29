@@ -5,5 +5,5 @@ namespace Application.Files.Interfaces;
 
 public interface IXlsFileService
 {    
-    Task<FilesResult> GetProductsFromXls(IFormFile file);
+    FilesResult GetProductsFromXls(IFormFile file);
 }
