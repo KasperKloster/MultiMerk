@@ -1,6 +1,7 @@
 using Application.DTOs.Weeklists;
 using Application.Files.Interfaces;
 using Application.Repositories;
+using Application.Repositories.ApplicationUsers;
 using Application.Repositories.Weeklists;
 using Application.Services.Interfaces.Weeklists;
 using Domain.Entities.Files;
@@ -19,8 +20,9 @@ public class WeeklistService : IWeeklistService
     private readonly IWeeklistTaskRepository _weeklistTaskRepository;
     private readonly IWeeklistTaskLinkRepository _weeklistTaskLinkRepository;
     private readonly IWeeklistUserRoleAssignmentRepository _weeklistUserRoleAssignmentRepository;
+    private readonly IApplicationUserRepository _applicationUserRepository;
 
-    public WeeklistService(IWeeklistRepository weeklistRepository, IXlsFileService xlsFileService, IProductRepository productRepository, IWeeklistTaskRepository weeklistTaskRepository, IWeeklistTaskLinkRepository weeklistTaskLinkRepository, IWeeklistUserRoleAssignmentRepository weeklistUserRoleAssignmentRepository)
+    public WeeklistService(IWeeklistRepository weeklistRepository, IXlsFileService xlsFileService, IProductRepository productRepository, IWeeklistTaskRepository weeklistTaskRepository, IWeeklistTaskLinkRepository weeklistTaskLinkRepository, IWeeklistUserRoleAssignmentRepository weeklistUserRoleAssignmentRepository, IApplicationUserRepository applicationUserRepository)
     {
         _weeklistRepository = weeklistRepository;
         _xlsFileService = xlsFileService;
@@ -28,6 +30,7 @@ public class WeeklistService : IWeeklistService
         _weeklistTaskRepository = weeklistTaskRepository;
         _weeklistTaskLinkRepository = weeklistTaskLinkRepository;
         _weeklistUserRoleAssignmentRepository = weeklistUserRoleAssignmentRepository;
+        _applicationUserRepository = applicationUserRepository;
     }
 
     public async Task<List<WeeklistDto>> GetAllWeeklistsAsync()
@@ -126,20 +129,35 @@ public class WeeklistService : IWeeklistService
             return FilesResult.Fail($"An error occured while getting all WeeklistTasks: {ex.Message}");
         }        
 
+        
+
+        // Get mapping of TaskId -> Role        
+        var roleAssignments = await _weeklistUserRoleAssignmentRepository.GetAsync();
+        var taskIdToRole = roleAssignments.ToDictionary(x => x.WeeklistTaskId, x => x.UserRole);
+        // Get one user per role (e.g., first admin, first warehouse etc.)
+        var userRoleToUserId = new Dictionary<string, string>();
+        foreach (var role in taskIdToRole.Values.Distinct())
+        {
+            var user = await _applicationUserRepository.GetFirstUserByRoleAsync(role); // custom method
+            if (user != null)
+            {
+                userRoleToUserId[role] = user.Id;
+            }
+        }
+        
         // Map all Weeklisttasks to WeeklistTaskLink
-        // var roleAssignments = await _weeklistUserRoleAssignmentRepository.GetAsync();
-
-
         // All task should have status "Awaiting". Except the first task, that should be "Ready"
         // int defaultStatusId = 1; // Default status ID - "Awaiting".
         // int firstTaskId = 1; // WeeklistTask: Give EAN
-        // int readyStatusId = 2; // WeeklistTaskStatus: Ready          
+        // int readyStatusId = 2; // WeeklistTaskStatus: Ready                      
         var weeklistTaskLinks = WeeklistTaskLinkFactory.CreateLinks(
             weeklist.Id,
             allWeeklistTasks,
             firstTaskId: 1,
             readyStatusId: 2,
-            defaultStatusId: 1
+            defaultStatusId: 1,
+            userRoleToUserId,
+            taskIdToRole
         );
 
         // Save WeeklistTaskLinks
