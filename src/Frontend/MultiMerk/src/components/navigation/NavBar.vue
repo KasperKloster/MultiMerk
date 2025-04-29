@@ -5,7 +5,7 @@ import { useRouter } from 'vue-router';
 import { isUserLoggedIn, getUserRole } from '@/utils/isUserLoggedIn';
 import { Disclosure, DisclosureButton, DisclosurePanel, Menu, MenuButton, MenuItem, MenuItems } from '@headlessui/vue'
 import { Bars3Icon, BellIcon, XMarkIcon } from '@heroicons/vue/24/outline'
-import { ChevronDownIcon } from '@heroicons/vue/20/solid'
+import { ChevronDownIcon, UserIcon } from '@heroicons/vue/20/solid'
 
 
 const isLoggedIn = ref(false);
@@ -135,10 +135,8 @@ const handleLogout = async () => {
                 <MenuButton
                   class="relative flex rounded-full bg-gray-800 text-sm focus:ring-2 focus:ring-white focus:ring-offset-2 focus:ring-offset-gray-800 focus:outline-hidden cursor-pointer">
                   <span class="absolute -inset-1.5" />
-                  <span class="sr-only">Open user menu</span>
-                  <img class="size-8 rounded-full"
-                    src="https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=facearea&facepad=2&w=256&h=256&q=80"
-                    alt="" />
+                  <span class="sr-only">Open user menu</span>                  
+                  <UserIcon class="size-6 text-white" />      
                 </MenuButton>
               </div>
               <transition enter-active-class="transition ease-out duration-100"
