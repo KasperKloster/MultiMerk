@@ -1,23 +1,26 @@
 <script setup>
 import Header from '@/components/layout/Header.vue';
 import { inject, ref, onMounted } from 'vue';
+import { getUserRole } from '@/utils/isUserLoggedIn';
+
 import axios from 'axios';
 const apiUrl = inject('apiUrl');
-
 const weeklists = ref([]);
 const loading = ref(true);
-
+const currentUserRole = ref();
 
 onMounted(async () => {
-  try {    
-    const response = await axios.get(`${apiUrl}/api/weeklist/all`);
-    weeklists.value = response.data;
-    console.log(weeklists);
-  } catch (err) {
-    console.error(err);    
-  } finally {
-    loading.value = false;    
-  }
+    currentUserRole.value = getUserRole();
+
+    try {    
+        const response = await axios.get(`${apiUrl}/api/weeklist/all`);
+        weeklists.value = response.data;
+        console.log(weeklists);
+    } catch (err) {
+        console.error(err);    
+    } finally {
+        loading.value = false;    
+    }
 });
 
 
@@ -93,13 +96,27 @@ onMounted(async () => {
                                     }"
                                     ></div> {{task.status?.status}}                                
                                 </div>
-                                <div class="py-3">                                    
-                                    <p class="font-small text-gray-500"><em>Owner: </em>{{ task.assignedUser?.name }}</p>
+                                <div class="py-3">                                                                   
+                                    <p class="font-small text-gray-500"><em>Owner: </em><b>{{ task.assignedUser?.name }}</b></p>
                                 </div>
                                 
                                 <div>
-                                    <button type="button" class="w-full px-3 py-2 text-xs font-medium text-center text-white bg-emerald-400 
-                                    rounded-lg hover:bg-emerald-800 focus:ring-4 focus:outline-none focus:ring-emerald-300 dark:bg-blue-600 dark:hover:bg-emerald-700 dark:focus:ring-emerald-800 cursor-pointer">Go</button>
+                                    <button
+                                        type="button"
+                                        class="w-full px-3 py-2 text-xs font-medium text-center text-white rounded-lg
+                                                bg-emerald-400 focus:ring-4 focus:outline-none focus:ring-emerald-300
+                                                dark:bg-blue-600 dark:hover:bg-emerald-700 dark:focus:ring-emerald-800
+                                                hover:bg-emerald-800"
+                                        :class="{
+                                            'cursor-not-allowed opacity-50': currentUserRole.toLowerCase() !== 'admin' && 
+                                                                            currentUserRole.toLowerCase() !== task.assignedUser?.userRole.toLowerCase(),
+                                            'cursor-pointer': currentUserRole.toLowerCase() === 'admin' || 
+                                                            currentUserRole.toLowerCase() === task.assignedUser?.userRole.toLowerCase()
+                                        }"
+                                        :disabled="currentUserRole.toLowerCase() !== 'admin' && 
+                                                    currentUserRole.toLowerCase() !== task.assignedUser?.userRole.toLowerCase()">
+                                        Go
+                                        </button>
                                 </div>
                             </div>
                         </td> 
