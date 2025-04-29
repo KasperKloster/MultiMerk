@@ -7,7 +7,7 @@
 namespace Infrastructure.Migrations
 {
     /// <inheritdoc />
-    public partial class RmTaskAssignment : Migration
+    public partial class Seeder : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
@@ -78,6 +78,21 @@ namespace Infrastructure.Migrations
                     { 2, 6, "00000000-0000-0000-0000-000000000001", 4 },
                     { 2, 7, "00000000-0000-0000-0000-000000000001", 3 },
                     { 2, 8, "00000000-0000-0000-0000-000000000001", 1 }
+                });
+
+            migrationBuilder.InsertData(
+                table: "WeeklistTaskUserRoleAssignments",
+                columns: new[] { "Id", "UserRole", "WeeklistTaskId" },
+                values: new object[,]
+                {
+                    { 1, "Admin", 1 },
+                    { 2, "Writer", 2 },
+                    { 3, "WarehouseWorker", 3 },
+                    { 4, "WarehouseWorker", 4 },
+                    { 5, "Writer", 5 },
+                    { 6, "Admin", 6 },
+                    { 7, "Admin", 7 },
+                    { 8, "Admin", 8 }
                 });
         }
 
@@ -178,6 +193,46 @@ namespace Infrastructure.Migrations
                 table: "WeeklistTaskLinks",
                 keyColumns: new[] { "WeeklistId", "WeeklistTaskId" },
                 keyValues: new object[] { 2, 8 });
+
+            migrationBuilder.DeleteData(
+                table: "WeeklistTaskUserRoleAssignments",
+                keyColumn: "Id",
+                keyValue: 1);
+
+            migrationBuilder.DeleteData(
+                table: "WeeklistTaskUserRoleAssignments",
+                keyColumn: "Id",
+                keyValue: 2);
+
+            migrationBuilder.DeleteData(
+                table: "WeeklistTaskUserRoleAssignments",
+                keyColumn: "Id",
+                keyValue: 3);
+
+            migrationBuilder.DeleteData(
+                table: "WeeklistTaskUserRoleAssignments",
+                keyColumn: "Id",
+                keyValue: 4);
+
+            migrationBuilder.DeleteData(
+                table: "WeeklistTaskUserRoleAssignments",
+                keyColumn: "Id",
+                keyValue: 5);
+
+            migrationBuilder.DeleteData(
+                table: "WeeklistTaskUserRoleAssignments",
+                keyColumn: "Id",
+                keyValue: 6);
+
+            migrationBuilder.DeleteData(
+                table: "WeeklistTaskUserRoleAssignments",
+                keyColumn: "Id",
+                keyValue: 7);
+
+            migrationBuilder.DeleteData(
+                table: "WeeklistTaskUserRoleAssignments",
+                keyColumn: "Id",
+                keyValue: 8);
 
             migrationBuilder.DeleteData(
                 table: "WeeklistTaskStatus",

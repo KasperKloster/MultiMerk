@@ -12,8 +12,8 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 namespace Infrastructure.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    [Migration("20250429075812_WeeklistTaskUserRoleAssignmentSeeder")]
-    partial class WeeklistTaskUserRoleAssignmentSeeder
+    [Migration("20250429105116_Seeder")]
+    partial class Seeder
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
