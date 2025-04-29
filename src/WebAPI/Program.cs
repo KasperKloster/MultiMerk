@@ -3,6 +3,7 @@ using Application.Authentication.Interfaces;
 using Application.Files.Interfaces;
 using Application.Files.Services;
 using Application.Repositories;
+using Application.Repositories.ApplicationUsers;
 using Application.Repositories.Weeklists;
 using Application.Services.Interfaces.Weeklists;
 using Application.Services.Weeklists;
@@ -10,6 +11,7 @@ using Domain.Entities.Authentication;
 using Infrastructure.Data;
 using Infrastructure.Files;
 using Infrastructure.Repositories;
+using Infrastructure.Repositories.ApplicationUsers;
 using Infrastructure.Repositories.Weeklists;
 using Infrastructure.Seeder;
 using Infrastructure.Services.Authentication;
@@ -67,6 +69,7 @@ builder.Services.AddScoped<IWeeklistRepository, WeeklistRepository>();
 builder.Services.AddScoped<IWeeklistTaskRepository, WeeklistTaskRepository>();
 builder.Services.AddScoped<IWeeklistTaskLinkRepository, WeeklistTaskLinkRepository>();
 builder.Services.AddScoped<IWeeklistUserRoleAssignmentRepository, WeeklistUserRoleAssignmentRepository>();
+builder.Services.AddScoped<IApplicationUserRepository, ApplicationUserRepository>();
 
 // Services
 builder.Services.AddScoped<IWeeklistService, WeeklistService>();

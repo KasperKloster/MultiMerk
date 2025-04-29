@@ -29,6 +29,18 @@ export async function isUserLoggedIn() {
     }
 }
 
+export async function isAuthenticated(){
+    const isAuth = await isUserLoggedIn();
+    // Check if user is logged in, redirect to login if not
+    if(!isAuth){
+        console.warn("User not authenticated. Redirecting to login...");
+        window.location.href = "/login";        
+    }
+    // Get and return user role if they are authenticated
+    const role = getUserRole();
+    return role;
+}
+
 // Get user role from token
 export function getUserRole() {
     const token = localStorage.getItem("multimerk_accessToken");
@@ -42,18 +54,6 @@ export function getUserRole() {
         console.error("Error decoding token:", error);
         return null;
     }
-}
-
-export async function isAuthenticated(){
-    const isAuth = await isUserLoggedIn();
-    // Check if user is logged in, redirect to login if not
-    if(!isAuth){
-        console.warn("User not authenticatd. Redirecting to login...");
-        window.location.href = "/login";        
-    }
-    // Get and return user role if they are authenticated
-    const role = getUserRole();
-    return role;
 }
 
 export async function refreshToken() {

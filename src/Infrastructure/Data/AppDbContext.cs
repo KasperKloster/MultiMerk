@@ -68,10 +68,10 @@ public class AppDbContext : IdentityDbContext<ApplicationUser>
 
         // WeeklistTaskUserRoleAssignment
         modelBuilder.Entity<WeeklistTaskUserRoleAssignment>()
-        .HasOne(x => x.WeeklistTask)
-        .WithMany(t => t.UserRoleAssignments)
-        .HasForeignKey(x => x.WeeklistTaskId)
-        .OnDelete(DeleteBehavior.Cascade);
+            .HasOne(x => x.WeeklistTask)
+            .WithMany(t => t.UserRoleAssignments)
+            .HasForeignKey(x => x.WeeklistTaskId)
+            .OnDelete(DeleteBehavior.Cascade);
 
         // Seed database
         ApplySeeders(modelBuilder);
