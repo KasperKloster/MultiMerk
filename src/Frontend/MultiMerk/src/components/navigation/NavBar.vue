@@ -18,7 +18,7 @@ const navigation = ref([{ name: 'Home', href: '/', current: false }])
 onMounted(async () => {
   // Check if the user is logged in, and display content to all user types
   isLoggedIn.value = await isUserLoggedIn();
-  // userRole.value = await getUserRole();
+  userRole.value = await getUserRole();
   // userRole.value = 'admin'; // For testing purposes, set userRole to 'admin'
 
   // If the user is not logged in, add additional navigation items    
