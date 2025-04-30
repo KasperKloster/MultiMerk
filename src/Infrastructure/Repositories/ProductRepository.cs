@@ -34,16 +34,72 @@ public class ProductRepository : IProductRepository
             if (existingProduct != null)
             {
                 // Only update if a new value is provided
-                // if (updatedProduct.Color != null)
-                //     existingProduct.Color = updatedProduct.Color;
+                if (updatedProduct.SupplierSku != null)
+                {
+                    existingProduct.SupplierSku = updatedProduct.SupplierSku;
+                }
 
-                // if (updatedProduct.Material != null)
-                //     existingProduct.Material = updatedProduct.Material;
+                if (updatedProduct.Title != null)
+                {
+                    existingProduct.Title = updatedProduct.Title;
+                }     
 
-                // if (updatedProduct.EAN != null)
-                //     existingProduct.EAN = updatedProduct.EAN;
+                if (updatedProduct.Description != null)
+                {
+                    existingProduct.Description = updatedProduct.Description;
+                }          
 
-                if (updatedProduct.WeeklistId.HasValue) {
+                if (updatedProduct.EAN != null)
+                {
+                    existingProduct.EAN = updatedProduct.EAN;
+                } 
+
+                if (updatedProduct.CategoryId != null)
+                {
+                    existingProduct.CategoryId = updatedProduct.CategoryId;
+                }
+
+                if (updatedProduct.Series != null)
+                {
+                    existingProduct.Series = updatedProduct.Series;
+                }                 
+
+                if (updatedProduct.Color != null)
+                {
+                    existingProduct.Color = updatedProduct.Color;
+                }
+                    
+                if (updatedProduct.Material != null)
+                {
+                    existingProduct.Material = updatedProduct.Material;
+                }
+
+                if (updatedProduct.Price != null)
+                {
+                    existingProduct.Price = updatedProduct.Price;
+                }
+
+                if (updatedProduct.Cost != null)
+                {
+                    existingProduct.Cost = updatedProduct.Cost;
+                }  
+                if (updatedProduct.Qty != null)
+                {
+                    existingProduct.Qty = updatedProduct.Qty;
+                }  
+
+                if (updatedProduct.Weight != null)
+                {
+                    existingProduct.Weight = updatedProduct.Weight;
+                }    
+
+                if (updatedProduct.MainImage != null)
+                {
+                    existingProduct.MainImage = updatedProduct.MainImage;
+                }                                                       
+
+                if (updatedProduct.WeeklistId.HasValue) 
+                {
                     existingProduct.WeeklistId = updatedProduct.WeeklistId;
                 }
             }            
