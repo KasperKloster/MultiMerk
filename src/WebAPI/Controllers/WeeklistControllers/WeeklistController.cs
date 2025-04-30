@@ -63,9 +63,9 @@ namespace WebAPI.Controllers.WeeklistControllers
             var result = await _productService.UpdateProductsFromFile(file);            
             
             // // Handle the result
-            // if (!result.Success) {
-            //     return BadRequest(result.Message);
-            // }            
+            if (!result.Success) {
+                return BadRequest(result.Message);
+            }            
             return Ok();
         }        
     }
