@@ -1,3 +1,4 @@
+using Application.Services.Interfaces.Products;
 using Application.Services.Interfaces.Weeklists;
 using Domain.Constants;
 using Domain.Entities.Weeklists.Entities;
@@ -11,11 +12,14 @@ namespace WebAPI.Controllers.WeeklistControllers
     public class WeeklistController : ControllerBase
     {        
         private readonly IWeeklistService _weeklistService;
-        public WeeklistController(IWeeklistService weeklistService)
+        private readonly IProductService _productService;
+
+        public WeeklistController(IWeeklistService weeklistService, IProductService productService)
         {
             _weeklistService = weeklistService;
+            _productService = productService;
         }
-        
+
         [HttpGet("all")]
         [Authorize]
         public async Task<IActionResult> GetAllWeeklists()
@@ -50,6 +54,20 @@ namespace WebAPI.Controllers.WeeklistControllers
             }            
             return Ok();
         }
+
+        [HttpPost("assign-ean")]
+        [Authorize(Roles = Roles.Admin)]
+        public async Task <IActionResult> AssignEan ([FromForm] IFormFile file)
+        {        
+            // Send to service
+            var result = await _productService.UpdateProductsFromFile(file);            
+            
+            // // Handle the result
+            // if (!result.Success) {
+            //     return BadRequest(result.Message);
+            // }            
+            return Ok();
+        }        
     }
 }
 
