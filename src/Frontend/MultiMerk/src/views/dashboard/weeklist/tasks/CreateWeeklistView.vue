@@ -20,6 +20,11 @@ const onFileChange = (event) => {
 }
 
 const handleUpload = async () => {
+    // Reset message
+    successMessage = '';
+    errorMessage = '';
+
+    // Check if file is selected
     if (!selectedFile.value) return;
 
     // Getting the file
@@ -51,8 +56,7 @@ const handleUpload = async () => {
         selectedFile.value = null;
         
     } catch (error) {
-        errorMessage.value = `Upload failed: ${error.response.data}`;
-        console.error("Upload failed", error.response.data);
+        errorMessage.value = `Upload failed: ${error.response.data}`;        
     }
 };
 

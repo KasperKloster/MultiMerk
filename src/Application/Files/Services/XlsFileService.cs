@@ -14,7 +14,7 @@ public class XlsFileService : IXlsFileService
         _fileparser = fileparser;
     }
 
-    public FilesResult GetProductsFromXls(IFormFile file)
+    public async Task<FilesResult> GetProductsFromXls(IFormFile file)
     {        
         // Is an .xls file        
         if(!HasValidXlsFileExtension(file)) {

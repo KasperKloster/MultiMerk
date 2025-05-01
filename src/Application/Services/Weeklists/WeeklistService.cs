@@ -114,7 +114,7 @@ public class WeeklistService : IWeeklistService
         FilesResult result;
         try
         {
-            result = _xlsFileService.GetProductsFromXls(file);
+            result = await _xlsFileService.GetProductsFromXls(file);
             if (!result.Success)
             {
                 return result;

@@ -131,7 +131,7 @@ public class FileParser : IFileParser
             if (string.IsNullOrWhiteSpace(sku)) continue;
 
             var product = new Product(sku)
-            {
+            {                
                 SupplierSku = GetCellString(row, columnMap, "SupplierSku"),
                 Title = GetCellString(row, columnMap, "Title"),
                 Description = GetCellString(row, columnMap, "Description"),

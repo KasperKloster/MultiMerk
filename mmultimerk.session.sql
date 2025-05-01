@@ -1,0 +1,1 @@
+DELETE FROM "Products" WHERE "Id" BETWEEN 4 AND 8;

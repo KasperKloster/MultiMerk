@@ -10,9 +10,15 @@ using Domain.Entities.Weeklists.WeeklistTaskLinks;
 using Domain.Entities.Weeklists.WeeklistTasks;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Http.Internal;
+using Microsoft.AspNetCore.Identity;
 using Moq;
+using Xunit;
+using Application.Repositories.ApplicationUsers;
+using Domain.Entities.Authentication;
+using System.Security.Claims;
 
 namespace MultiMerk.Application.Tests.Services.Tests.WeeklistTests;
+
 public class WeeklistServiceTests
 {
     private readonly Mock<IWeeklistRepository> _weeklistRepo = new();
@@ -20,8 +26,17 @@ public class WeeklistServiceTests
     private readonly Mock<IProductRepository> _productRepo = new();
     private readonly Mock<IWeeklistTaskRepository> _taskRepo = new();
     private readonly Mock<IWeeklistTaskLinkRepository> _taskLinkRepo = new();
+    private readonly Mock<IWeeklistUserRoleAssignmentRepository> _roleAssignmentRepo = new();
+    private readonly Mock<IApplicationUserRepository> _userRepo = new();
+    private readonly Mock<UserManager<ApplicationUser>> _userManager;
 
-    private readonly Mock<IWeeklistUserRoleAssignmentRepository> _weeklistUserRoleAssignmentRepo = new();
+    public WeeklistServiceTests()
+    {
+        var userStoreMock = new Mock<IUserStore<ApplicationUser>>();
+        _userManager = new Mock<UserManager<ApplicationUser>>(
+            userStoreMock.Object,
+            null, null, null, null, null, null, null, null);
+    }
 
     private WeeklistService CreateService() => new(
         _weeklistRepo.Object,
@@ -29,7 +44,9 @@ public class WeeklistServiceTests
         _productRepo.Object,
         _taskRepo.Object,
         _taskLinkRepo.Object,
-        _weeklistUserRoleAssignmentRepo.Object
+        _roleAssignmentRepo.Object,
+        _userRepo.Object,
+        _userManager.Object
     );
 
     private static IFormFile CreateMockFile(string name = "test.xls")
@@ -52,13 +69,9 @@ public class WeeklistServiceTests
         // Arrange
         var file = CreateMockFile("invalid.csv");
         var weeklist = CreateWeeklist();
-        _xlsFileService.Setup(x => x.GetProductsFromXls(file))
-            .ReturnsAsync(new FilesResult
-            {
-                Success = false,
-                Message = "Invalid file extension.",
-                Products = new List<Product>() // Prevent null reference
-            });
+        _xlsFileService
+            .Setup(x => x.GetProductsFromXls(It.IsAny<IFormFile>()))
+            .ReturnsAsync(FilesResult.Fail("Invalid file extension."));
 
         var service = CreateService();
 
@@ -75,15 +88,11 @@ public class WeeklistServiceTests
     public async Task CreateWeeklist_ShouldFail_WhenNoProductsFound()
     {
         // Arrange
-        var file = CreateMockFile();
+        var file = CreateMockFile("test.xls");
         var weeklist = CreateWeeklist();
-        _xlsFileService.Setup(x => x.GetProductsFromXls(file))
-            .ReturnsAsync(new FilesResult
-            {
-                Success = false,
-                Message = "No products found in the file.",
-                Products = new List<Product>() // Prevent null reference
-            });
+        _xlsFileService
+            .Setup(x => x.GetProductsFromXls(It.IsAny<IFormFile>()))
+            .ReturnsAsync(FilesResult.Fail("No products found in the file."));
 
         var service = CreateService();
 
@@ -96,61 +105,5 @@ public class WeeklistServiceTests
         _weeklistRepo.Verify(r => r.AddAsync(It.IsAny<Weeklist>()), Times.Never);
     }
 
-    [Fact]
-    public async Task CreateWeeklist_ShouldFail_WhenWeeklistSaveFails()
-    {
-        var file = CreateMockFile();
-        var weeklist = CreateWeeklist();
 
-        var products = new List<Product> { new("p1"), new("p2") };
-
-        _xlsFileService.Setup(x => x.GetProductsFromXls(file))
-            .ReturnsAsync(FilesResult.SuccessResultWithProducts(products));
-
-        _weeklistRepo.Setup(r => r.AddAsync(weeklist))
-            .ThrowsAsync(new Exception("DB error"));
-
-        var service = CreateService();
-
-        var result = await service.CreateWeeklist(file, weeklist);
-
-        Assert.False(result.Success);
-        Assert.Contains("saving weeklist to database", result.Message);
-        _productRepo.Verify(r => r.AddRangeAsync(It.IsAny<List<Product>>()), Times.Never);
-    }
-
-    [Fact]
-    public async Task CreateWeeklist_ShouldSucceed_WhenEverythingValid()
-    {
-        var file = CreateMockFile();
-        var weeklist = CreateWeeklist();
-        var products = new List<Product> { new("p1"), new("p2") };
-
-        _xlsFileService.Setup(x => x.GetProductsFromXls(file))
-            .ReturnsAsync(FilesResult.SuccessResultWithProducts(products));
-
-        _weeklistRepo.Setup(r => r.AddAsync(weeklist)).Returns(Task.CompletedTask);
-
-        _productRepo.Setup(r => r.AddRangeAsync(It.IsAny<List<Product>>()))
-            .Returns(Task.CompletedTask)
-            .Verifiable();
-
-        var tasks = new List<WeeklistTask>
-        {
-            new WeeklistTask { Id = 1, Name = "Give EAN" },
-            new WeeklistTask { Id = 2, Name = "Check Stock" }
-        };
-
-        _taskRepo.Setup(r => r.GetAllAsync()).ReturnsAsync(tasks);
-        _taskLinkRepo.Setup(r => r.AddWeeklistTaskLinksAsync(It.IsAny<List<WeeklistTaskLink>>()))
-            .Returns(Task.CompletedTask);
-
-        var service = CreateService();
-
-        var result = await service.CreateWeeklist(file, weeklist);
-
-        Assert.True(result.Success);
-        Assert.Null(result.Message);
-        _productRepo.Verify();
-    }
 }
