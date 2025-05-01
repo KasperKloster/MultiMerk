@@ -13,7 +13,7 @@ namespace WebAPI.Controllers.WeeklistControllers
     [Route("api/weeklist/")]
     [ApiController]
     public class WeeklistController : ControllerBase
-    {        
+    {
         private readonly IWeeklistService _weeklistService;
         private readonly IProductService _productService;
         private readonly IWeeklistTaskLinkService _weeklistTaskLinkService;
@@ -29,57 +29,80 @@ namespace WebAPI.Controllers.WeeklistControllers
         [Authorize]
         public async Task<IActionResult> GetAllWeeklists()
         {
-            try{
-                var weeklists = await _weeklistService.GetAllWeeklistsAsync();            
-                return Ok(weeklists);
-            } catch (Exception ex)
+            try
             {
-                return BadRequest(ex.Message);
+                var weeklists = await _weeklistService.GetAllWeeklistsAsync();
+                return Ok(weeklists);
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, $"Something went wrong. Please try again. {ex.Message}");
             }
         }
 
         [HttpPost("create")]
         [Authorize(Roles = $"{Roles.Admin},{Roles.Freelancer}")]
-        public async Task <IActionResult> CreateWeeklist ([FromForm] IFormFile file, [FromForm] int Number, [FromForm] string OrderNumber, [FromForm] string Supplier)
+        public async Task<IActionResult> CreateWeeklist([FromForm] IFormFile file, [FromForm] int Number, [FromForm] string OrderNumber, [FromForm] string Supplier)
         {
-            // Instantiate weeklist object with the parameters received from the form
-            var weeklist = new Weeklist
+            try
             {
-                Number = Number,
-                OrderNumber = OrderNumber,
-                Supplier = Supplier
-            };
-            
-            // Send to service to create the weeklist
-            var result = await _weeklistService.CreateWeeklist(file, weeklist);            
-            
-            // Handle the result
-            if (!result.Success) {
-                return BadRequest(result.Message);
-            }            
-            return Ok();
+                // Instantiate weeklist object with the parameters received from the form
+                var weeklist = new Weeklist
+                {
+                    Number = Number,
+                    OrderNumber = OrderNumber,
+                    Supplier = Supplier
+                };
+
+                // Send to service to create the weeklist
+                var result = await _weeklistService.CreateWeeklist(file, weeklist);
+
+                // Handle the result
+                if (!result.Success)
+                {
+                    return BadRequest(result.Message);
+                }
+                return Ok();
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, $"Something went wrong. Please try again. {ex.Message}");
+            }
+
         }
 
         [HttpPost("assign-ean")]
         // [Authorize(Roles = $"{Roles.Admin}")]
-        public async Task <IActionResult> AssignEan ([FromForm] IFormFile file, [FromForm] int weeklistId)
-        {                   
-            // Send to service
-            var result = await _productService.UpdateProductsFromFile(file);
+        public async Task<IActionResult> AssignEan([FromForm] IFormFile file, [FromForm] int weeklistId)
+        {
+            try
+            {
+                // Send to product service
+                var result = await _productService.UpdateProductsFromFile(file);
+                if (!result.Success)
+                {
+                    return BadRequest(result.Message);
+                }
 
-            // // Handle the result
-            if (!result.Success) {
-                return BadRequest(result.Message);
+                // Mark Current task as done
+                var updateResult = await _weeklistTaskLinkService.UpdateTaskStatusAndAdvanceNext(
+                    weeklistId: weeklistId,
+                    currentTask: WeeklistTaskName.AssignEAN,
+                    taskStatus: WeeklistTaskStatus.Done);
+
+                if (!updateResult.Success)
+                {
+                    return BadRequest(result.Message);
+                }
+
+                return Ok();
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, $"Something went wrong. Please try again. {ex.Message}");
             }
 
-            // Mark Current task as done, set next task as ready
-            _weeklistTaskLinkService.UpdateTaskStatus(
-                weeklistId: weeklistId, 
-                currentTask: WeeklistTaskName.AssignEAN, 
-                taskStatus: WeeklistTaskStatus.Done);
-
-            return Ok();
-        }        
+        }
     }
 }
 
