@@ -3,6 +3,7 @@ using System;
 using Infrastructure.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 
@@ -11,9 +12,11 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 namespace Infrastructure.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    partial class AppDbContextModelSnapshot : ModelSnapshot
+    [Migration("20250430091957_Seed")]
+    partial class Seed
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -124,51 +127,12 @@ namespace Infrastructure.Migrations
 
                     NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
 
-                    b.Property<string>("CategoryId")
-                        .HasColumnType("text");
-
-                    b.Property<string>("Color")
-                        .HasColumnType("text");
-
-                    b.Property<float?>("Cost")
-                        .HasColumnType("real");
-
-                    b.Property<string>("Description")
-                        .HasColumnType("text");
-
-                    b.Property<string>("EAN")
-                        .HasColumnType("text");
-
-                    b.Property<string>("MainImage")
-                        .HasColumnType("text");
-
-                    b.Property<string>("Material")
-                        .HasColumnType("text");
-
-                    b.Property<int?>("Price")
-                        .HasColumnType("integer");
-
-                    b.Property<int?>("Qty")
-                        .HasColumnType("integer");
-
-                    b.Property<string>("Series")
-                        .HasColumnType("text");
-
                     b.Property<string>("Sku")
                         .IsRequired()
                         .HasColumnType("text");
 
-                    b.Property<string>("SupplierSku")
-                        .HasColumnType("text");
-
-                    b.Property<string>("Title")
-                        .HasColumnType("text");
-
                     b.Property<int?>("WeeklistId")
                         .HasColumnType("integer");
-
-                    b.Property<float?>("Weight")
-                        .HasColumnType("real");
 
                     b.HasKey("Id");
 
@@ -178,26 +142,6 @@ namespace Infrastructure.Migrations
                     b.HasIndex("WeeklistId");
 
                     b.ToTable("Products");
-
-                    b.HasData(
-                        new
-                        {
-                            Id = 1,
-                            Sku = "LC01-1001-1",
-                            WeeklistId = 1
-                        },
-                        new
-                        {
-                            Id = 2,
-                            Sku = "LC01-1001-2",
-                            WeeklistId = 1
-                        },
-                        new
-                        {
-                            Id = 3,
-                            Sku = "LC02-2002-1",
-                            WeeklistId = 2
-                        });
                 });
 
             modelBuilder.Entity("Domain.Entities.Weeklists.Entities.Weeklist", b =>
@@ -225,22 +169,6 @@ namespace Infrastructure.Migrations
                         .IsUnique();
 
                     b.ToTable("Weeklists");
-
-                    b.HasData(
-                        new
-                        {
-                            Id = 1,
-                            Number = 101,
-                            OrderNumber = "E123",
-                            Supplier = "TVC"
-                        },
-                        new
-                        {
-                            Id = 2,
-                            Number = 102,
-                            OrderNumber = "E321",
-                            Supplier = "TVC"
-                        });
                 });
 
             modelBuilder.Entity("Domain.Entities.Weeklists.WeeklistTaskLinks.WeeklistTaskLink", b =>
@@ -266,120 +194,6 @@ namespace Infrastructure.Migrations
                     b.HasIndex("WeeklistTaskStatusId");
 
                     b.ToTable("WeeklistTaskLinks");
-
-                    b.HasData(
-                        new
-                        {
-                            WeeklistId = 1,
-                            WeeklistTaskId = 1,
-                            AssignedUserId = "00000000-0000-0000-0000-000000000001",
-                            WeeklistTaskStatusId = 2
-                        },
-                        new
-                        {
-                            WeeklistId = 1,
-                            WeeklistTaskId = 2,
-                            AssignedUserId = "00000000-0000-0000-0000-000000000004",
-                            WeeklistTaskStatusId = 1
-                        },
-                        new
-                        {
-                            WeeklistId = 1,
-                            WeeklistTaskId = 3,
-                            AssignedUserId = "00000000-0000-0000-0000-000000000005",
-                            WeeklistTaskStatusId = 1
-                        },
-                        new
-                        {
-                            WeeklistId = 1,
-                            WeeklistTaskId = 4,
-                            AssignedUserId = "00000000-0000-0000-0000-000000000005",
-                            WeeklistTaskStatusId = 1
-                        },
-                        new
-                        {
-                            WeeklistId = 1,
-                            WeeklistTaskId = 5,
-                            AssignedUserId = "00000000-0000-0000-0000-000000000004",
-                            WeeklistTaskStatusId = 1
-                        },
-                        new
-                        {
-                            WeeklistId = 1,
-                            WeeklistTaskId = 6,
-                            AssignedUserId = "00000000-0000-0000-0000-000000000001",
-                            WeeklistTaskStatusId = 1
-                        },
-                        new
-                        {
-                            WeeklistId = 1,
-                            WeeklistTaskId = 7,
-                            AssignedUserId = "00000000-0000-0000-0000-000000000001",
-                            WeeklistTaskStatusId = 1
-                        },
-                        new
-                        {
-                            WeeklistId = 1,
-                            WeeklistTaskId = 8,
-                            AssignedUserId = "00000000-0000-0000-0000-000000000001",
-                            WeeklistTaskStatusId = 1
-                        },
-                        new
-                        {
-                            WeeklistId = 2,
-                            WeeklistTaskId = 1,
-                            AssignedUserId = "00000000-0000-0000-0000-000000000001",
-                            WeeklistTaskStatusId = 4
-                        },
-                        new
-                        {
-                            WeeklistId = 2,
-                            WeeklistTaskId = 2,
-                            AssignedUserId = "00000000-0000-0000-0000-000000000004",
-                            WeeklistTaskStatusId = 4
-                        },
-                        new
-                        {
-                            WeeklistId = 2,
-                            WeeklistTaskId = 3,
-                            AssignedUserId = "00000000-0000-0000-0000-000000000005",
-                            WeeklistTaskStatusId = 4
-                        },
-                        new
-                        {
-                            WeeklistId = 2,
-                            WeeklistTaskId = 4,
-                            AssignedUserId = "00000000-0000-0000-0000-000000000005",
-                            WeeklistTaskStatusId = 4
-                        },
-                        new
-                        {
-                            WeeklistId = 2,
-                            WeeklistTaskId = 5,
-                            AssignedUserId = "00000000-0000-0000-0000-000000000004",
-                            WeeklistTaskStatusId = 4
-                        },
-                        new
-                        {
-                            WeeklistId = 2,
-                            WeeklistTaskId = 6,
-                            AssignedUserId = "00000000-0000-0000-0000-000000000001",
-                            WeeklistTaskStatusId = 4
-                        },
-                        new
-                        {
-                            WeeklistId = 2,
-                            WeeklistTaskId = 7,
-                            AssignedUserId = "00000000-0000-0000-0000-000000000001",
-                            WeeklistTaskStatusId = 3
-                        },
-                        new
-                        {
-                            WeeklistId = 2,
-                            WeeklistTaskId = 8,
-                            AssignedUserId = "00000000-0000-0000-0000-000000000001",
-                            WeeklistTaskStatusId = 1
-                        });
                 });
 
             modelBuilder.Entity("Domain.Entities.Weeklists.WeeklistTasks.WeeklistTask", b =>
@@ -397,48 +211,6 @@ namespace Infrastructure.Migrations
                     b.HasKey("Id");
 
                     b.ToTable("WeeklistTasks");
-
-                    b.HasData(
-                        new
-                        {
-                            Id = 1,
-                            Name = "Assign EAN"
-                        },
-                        new
-                        {
-                            Id = 2,
-                            Name = "Create AI content list"
-                        },
-                        new
-                        {
-                            Id = 3,
-                            Name = "Assign location"
-                        },
-                        new
-                        {
-                            Id = 4,
-                            Name = "Assign correct quantity"
-                        },
-                        new
-                        {
-                            Id = 5,
-                            Name = "Upload AI content"
-                        },
-                        new
-                        {
-                            Id = 6,
-                            Name = "Create final list"
-                        },
-                        new
-                        {
-                            Id = 7,
-                            Name = "Import product list"
-                        },
-                        new
-                        {
-                            Id = 8,
-                            Name = "Create translations"
-                        });
                 });
 
             modelBuilder.Entity("Domain.Entities.Weeklists.WeeklistTasks.WeeklistTaskStatus", b =>
@@ -456,28 +228,6 @@ namespace Infrastructure.Migrations
                     b.HasKey("Id");
 
                     b.ToTable("WeeklistTaskStatus");
-
-                    b.HasData(
-                        new
-                        {
-                            Id = 1,
-                            Status = "Awaiting"
-                        },
-                        new
-                        {
-                            Id = 2,
-                            Status = "Ready"
-                        },
-                        new
-                        {
-                            Id = 3,
-                            Status = "In Progress"
-                        },
-                        new
-                        {
-                            Id = 4,
-                            Status = "Done"
-                        });
                 });
 
             modelBuilder.Entity("Domain.Entities.Weeklists.WeeklistTasks.WeeklistTaskUserRoleAssignment", b =>
@@ -500,56 +250,6 @@ namespace Infrastructure.Migrations
                     b.HasIndex("WeeklistTaskId");
 
                     b.ToTable("WeeklistTaskUserRoleAssignments");
-
-                    b.HasData(
-                        new
-                        {
-                            Id = 1,
-                            UserRole = "Admin",
-                            WeeklistTaskId = 1
-                        },
-                        new
-                        {
-                            Id = 2,
-                            UserRole = "Writer",
-                            WeeklistTaskId = 2
-                        },
-                        new
-                        {
-                            Id = 3,
-                            UserRole = "WarehouseWorker",
-                            WeeklistTaskId = 3
-                        },
-                        new
-                        {
-                            Id = 4,
-                            UserRole = "WarehouseWorker",
-                            WeeklistTaskId = 4
-                        },
-                        new
-                        {
-                            Id = 5,
-                            UserRole = "Writer",
-                            WeeklistTaskId = 5
-                        },
-                        new
-                        {
-                            Id = 6,
-                            UserRole = "Admin",
-                            WeeklistTaskId = 6
-                        },
-                        new
-                        {
-                            Id = 7,
-                            UserRole = "Admin",
-                            WeeklistTaskId = 7
-                        },
-                        new
-                        {
-                            Id = 8,
-                            UserRole = "Admin",
-                            WeeklistTaskId = 8
-                        });
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRole", b =>

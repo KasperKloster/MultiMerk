@@ -12,8 +12,8 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 namespace Infrastructure.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    [Migration("20250429165144_Seeding")]
-    partial class Seeding
+    [Migration("20250430135347_ProductPropertiesInitFile")]
+    partial class ProductPropertiesInitFile
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -127,12 +127,51 @@ namespace Infrastructure.Migrations
 
                     NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
 
+                    b.Property<string>("CategoryId")
+                        .HasColumnType("text");
+
+                    b.Property<string>("Color")
+                        .HasColumnType("text");
+
+                    b.Property<float?>("Cost")
+                        .HasColumnType("real");
+
+                    b.Property<string>("Description")
+                        .HasColumnType("text");
+
+                    b.Property<string>("EAN")
+                        .HasColumnType("text");
+
+                    b.Property<string>("MainImage")
+                        .HasColumnType("text");
+
+                    b.Property<string>("Material")
+                        .HasColumnType("text");
+
+                    b.Property<int?>("Price")
+                        .HasColumnType("integer");
+
+                    b.Property<int?>("Qty")
+                        .HasColumnType("integer");
+
+                    b.Property<string>("Series")
+                        .HasColumnType("text");
+
                     b.Property<string>("Sku")
                         .IsRequired()
                         .HasColumnType("text");
 
+                    b.Property<string>("SupplierSku")
+                        .HasColumnType("text");
+
+                    b.Property<string>("Title")
+                        .HasColumnType("text");
+
                     b.Property<int?>("WeeklistId")
                         .HasColumnType("integer");
+
+                    b.Property<float?>("Weight")
+                        .HasColumnType("real");
 
                     b.HasKey("Id");
 

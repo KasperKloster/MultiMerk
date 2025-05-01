@@ -1,4 +1,4 @@
-using System.Security.Claims;
+using Application.Services.Interfaces.Products;
 using Application.Services.Interfaces.Weeklists;
 using Domain.Constants;
 using Domain.Entities.Weeklists.Entities;
@@ -12,13 +12,16 @@ namespace WebAPI.Controllers.WeeklistControllers
     public class WeeklistController : ControllerBase
     {        
         private readonly IWeeklistService _weeklistService;
-        public WeeklistController(IWeeklistService weeklistService)
+        private readonly IProductService _productService;
+
+        public WeeklistController(IWeeklistService weeklistService, IProductService productService)
         {
             _weeklistService = weeklistService;
+            _productService = productService;
         }
-        
+
         [HttpGet("all")]
-        // [Authorize(Roles = Roles.Admin)]                
+        [Authorize]
         public async Task<IActionResult> GetAllWeeklists()
         {
             try{
@@ -29,7 +32,9 @@ namespace WebAPI.Controllers.WeeklistControllers
                 return BadRequest(ex.Message);
             }
         }
-                
+
+        [HttpPost("create")]
+        [Authorize(Roles = $"{Roles.Admin},{Roles.Freelancer}")]
         public async Task <IActionResult> CreateWeeklist ([FromForm] IFormFile file, [FromForm] int Number, [FromForm] string OrderNumber, [FromForm] string Supplier)
         {
             // Instantiate weeklist object with the parameters received from the form
@@ -49,6 +54,20 @@ namespace WebAPI.Controllers.WeeklistControllers
             }            
             return Ok();
         }
+
+        [HttpPost("assign-ean")]
+        [Authorize(Roles = Roles.Admin)]
+        public async Task <IActionResult> AssignEan ([FromForm] IFormFile file)
+        {        
+            // Send to service
+            var result = await _productService.UpdateProductsFromFile(file);            
+            
+            // // Handle the result
+            if (!result.Success) {
+                return BadRequest(result.Message);
+            }            
+            return Ok();
+        }        
     }
 }
 

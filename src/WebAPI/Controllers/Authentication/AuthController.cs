@@ -1,6 +1,5 @@
 using Application.Authentication.Interfaces;
 using Domain.Entities.Authentication.DTOs;
-using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace WebAPI.Controllers.Authentication;
@@ -50,8 +49,7 @@ public class AuthController : ControllerBase
         return Ok(result.Token);
     }
 
-    [HttpPost("token/revoke")]
-    [Authorize]
+    [HttpPost("token/revoke")]    
     public async Task<IActionResult> RevokeToken()
     {
         // We are getting the username from token        

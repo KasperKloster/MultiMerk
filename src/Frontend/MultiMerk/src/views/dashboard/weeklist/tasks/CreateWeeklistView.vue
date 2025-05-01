@@ -1,25 +1,10 @@
 <script setup>
-import { inject, ref } from 'vue';
-// import { isAuthenticated } from '@/utils/isUserLoggedIn';
+import { ref } from 'vue';
 import Header from '@/components/layout/Header.vue';
-import axios from 'axios';
+import api from '@/utils/api';
 
-const apiUrl = inject('apiUrl');
 const successMessage = ref('');
 const errorMessage = ref('');
-
-// onMounted(() => {
-//     // Check if the user is logged in and get their role
-//     const role = isAuthenticated();
-//     // if (role === 'admin') {
-//     //     console.log('User is an admin');
-//     // } else if (role === 'user') {
-//     //     console.log('User is a regular user');
-//     // } else {
-//     //     console.log('User is not logged in');
-//     // }    
-// });
-
 const selectedFile = ref(null);
 
 const onFileChange = (event) => {
@@ -51,8 +36,8 @@ const handleUpload = async () => {
     formData.append('OrderNumber', orderNumber);
     formData.append('Supplier', supplier);
 
-    try {
-        const response = await axios.post(`${apiUrl}/api/weeklist/create`, formData, {
+    try {        
+        const response = await api.post(`/weeklist/create`, formData, {
             headers: {
                 'Content-Type': 'multipart/form-data'
             }
