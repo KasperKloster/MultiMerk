@@ -1,9 +1,11 @@
 <script setup>
 import Header from '@/components/layout/Header.vue';
+import { useRouter } from 'vue-router';
 import { ref, onMounted } from 'vue';
 import { getUserRole } from '@/utils/isUserLoggedIn';
 import api from '@/utils/api';
 
+const router = useRouter();
 const weeklists = ref([]);
 const loading = ref(true);
 const currentUserRole = ref();
@@ -11,7 +13,7 @@ const currentUserRole = ref();
 onMounted(async () => {
     currentUserRole.value = getUserRole();
 
-    try {        
+    try {
         const response = await api.get(`/weeklist/all`);
         weeklists.value = response.data;
     } catch (err) {
@@ -21,7 +23,7 @@ onMounted(async () => {
     }
 });
 
-const isDisabled = ((taskStatus, taskUserRole) => {        
+const isDisabled = ((taskStatus, taskUserRole) => {
     const role = currentUserRole.value?.toLowerCase() || '';
     const assignedRole = taskUserRole?.toLowerCase() || '';
     const status = taskStatus?.toLowerCase() || '';
@@ -29,9 +31,15 @@ const isDisabled = ((taskStatus, taskUserRole) => {
     return (
         (role !== 'admin' && role !== assignedRole) ||
         status !== 'ready' && status !== 'in progress'
-      );
+    );
 });
 
+
+const goToTask = (taskId, weeklistId) => {
+    if (taskId === 1) {
+        router.push({ name: 'assign-ean', params: { id: weeklistId } });
+    }
+};
 
 </script>
 
@@ -105,11 +113,12 @@ const isDisabled = ((taskStatus, taskUserRole) => {
                                     }"></div> {{ task.status?.status }}
                                 </div>
                                 <div class="py-3">
-                                    <p class="font-small text-gray-500"><em>Owner: </em><b>{{ task.assignedUser?.name}}</b></p>
+                                    <p class="font-small text-gray-500"><em>Owner: </em><b>{{
+                                        task.assignedUser?.name }}</b></p>
                                 </div>
 
                                 <div>
-                                    <button type="button" class="w-full px-3 py-2 text-xs font-medium text-center text-white rounded-lg
+                                    <button @click="goToTask(task.weeklistTaskId, week.id)" type="button" class="w-full px-3 py-2 text-xs font-medium text-center text-white rounded-lg
                                                 bg-emerald-400 focus:ring-4 focus:outline-none focus:ring-emerald-300
                                                 dark:bg-blue-600 dark:hover:bg-emerald-700 dark:focus:ring-emerald-800
                                                 hover:bg-emerald-800" :class="{

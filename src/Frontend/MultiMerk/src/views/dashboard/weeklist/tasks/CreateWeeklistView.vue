@@ -20,9 +20,9 @@ const onFileChange = (event) => {
 }
 
 const handleUpload = async () => {
-    // Reset message
-    successMessage = '';
-    errorMessage = '';
+    // Reset messages
+    successMessage.value = '';
+    errorMessage.value = '';
 
     // Check if file is selected
     if (!selectedFile.value) return;
@@ -56,6 +56,7 @@ const handleUpload = async () => {
         selectedFile.value = null;
         
     } catch (error) {
+        console.log(error);
         errorMessage.value = `Upload failed: ${error.response.data}`;        
     }
 };
@@ -125,8 +126,8 @@ const handleUpload = async () => {
 
                 <!-- User messages -->
                 <div>
-                    <p v-if="successMessage" class="text-base/1 text-emerald-500 font-semibold">{{ successMessage }}</p>                    
-                    <p v-if="errorMessage" class="text-base/1 text-red-400 font-semibold">{{ errorMessage }}</p>
+                    <p v-if="successMessage" class="text-sm text-emerald-500 font-semibold">{{ successMessage }}</p>                    
+                    <p v-if="errorMessage" class="text-sm text-red-400 font-semibold">{{ errorMessage }}</p>
                 </div>
 
                 <!-- submit Button -->

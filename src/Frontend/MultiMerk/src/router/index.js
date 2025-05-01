@@ -68,7 +68,7 @@ const router = createRouter({
       meta: { requiresAuth: true, roles: ['Admin', 'WarehouseWorker', 'WarehouseManager'] }
     }, 
     {
-      path: '/weeklist/tasks/admin/assign-ean',
+      path: '/weeklist/tasks/admin/assign-ean/:id',
       name: 'assign-ean',
       component: AssignEanView,
       meta: { requiresAuth: true, roles: ['Admin'] }

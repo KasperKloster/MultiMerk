@@ -22,14 +22,14 @@ public class ProductRepository : IProductRepository
 
     public async Task UpdateRangeAsync(List<Product> products)
     {
+        // All SKUS from updated products
         var skus = products.Select(p => p.Sku).ToList();
-
+        // Find Existing products from SKU
         var existingProducts = await _dbContext.Products.Where(p => skus.Contains(p.Sku)).ToListAsync();
 
-        foreach (var updatedProduct in products)
+        foreach (Product updatedProduct in products)
         {
-            var existingProduct = existingProducts
-                .FirstOrDefault(p => p.Sku == updatedProduct.Sku);
+            var existingProduct = existingProducts.FirstOrDefault(p => p.Sku == updatedProduct.Sku);
 
             if (existingProduct != null)
             {

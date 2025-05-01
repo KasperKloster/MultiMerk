@@ -49,18 +49,16 @@ public class ProductService : IProductService
         // Update products
         try
         {
-            await _productRepository.UpdateRangeAsync(products: Products);
+            await _productRepository.UpdateRangeAsync(products: Products);            
         }
-
         catch (Exception ex)
         {
             
             return FilesResult.Fail($"Could not update products: {ex.Message}");
-        }
+        }        
         
         // Return success        
-        return FilesResult.SuccessResult();
-        
+        return FilesResult.SuccessResult();        
     }
 
     private static string GetFileExtension(IFormFile file)

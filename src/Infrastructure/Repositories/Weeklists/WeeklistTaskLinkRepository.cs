@@ -18,4 +18,9 @@ public class WeeklistTaskLinkRepository : IWeeklistTaskLinkRepository
         await _dbContext.WeeklistTaskLinks.AddRangeAsync(taskLinks);
         await _dbContext.SaveChangesAsync();
     }
+
+    public Task UpdateTaskStatus()
+    {
+        throw new NotImplementedException();
+    }
 }

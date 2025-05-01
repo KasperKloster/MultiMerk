@@ -80,25 +80,7 @@ public class FileParser : IFileParser
         var sheet = workbook.GetSheetAt(0) ?? throw new InvalidDataException("Excel file has no worksheet.");
         var headerRow = sheet.GetRow(0) ?? throw new InvalidDataException("Excel file has no header row.");
 
-        // Define aliases for flexible headers
-        var headerAliases = new Dictionary<string, string[]>(StringComparer.OrdinalIgnoreCase)
-        {
-            { "sku", new[] { "sku" } },
-            { "suppliersku", new[] { "supplier sku", "supplier_sku", "p/n" } },
-            { "title", new[] { "name" } },
-            { "description", new[] { "product description" } },
-            { "ean", new[] { "ean" } },
-            { "categoryId", new[] { "category id", "category_id" } },
-            { "series", new[] { "series" } },
-            { "color", new[] { "color", "colour" } },
-            { "material", new[] { "material" } },
-            { "price", new[] { "price" } },
-            { "cost", new[] { "cost" } },
-            { "qty", new[] { "qty", "quantity" } },
-            { "weight", new[] { "weight" } },
-            { "mainImage", new[] { "main_image" } },
-        };
-
+        Dictionary<string, string[]> headerAliases = GetHeaderAliases();
         // Build a column index map from Excel headers
         var columnMap = new Dictionary<string, int>(StringComparer.OrdinalIgnoreCase);
         for (int i = 0; i < headerRow.LastCellNum; i++)
@@ -131,7 +113,7 @@ public class FileParser : IFileParser
             if (string.IsNullOrWhiteSpace(sku)) continue;
 
             var product = new Product(sku)
-            {                
+            {
                 SupplierSku = GetCellString(row, columnMap, "SupplierSku"),
                 Title = GetCellString(row, columnMap, "Title"),
                 Description = GetCellString(row, columnMap, "Description"),
@@ -146,11 +128,33 @@ public class FileParser : IFileParser
                 Weight = GetCellFloat(row, columnMap, "Weight"),
                 MainImage = GetCellString(row, columnMap, "MainImage")
             };
-
             products.Add(product);
         }
 
         return products;
+    }
+
+    private static Dictionary<string, string[]> GetHeaderAliases()
+    {
+        // Define aliases for headers, if a column name is spelled differently
+        Dictionary<string, string[]> headerAliases = new Dictionary<string, string[]>(StringComparer.OrdinalIgnoreCase)
+        {
+            { "sku", new[] { "sku" } },
+            { "suppliersku", new[] { "supplier sku", "supplier_sku", "p/n" } },
+            { "title", new[] { "title", "name" } },
+            { "description", new[] { "description", "product description" } },
+            { "ean", new[] { "ean" } },
+            { "categoryId", new[] { "categoryId", "category id", "category_id" } },
+            { "series", new[] { "series" } },
+            { "color", new[] { "color", "colour" } },
+            { "material", new[] { "material" } },
+            { "price", new[] { "price" } },
+            { "cost", new[] { "cost" } },
+            { "qty", new[] { "qty", "quantity" } },
+            { "weight", new[] { "weight" } },
+            { "mainImage", new[] { "mainImage", "main_image" } },
+        };
+        return headerAliases;
     }
 
     // Helpers

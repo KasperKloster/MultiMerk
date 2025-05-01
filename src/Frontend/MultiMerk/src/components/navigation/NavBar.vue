@@ -55,7 +55,7 @@ onMounted(async () => {
 
   // Menu items for admin only
   if (userRole.value === 'admin') {
-    weeklistNavigation.value.push({ name: 'Assign EAN', href: '/weeklist/tasks/admin/assign-ean', current: false });
+    // weeklistNavigation.value.push({ name: 'Assign EAN', href: '/weeklist/tasks/admin/assign-ean', current: false });
     weeklistNavigation.value.push({ name: 'Create Final List', href: '/weeklist/tasks/admin/create-final-list', current: false });
     weeklistNavigation.value.push({ name: 'Create Translations', href: '/weeklist/tasks/admin/create-translations', current: false });
   };  

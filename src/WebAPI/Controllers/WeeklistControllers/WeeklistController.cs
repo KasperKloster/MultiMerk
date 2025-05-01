@@ -1,7 +1,10 @@
+using System.Diagnostics;
 using Application.Services.Interfaces.Products;
+using Application.Services.Interfaces.Tasks;
 using Application.Services.Interfaces.Weeklists;
 using Domain.Constants;
 using Domain.Entities.Weeklists.Entities;
+using Domain.Enums;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
@@ -13,11 +16,13 @@ namespace WebAPI.Controllers.WeeklistControllers
     {        
         private readonly IWeeklistService _weeklistService;
         private readonly IProductService _productService;
+        private readonly IWeeklistTaskLinkService _weeklistTaskLinkService;
 
-        public WeeklistController(IWeeklistService weeklistService, IProductService productService)
+        public WeeklistController(IWeeklistService weeklistService, IProductService productService, IWeeklistTaskLinkService weeklistTaskLinkService)
         {
             _weeklistService = weeklistService;
             _productService = productService;
+            _weeklistTaskLinkService = weeklistTaskLinkService;
         }
 
         [HttpGet("all")]
@@ -56,16 +61,23 @@ namespace WebAPI.Controllers.WeeklistControllers
         }
 
         [HttpPost("assign-ean")]
-        [Authorize(Roles = Roles.Admin)]
-        public async Task <IActionResult> AssignEan ([FromForm] IFormFile file)
-        {        
+        // [Authorize(Roles = $"{Roles.Admin}")]
+        public async Task <IActionResult> AssignEan ([FromForm] IFormFile file, [FromForm] int weeklistId)
+        {                   
             // Send to service
-            var result = await _productService.UpdateProductsFromFile(file);            
-            
+            var result = await _productService.UpdateProductsFromFile(file);
+
             // // Handle the result
             if (!result.Success) {
                 return BadRequest(result.Message);
-            }            
+            }
+
+            // Mark Current task as done, set next task as ready
+            _weeklistTaskLinkService.UpdateTaskStatus(
+                weeklistId: weeklistId, 
+                currentTask: WeeklistTaskName.AssignEAN, 
+                taskStatus: WeeklistTaskStatus.Done);
+
             return Ok();
         }        
     }

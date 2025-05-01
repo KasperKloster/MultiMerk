@@ -167,8 +167,6 @@ public class WeeklistService : IWeeklistService
             return FilesResult.Fail($"An error occured while getting all WeeklistTasks: {ex.Message}");
         }
 
-
-
         // Get mapping of TaskId -> Role        
         var roleAssignments = await _weeklistUserRoleAssignmentRepository.GetAsync();
         var taskIdToRole = roleAssignments.ToDictionary(x => x.WeeklistTaskId, x => x.UserRole);
