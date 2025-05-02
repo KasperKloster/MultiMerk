@@ -39,7 +39,7 @@ const handleUpload = async () => {
     formData.append('weeklistId', weeklistId);
 
     try {        
-        const response = await api.post(`/weeklist/assign-ean`, formData, {
+        const response = await api.post(`/weeklist/admin/assign-ean`, formData, {
             headers: {
                 'Content-Type': 'multipart/form-data'
             }

@@ -41,8 +41,7 @@ public class WeeklistTaskLinkRepository : IWeeklistTaskLinkRepository
     {
         int nextTaskId = (int)currentTask + 1;
 
-        var nextTaskLink = await _dbContext.WeeklistTaskLinks
-            .FirstOrDefaultAsync(link => link.WeeklistId == weeklistId && link.WeeklistTaskId == nextTaskId);
+        var nextTaskLink = await _dbContext.WeeklistTaskLinks.FirstOrDefaultAsync(link => link.WeeklistId == weeklistId && link.WeeklistTaskId == nextTaskId);
 
         if (nextTaskLink == null)
         {
