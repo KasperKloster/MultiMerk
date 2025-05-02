@@ -1,11 +1,10 @@
-using System;
 using Application.Services.Interfaces.Tasks;
 using Domain.Enums;
 using Microsoft.AspNetCore.Mvc;
 
 namespace WebAPI.Controllers.WeeklistControllers;
 
-public class WeeklistBaseController : ControllerBase
+public abstract class WeeklistBaseController : ControllerBase
 {
     protected readonly IWeeklistTaskLinkService _weeklistTaskLinkService;
     

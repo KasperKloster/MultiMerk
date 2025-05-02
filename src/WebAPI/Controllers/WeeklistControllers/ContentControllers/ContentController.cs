@@ -14,7 +14,7 @@ namespace WebAPI.Controllers.WeeklistControllers.ContentControllers
 
         [HttpPost("create-ai-content")]
         // [Authorize(Roles = $"{Roles.Admin}")]
-        public async Task<IActionResult> CreateAIContent([FromForm] IFormFile file, [FromForm] int weeklistId)
+        public async Task<IActionResult> CreateAIContent([FromForm] int weeklistId)
         {
             try
             {
@@ -30,7 +30,7 @@ namespace WebAPI.Controllers.WeeklistControllers.ContentControllers
 
         [HttpPost("upload-ai-content")]
         // [Authorize(Roles = $"{Roles.Admin}")]
-        public async Task<IActionResult> UploadAIContent([FromForm] IFormFile file, [FromForm] int weeklistId)
+        public async Task<IActionResult> UploadAIContent([FromForm] int weeklistId)
         {
             try
             {

@@ -16,7 +16,7 @@ namespace WebAPI.Controllers.WeeklistControllers.WarehouseControllers
 
         [HttpPost("assign-location")]
         // [Authorize(Roles = $"{Roles.Admin}")]
-        public async Task<IActionResult> AssignLocation([FromForm] IFormFile file, [FromForm] int weeklistId)
+        public async Task<IActionResult> AssignLocation([FromForm] int weeklistId)
         {
                             
             try
@@ -33,7 +33,7 @@ namespace WebAPI.Controllers.WeeklistControllers.WarehouseControllers
 
         [HttpPost("assign-qty")]
         // [Authorize(Roles = $"{Roles.Admin}")]
-        public async Task<IActionResult> AssignQty([FromForm] IFormFile file, [FromForm] int weeklistId)
+        public async Task<IActionResult> AssignQty([FromForm] int weeklistId)
         {
             try
             {

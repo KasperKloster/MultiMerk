@@ -20,7 +20,7 @@ const handleUpload = async () => {
     formData.append('weeklistId', weeklistId);
 
     try {                
-        const response = await api.post(`/weeklist/admin/create-translations`, formData);        
+        const response = await api.post(`/weeklist/admin/import-product-list`, formData);        
         successMessage.value = `Success`
         console.info("Upload success");
         
@@ -33,7 +33,7 @@ const handleUpload = async () => {
 </script>
 
 <template>
-    <Header title="Create Translations " />
+    <Header title="Import Product List " />
     <div class="w-full max-w-5xl mx-auto mt-10 p-6 bg-white rounded-xl shadow-md space-y-4">    
         <form @submit.prevent="handleUpload">
             <div class="space-y-12">

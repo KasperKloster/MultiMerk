@@ -36,9 +36,31 @@ const isDisabled = ((taskStatus, taskUserRole) => {
 
 
 const goToTask = (taskId, weeklistId) => {
+    
     if (taskId === 1) {
         router.push({ name: 'assign-ean', params: { id: weeklistId } });
     }
+    if (taskId === 2) {
+        router.push({ name: 'create-ai-content', params: { id: weeklistId } });
+    }
+    if (taskId === 3) {        
+        router.push({ name: 'assign-location', params: { id: weeklistId } });
+    }    
+    if (taskId === 4) {
+        router.push({ name: 'assign-qty', params: { id: weeklistId } });
+    }
+    if (taskId === 5) {
+        router.push({ name: 'upload-ai-content', params: { id: weeklistId } });
+    }
+    if (taskId === 6) {
+        router.push({ name: 'create-final-list', params: { id: weeklistId } });
+    }
+    if (taskId === 7) {
+        router.push({ name: 'import-product-list', params: { id: weeklistId } });
+    }
+    if (taskId === 8) {
+        router.push({ name: 'create-translations', params: { id: weeklistId } });
+    }                        
 };
 
 </script>
@@ -103,6 +125,7 @@ const goToTask = (taskId, weeklistId) => {
                         </td>
 
                         <td v-for="task in week.weeklistTasks" :key="task.weeklistTaskId" class="px-6 py-4">
+                            {{ task.weeklistTaskId }}
                             <div class="flex flex-col">
                                 <div class="flex items-center">
                                     <div class="h-2.5 w-2.5 rounded-full me-2" :class="{

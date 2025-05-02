@@ -37,28 +37,28 @@ onMounted(async () => {
     weeklistNavigation.value.push({ name: 'All Weeklists', href: '/weeklist/all' });
   };
 
-  // Menu items for freelancer
+  // // Menu items for freelancer
   if (userRole.value === 'admin' || userRole.value === 'freelancer') {
       weeklistNavigation.value.push({ name: 'Create a new Weeklist', href: '/weeklist/tasks/create', current: false });
   };
 
-  // Menu items for Writer
-  if (userRole.value === 'admin' || userRole.value === 'writer') {
-      contentNavigation.value.push({ name: 'Create AI content', href: '/weeklist/tasks/content/create-ai-content', current: false });
-      contentNavigation.value.push({ name: 'Upload AI content', href: '/weeklist/tasks/content/upload-ai-content', current: false });      
-  };
+  // // Menu items for Writer
+  // if (userRole.value === 'admin' || userRole.value === 'writer') {
+  //     contentNavigation.value.push({ name: 'Create AI content', href: '/weeklist/tasks/content/create-ai-content', current: false });
+  //     contentNavigation.value.push({ name: 'Upload AI content', href: '/weeklist/tasks/content/upload-ai-content', current: false });      
+  // };
 
-  // Menu items for Warehouse
-  if (userRole.value === 'admin' || userRole.value === 'warehouseworker'  || userRole.value === 'warehousemanager') {
-      warehouseNavigation.value.push({ name: 'Assign Location and Quantity', href: '/weeklist/tasks/warehouse/assign-location-qty', current: false });            
-  };
+  // // Menu items for Warehouse
+  // if (userRole.value === 'admin' || userRole.value === 'warehouseworker'  || userRole.value === 'warehousemanager') {
+  //     warehouseNavigation.value.push({ name: 'Assign Location and Quantity', href: '/weeklist/tasks/warehouse/assign-location-qty', current: false });            
+  // };
 
-  // Menu items for admin only
-  if (userRole.value === 'admin') {
-    // weeklistNavigation.value.push({ name: 'Assign EAN', href: '/weeklist/tasks/admin/assign-ean', current: false });
-    weeklistNavigation.value.push({ name: 'Create Final List', href: '/weeklist/tasks/admin/create-final-list', current: false });
-    weeklistNavigation.value.push({ name: 'Create Translations', href: '/weeklist/tasks/admin/create-translations', current: false });
-  };  
+  // // Menu items for admin only
+  // if (userRole.value === 'admin') {
+  //   weeklistNavigation.value.push({ name: 'Assign EAN', href: '/weeklist/tasks/admin/assign-ean', current: false });
+  //   weeklistNavigation.value.push({ name: 'Create Final List', href: '/weeklist/tasks/admin/create-final-list', current: false });
+  //   weeklistNavigation.value.push({ name: 'Create Translations', href: '/weeklist/tasks/admin/create-translations', current: false });
+  // };  
 
 });
 

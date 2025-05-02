@@ -41,13 +41,12 @@ namespace WebAPI.Controllers.WeeklistControllers.AdminControllers
 
         [HttpPost("create-final-list")]
         // [Authorize(Roles = $"{Roles.Admin}")]
-        public async Task<IActionResult> CreateFinalList([FromForm] IFormFile file, [FromForm] int weeklistId)
+        public async Task<IActionResult> CreateFinalList([FromForm] int weeklistId)
         {
             try
             {
-
                 // Mark Current task as done, set next to ready                          
-                var updateTaskResult = await UpdateTaskStatusAndAdvanceNext(weeklistId, WeeklistTaskName.CreateAIcontentList);
+                var updateTaskResult = await UpdateTaskStatusAndAdvanceNext(weeklistId, WeeklistTaskName.CreateFinalList);
 
             }
             catch (Exception ex)
@@ -59,7 +58,7 @@ namespace WebAPI.Controllers.WeeklistControllers.AdminControllers
 
         [HttpPost("import-product-list")]
         // [Authorize(Roles = $"{Roles.Admin}")]
-        public async Task<IActionResult> ImportProductList([FromForm] IFormFile file, [FromForm] int weeklistId)
+        public async Task<IActionResult> ImportProductList([FromForm] int weeklistId)
         {
             try
             {
@@ -76,7 +75,7 @@ namespace WebAPI.Controllers.WeeklistControllers.AdminControllers
 
         [HttpPost("create-translations")]
         // [Authorize(Roles = $"{Roles.Admin}")]
-        public async Task<IActionResult> CreateTranslations([FromForm] IFormFile file, [FromForm] int weeklistId)
+        public async Task<IActionResult> CreateTranslations([FromForm] int weeklistId)
         {
             try
             {

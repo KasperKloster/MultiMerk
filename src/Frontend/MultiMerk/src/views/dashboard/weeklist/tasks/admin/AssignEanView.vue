@@ -31,8 +31,9 @@ const handleUpload = async () => {
     // Check if file is selected
     if (!selectedFile.value) return;
 
-    // Getting the file
+    // Setting formdata
     const formData = new FormData();
+    // Getting the file
     formData.append('file', selectedFile.value);
 
     // Append
