@@ -74,20 +74,20 @@ public class AppDbContext : IdentityDbContext<ApplicationUser>
             .OnDelete(DeleteBehavior.Cascade);
 
         // Seed database
-        ApplySeeders(modelBuilder);
+        // ApplySeeders(modelBuilder);
     }
 
-    private void ApplySeeders(ModelBuilder modelBuilder)
-    {        
+    // private void ApplySeeders(ModelBuilder modelBuilder)
+    // {        
         
-        // Seed weeklist
-        WeeklistSeeder.Seed(modelBuilder.Entity<Weeklist>());
-        WeeklistTaskSeeder.Seed(modelBuilder.Entity<WeeklistTask>());
-        WeeklistTaskStatusSeeder.Seed(modelBuilder.Entity<WeeklistTaskStatus>());
-        WeeklistTaskLinkSeeder.Seed(modelBuilder.Entity<WeeklistTaskLink>());        
-        WeeklistTaskUserRoleAssignmentSeeder.Seed(modelBuilder.Entity<WeeklistTaskUserRoleAssignment>());
+    //     // Seed weeklist
+    //     WeeklistSeeder.Seed(modelBuilder.Entity<Weeklist>());
+    //     WeeklistTaskSeeder.Seed(modelBuilder.Entity<WeeklistTask>());
+    //     WeeklistTaskStatusSeeder.Seed(modelBuilder.Entity<WeeklistTaskStatus>());
+    //     WeeklistTaskLinkSeeder.Seed(modelBuilder.Entity<WeeklistTaskLink>());        
+    //     WeeklistTaskUserRoleAssignmentSeeder.Seed(modelBuilder.Entity<WeeklistTaskUserRoleAssignment>());
         
-        // Seed products
-        ProductSeeder.Seed(modelBuilder.Entity<Product>());
-    }
+    //     // Seed products
+    //     ProductSeeder.Seed(modelBuilder.Entity<Product>());
+    // }
 }

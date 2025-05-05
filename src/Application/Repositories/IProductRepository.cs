@@ -6,4 +6,5 @@ public interface IProductRepository
 {
     Task AddRangeAsync(IEnumerable<Product> products);
     Task UpdateRangeAsync(List<Product> products);
+    Task<List<Product>> GetProductsReadyForAI(int weeklistId);
 }

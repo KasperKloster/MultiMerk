@@ -3,6 +3,7 @@ import { useRoute } from 'vue-router';
 import { ref } from 'vue';
 import api from '@/utils/api';
 import Header from '@/components/layout/Header.vue';
+import BackToWeeklistLink from '@/components/layout/BackToWeeklistLink.vue';
 
 const route = useRoute();
 const weeklistId = route.params.id;
@@ -34,7 +35,9 @@ const handleUpload = async () => {
 
 <template>
     <Header title="Assign Location " />
-    <div class="w-full max-w-5xl mx-auto mt-10 p-6 bg-white rounded-xl shadow-md space-y-4">    
+    <BackToWeeklistLink />
+
+    <div class="w-full max-w-5xl mx-auto mt-10 p-6 bg-white rounded-xl shadow-md space-y-4">            
         <form @submit.prevent="handleUpload">
             <div class="space-y-12">
 

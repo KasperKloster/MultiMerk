@@ -3,6 +3,7 @@ import { useRoute } from 'vue-router';
 import { ref } from 'vue';
 import api from '@/utils/api';
 import Header from '@/components/layout/Header.vue';
+import BackToWeeklistLink from '@/components/layout/BackToWeeklistLink.vue';
 
 const route = useRoute();
 const weeklistId = route.params.id;
@@ -20,7 +21,7 @@ const handleUpload = async () => {
     formData.append('weeklistId', weeklistId);
 
     try {                
-        const response = await api.post(`/weeklist/content/create-ai-content`, formData);        
+        const response = await api.post(`/weeklist/warehouse/assign-location`, formData);        
         successMessage.value = `Success`
         console.info("Upload success");
         
@@ -33,9 +34,10 @@ const handleUpload = async () => {
 </script>
 
 <template>
-    <Header title="Create AI Content" />
+    <Header title="Create Checklist " />
+    <BackToWeeklistLink />
 
-    <div class="w-full max-w-5xl mx-auto mt-10 p-6 bg-white rounded-xl shadow-md space-y-4">    
+    <div class="w-full max-w-5xl mx-auto mt-10 p-6 bg-white rounded-xl shadow-md space-y-4">            
         <form @submit.prevent="handleUpload">
             <div class="space-y-12">
 
@@ -54,6 +56,5 @@ const handleUpload = async () => {
 
             </div>  
         </form>
-    </div> 
-
+    </div>     
 </template>

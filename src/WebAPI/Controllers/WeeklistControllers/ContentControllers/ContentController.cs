@@ -1,4 +1,8 @@
+using Application.Files.Interfaces;
+using Application.Files.Services;
 using Application.Services.Interfaces.Tasks;
+using Application.Services.Interfaces.Weeklists;
+using Domain.Entities.Products;
 using Domain.Enums;
 using Microsoft.AspNetCore.Mvc;
 
@@ -8,24 +12,35 @@ namespace WebAPI.Controllers.WeeklistControllers.ContentControllers
     [ApiController]
     public class ContentController : WeeklistBaseController
     {
-        public ContentController(IWeeklistTaskLinkService weeklistTaskLinkService) : base(weeklistTaskLinkService)
+        private readonly IContentService _contentService;
+        private readonly ICsvService _csvService;
+
+        public ContentController(IWeeklistTaskLinkService weeklistTaskLinkService, IContentService contentService, ICsvService csvService) : base(weeklistTaskLinkService)
         {
+            _contentService = contentService;
+            _csvService = csvService;
         }
 
-        [HttpPost("create-ai-content")]
+        [HttpPost("get-products-ready-for-ai-content")]
         // [Authorize(Roles = $"{Roles.Admin}")]
-        public async Task<IActionResult> CreateAIContent([FromForm] int weeklistId)
+        public async Task<IActionResult> GetProductsReadyForAIContent([FromForm] int weeklistId)
         {
             try
             {
+                // Getting products
+                List<Product> products = await _contentService.GetProductsReadyForAI(weeklistId);
+                // Converts products to csv (byte array)
+                var csvBytes = _csvService.GenerateProductsReadyForAICSV(products);
+                var fileName = $"{weeklistId}-Ready-For-AI.csv";
                 // Mark Current task as done, set next to ready                
-                var updateTaskResult = await UpdateTaskStatusAndAdvanceNext(weeklistId, WeeklistTaskName.CreateAIcontentList);                
+                var updateTaskResult = await UpdateTaskStatusAndAdvanceNext(weeklistId, WeeklistTaskName.CreateAIcontentList);
+                return File(csvBytes, "text/csv", fileName);
+
             }
             catch (Exception ex)
             {
                 return StatusCode(500, $"Something went wrong. Please try again. {ex.Message}");
             }
-            return Ok();
         }
 
         [HttpPost("upload-ai-content")]
@@ -35,7 +50,7 @@ namespace WebAPI.Controllers.WeeklistControllers.ContentControllers
             try
             {
                 // Mark Current task as done, set next to ready                
-                var updateTaskResult = await UpdateTaskStatusAndAdvanceNext(weeklistId, WeeklistTaskName.UploadAIContent);                
+                var updateTaskResult = await UpdateTaskStatusAndAdvanceNext(weeklistId, WeeklistTaskName.UploadAIContent);
             }
             catch (Exception ex)
             {
@@ -43,7 +58,5 @@ namespace WebAPI.Controllers.WeeklistControllers.ContentControllers
             }
             return Ok();
         }
-
-
     }
 }
