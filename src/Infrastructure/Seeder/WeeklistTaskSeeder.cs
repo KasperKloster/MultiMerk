@@ -12,12 +12,11 @@ public class WeeklistTaskSeeder
         builder.HasData(
             new WeeklistTask { Id = 1, Name = "Assign EAN" },
             new WeeklistTask { Id = 2, Name = "Get AI content list" },
-            new WeeklistTask { Id = 3, Name = "Assign location" },
-            new WeeklistTask { Id = 4, Name = "Assign correct quantity" },
-            new WeeklistTask { Id = 5, Name = "Upload AI content" },
-            new WeeklistTask { Id = 6, Name = "Create final list" },
-            new WeeklistTask { Id = 7, Name = "Import product list" },
-            new WeeklistTask { Id = 8, Name = "Create translations" }
+            new WeeklistTask { Id = 3, Name = "Upload AI content" },
+            new WeeklistTask { Id = 4, Name = "Create Checklist" },            
+            new WeeklistTask { Id = 5, Name = "Create final list" },
+            new WeeklistTask { Id = 6, Name = "Import product list" },
+            new WeeklistTask { Id = 7, Name = "Create translations" }
         );
     }
 }

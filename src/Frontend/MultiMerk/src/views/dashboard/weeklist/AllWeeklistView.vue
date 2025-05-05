@@ -43,22 +43,19 @@ const goToTask = (taskId, weeklistId) => {
     if (taskId === 2) {
         router.push({ name: 'get-ai-content', params: { id: weeklistId } });
     }
-    if (taskId === 3) {        
-        router.push({ name: 'assign-location', params: { id: weeklistId } });
-    }    
-    if (taskId === 4) {
-        router.push({ name: 'assign-qty', params: { id: weeklistId } });
-    }
-    if (taskId === 5) {
+    if (taskId === 3) {
         router.push({ name: 'upload-ai-content', params: { id: weeklistId } });
-    }
-    if (taskId === 6) {
+    }    
+    if (taskId === 4) {        
+        router.push({ name: 'create-checklist', params: { id: weeklistId } });
+    }    
+    if (taskId === 5) {
         router.push({ name: 'create-final-list', params: { id: weeklistId } });
     }
-    if (taskId === 7) {
+    if (taskId === 6) {
         router.push({ name: 'import-product-list', params: { id: weeklistId } });
     }
-    if (taskId === 8) {
+    if (taskId === 7) {
         router.push({ name: 'create-translations', params: { id: weeklistId } });
     }                        
 };
@@ -91,13 +88,10 @@ const goToTask = (taskId, weeklistId) => {
                             Get AI Content
                         </th>
                         <th scope="col" class="px-6 py-3">
-                            Assign Location
-                        </th>
-                        <th scope="col" class="px-6 py-3">
-                            Assign Correct Quantity
-                        </th>
-                        <th scope="col" class="px-6 py-3">
                             Upload AI Content
+                        </th>                        
+                        <th scope="col" class="px-6 py-3">
+                            Create Checklist
                         </th>
                         <th scope="col" class="px-6 py-3">
                             Create Final List
