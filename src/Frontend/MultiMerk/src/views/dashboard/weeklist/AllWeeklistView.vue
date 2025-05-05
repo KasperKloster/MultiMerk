@@ -124,8 +124,7 @@ const goToTask = (taskId, weeklistId) => {
                             {{ week.supplier }}
                         </td>
 
-                        <td v-for="task in week.weeklistTasks" :key="task.weeklistTaskId" class="px-6 py-4">
-                            {{ task.weeklistTaskId }}
+                        <td v-for="task in week.weeklistTasks" :key="task.weeklistTaskId" class="px-6 py-4">                            
                             <div class="flex flex-col">
                                 <div class="flex items-center">
                                     <div class="h-2.5 w-2.5 rounded-full me-2" :class="{
