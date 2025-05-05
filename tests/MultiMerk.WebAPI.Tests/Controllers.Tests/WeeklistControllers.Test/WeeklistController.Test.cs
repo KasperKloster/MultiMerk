@@ -13,14 +13,13 @@ namespace MultiMerk.WebAPI.Tests.Controllers.Tests.WeeklistControllers.Test
     public class WeeklistControllerTest
     {
         private readonly Mock<IWeeklistService> _weeklistServiceMock;
-        private readonly Mock<IProductService> _productServiceMock;
+
         private readonly WeeklistController _weeklistController;
 
         public WeeklistControllerTest()
         {
             _weeklistServiceMock = new Mock<IWeeklistService>();
-            _productServiceMock = new Mock<IProductService>();
-            _weeklistController = new WeeklistController(_weeklistServiceMock.Object, _productServiceMock.Object);
+            _weeklistController = new WeeklistController(_weeklistServiceMock.Object);
         }
 
         [Fact]
@@ -62,42 +61,8 @@ namespace MultiMerk.WebAPI.Tests.Controllers.Tests.WeeklistControllers.Test
             Assert.Equal("Upload failed", badRequest.Value);
         }
 
-        [Fact]
-        public async Task AssignEan_ReturnsOk_WhenUpdateIsSuccessful()
-        {
-            // Arrange
-            var fileMock = CreateMockXlsFile("ean.xls");
 
-            _productServiceMock
-                .Setup(s => s.UpdateProductsFromFile(It.IsAny<IFormFile>()))
-                .ReturnsAsync(FilesResult.SuccessResult());
 
-            // Act
-            var result = await _weeklistController.AssignEan(fileMock);
-
-            // Assert
-            var okResult = Assert.IsType<OkResult>(result);
-            Assert.Equal(200, okResult.StatusCode);
-        }
-
-        [Fact]
-        public async Task AssignEan_ReturnsBadRequest_WhenUpdateFails()
-        {
-            // Arrange
-            var fileMock = CreateMockXlsFile("ean_bad.xls");
-
-            _productServiceMock
-                .Setup(s => s.UpdateProductsFromFile(It.IsAny<IFormFile>()))
-                .ReturnsAsync(FilesResult.Fail("EAN update failed"));
-
-            // Act
-            var result = await _weeklistController.AssignEan(fileMock);
-
-            // Assert
-            var badRequest = Assert.IsType<BadRequestObjectResult>(result);
-            Assert.Equal(400, badRequest.StatusCode);
-            Assert.Equal("EAN update failed", badRequest.Value);
-        }
 
         private static FormFile CreateMockXlsFile(string filename, string content = "Mock Excel Content")
         {

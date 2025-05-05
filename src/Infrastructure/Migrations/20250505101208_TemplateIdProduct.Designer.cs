@@ -12,8 +12,8 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 namespace Infrastructure.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    [Migration("20250505093003_TemplateProduct")]
-    partial class TemplateProduct
+    [Migration("20250505101208_TemplateIdProduct")]
+    partial class TemplateIdProduct
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -164,7 +164,7 @@ namespace Infrastructure.Migrations
                     b.Property<string>("SupplierSku")
                         .HasColumnType("text");
 
-                    b.Property<int?>("Template")
+                    b.Property<int?>("TemplateId")
                         .HasColumnType("integer");
 
                     b.Property<string>("Title")

@@ -6,7 +6,7 @@ import DashboardHomeViev from '@/views/dashboard/DashboardHomeView.vue'
 import CreateWeeklistView from '@/views/dashboard/weeklist/tasks/CreateWeeklistView.vue'
 import AllWeeklistView from '@/views/dashboard/weeklist/AllWeeklistView.vue'
 import { jwtDecode } from "jwt-decode";
-import CreateAIContentView from '@/views/dashboard/weeklist/tasks/content/CreateAIContentView.vue'
+import CreateAIContentView from '@/views/dashboard/weeklist/tasks/content/GetAIContentView.vue'
 import UploadAIContentView from '@/views/dashboard/weeklist/tasks/content/UploadAIContentView.vue'
 import AssignEanView from '@/views/dashboard/weeklist/tasks/admin/AssignEanView.vue'
 import CreateFinalListView from '@/views/dashboard/weeklist/tasks/admin/CreateFinalListView.vue'
@@ -52,8 +52,8 @@ const router = createRouter({
       meta: { requiresAuth: true, roles: ['Admin', 'Freelancer'] }
     },
     {
-      path: '/weeklist/tasks/content/create-ai-content/:id',
-      name: 'create-ai-content',
+      path: '/weeklist/tasks/content/get-ai-content/:id',
+      name: 'get-ai-content',
       component: CreateAIContentView,
       meta: { requiresAuth: true, roles: ['Admin', 'Writer'] }
     },

@@ -81,6 +81,8 @@ builder.Services.AddScoped<IApplicationUserRepository, ApplicationUserRepository
 builder.Services.AddScoped<IWeeklistService, WeeklistService>();
 builder.Services.AddScoped<IProductService, ProductService>();
 builder.Services.AddScoped<IWeeklistTaskLinkService, WeeklistTaskLinkService>();
+builder.Services.AddScoped<IContentService, ContentService>();
+
 
 // Allow CORS for your frontend
 builder.Services.AddCors(options =>
@@ -89,7 +91,8 @@ builder.Services.AddCors(options =>
   {
     policy.WithOrigins("http://localhost:5173") // Vue dev server
             .AllowAnyHeader()
-            .AllowAnyMethod();
+            .AllowAnyMethod()
+            .WithExposedHeaders("Content-Disposition");;
   });
 });
 

@@ -161,7 +161,7 @@ namespace Infrastructure.Migrations
                     b.Property<string>("SupplierSku")
                         .HasColumnType("text");
 
-                    b.Property<int?>("Template")
+                    b.Property<int?>("TemplateId")
                         .HasColumnType("integer");
 
                     b.Property<string>("Title")

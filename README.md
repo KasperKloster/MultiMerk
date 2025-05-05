@@ -32,4 +32,4 @@ https://vueschool.io/articles/vuejs-tutorials/how-to-use-vue-router-a-complete-t
 "default": "Host=127.0.0.1; Port=5432; Database=testing_db; Username=wepack;Password=Luxpack11;Include Error Detail=true"
 "default": "Host=localhost; Port=5432; Database=mmultimerk; Username=kasperkloster;Password=password"
 ##
-DELETE FROM "Products" WHERE "Id" BETWEEN 4 AND 8;
+DELETE FROM "Products" WHERE "Id" BETWEEN 4 AND 37;

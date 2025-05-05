@@ -1,9 +1,9 @@
-using Domain.Entities.Files;
-using Microsoft.AspNetCore.Http;
+using Domain.Entities.Products;
+
 
 namespace Application.Files.Interfaces;
 
 public interface ICsvService
 {
-    Task<FilesResult> UploadCsv(IFormFile file);
+  byte[] GenerateProductsReadyForAICSV(List<Product> products);
 }

@@ -41,7 +41,7 @@ const goToTask = (taskId, weeklistId) => {
         router.push({ name: 'assign-ean', params: { id: weeklistId } });
     }
     if (taskId === 2) {
-        router.push({ name: 'create-ai-content', params: { id: weeklistId } });
+        router.push({ name: 'get-ai-content', params: { id: weeklistId } });
     }
     if (taskId === 3) {        
         router.push({ name: 'assign-location', params: { id: weeklistId } });
