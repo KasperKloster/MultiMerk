@@ -88,7 +88,7 @@ const goToTask = (taskId, weeklistId) => {
                             Assign EAN
                         </th>
                         <th scope="col" class="px-6 py-3">
-                            Create AI Content
+                            Get AI Content
                         </th>
                         <th scope="col" class="px-6 py-3">
                             Assign Location

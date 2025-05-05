@@ -11,7 +11,7 @@ public class WeeklistTaskSeeder
         // Seed Products related to Weeklists
         builder.HasData(
             new WeeklistTask { Id = 1, Name = "Assign EAN" },
-            new WeeklistTask { Id = 2, Name = "Create AI content list" },
+            new WeeklistTask { Id = 2, Name = "Get AI content list" },
             new WeeklistTask { Id = 3, Name = "Assign location" },
             new WeeklistTask { Id = 4, Name = "Assign correct quantity" },
             new WeeklistTask { Id = 5, Name = "Upload AI content" },
