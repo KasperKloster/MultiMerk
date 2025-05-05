@@ -97,10 +97,16 @@ public class ProductRepository : IProductRepository
                 {
                     existingProduct.MainImage = updatedProduct.MainImage;
                 }
+
                 if (updatedProduct.TemplateId != null)
                 {
                     existingProduct.TemplateId = updatedProduct.TemplateId;
                 }                                                                       
+
+                if (updatedProduct.Location != null)
+                {
+                    existingProduct.Location = updatedProduct.Location;
+                }
 
                 if (updatedProduct.WeeklistId.HasValue) 
                 {

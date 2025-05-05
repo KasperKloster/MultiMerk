@@ -34,7 +34,7 @@ namespace WebAPI.Controllers.WeeklistControllers
 
         [HttpPost("create")]
         [Authorize(Roles = $"{Roles.Admin},{Roles.Freelancer}")]
-        public async Task<IActionResult> CreateWeeklist([FromForm] IFormFile file, [FromForm] int Number, [FromForm] string OrderNumber, [FromForm] string Supplier)
+        public async Task<IActionResult> CreateWeeklist([FromForm] IFormFile file, [FromForm] int Number, [FromForm] string OrderNumber, [FromForm] string Supplier, [FromForm] string ShippingNumber)
         {
             try
             {
@@ -43,7 +43,8 @@ namespace WebAPI.Controllers.WeeklistControllers
                 {
                     Number = Number,
                     OrderNumber = OrderNumber,
-                    Supplier = Supplier
+                    Supplier = Supplier,
+                    ShippingNumber = ShippingNumber
                 };
 
                 // Send to service to create the weeklist

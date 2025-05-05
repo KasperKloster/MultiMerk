@@ -35,11 +35,13 @@ const handleUpload = async () => {
     const weeklistNumber = document.getElementById('weeklist-number').value;
     const orderNumber = document.getElementById('order-number').value;
     const supplier = document.getElementById('supplier').value;
+    const shippingNumber = document.getElementById('shippingNumber').value;
 
     // Append extra fields
     formData.append('Number', weeklistNumber);
     formData.append('OrderNumber', orderNumber);
     formData.append('Supplier', supplier);
+    formData.append('ShippingNumber', shippingNumber);
 
     try {        
         const response = await api.post(`/weeklist/create`, formData, {
@@ -53,6 +55,7 @@ const handleUpload = async () => {
         weeklistNumber.value = '';
         orderNumber.value = '';
         supplier.value = '';
+        shippingNumber.value = '';
         selectedFile.value = null;
         
     } catch (error) {
@@ -98,6 +101,16 @@ const handleUpload = async () => {
                             <label for="supplier" class="block text-sm/6 font-medium text-gray-900">Supplier</label>
                             <div class="mt-2">
                                 <input type="text" name="supplier" id="supplier" placeholder="TVC" required
+                                class="block w-full rounded-md bg-white px-3 py-1.5 text-base text-gray-900 
+                                outline-1 -outline-offset-1 outline-gray-300 placeholder:text-gray-400 
+                                focus:outline-2 focus:-outline-offset-2 focus:outline-indigo-600 sm:text-sm/6">
+                            </div>
+                        </div>
+
+                        <div class="flex-1">
+                            <label for="shippingNumber" class="block text-sm/6 font-medium text-gray-900">Shipping Number</label>
+                            <div class="mt-2">
+                                <input type="text" name="shippingNumber" id="shippingNumber" placeholder="Shipment001" required
                                 class="block w-full rounded-md bg-white px-3 py-1.5 text-base text-gray-900 
                                 outline-1 -outline-offset-1 outline-gray-300 placeholder:text-gray-400 
                                 focus:outline-2 focus:-outline-offset-2 focus:outline-indigo-600 sm:text-sm/6">

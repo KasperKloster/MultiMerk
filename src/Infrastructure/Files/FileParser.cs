@@ -66,6 +66,7 @@ public class FileParser : IFileParser
                 Weight = GetCellFloat(row, columnMap, "Weight"),
                 MainImage = GetCellString(row, columnMap, "MainImage"),
                 TemplateId = GetCellInt(row, columnMap, "Template"),
+                Location = GetCellString(row, columnMap, "Location"),
             };
             products.Add(product);
         }
@@ -93,6 +94,7 @@ public class FileParser : IFileParser
             { "weight", new[] { "weight" } },
             { "mainImage", new[] { "mainImage", "main_image" } },
             { "template", new[] { "template" } },
+            { "location", new[] { "location" } },
         };
         return headerAliases;
     }

@@ -5,5 +5,5 @@ namespace Application.Files.Interfaces;
 
 public interface IFileParser
 {        
-    public List<Product> GetProductsFromXls(IFormFile file);
+    public List<Product> GetProductsFromXls(IFormFile file);    
 }

@@ -14,8 +14,7 @@ public class Product
     public int Id { get; set; }
     
     [Required]
-    public string Sku { get; set; }
-    
+    public string Sku { get; set; }    
     // Optionals
     public string? SupplierSku { get; set; }
     public string? Title { get; set; }
@@ -31,6 +30,7 @@ public class Product
     public float? Weight { get; set; }
     public string? MainImage { get; set; }
     public int? TemplateId { get; set; }
+    public string? Location { get; set; }
 
     // Relationsship
     // Has one weeklist

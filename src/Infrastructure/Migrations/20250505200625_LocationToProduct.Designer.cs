@@ -3,6 +3,7 @@ using System;
 using Infrastructure.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 
@@ -11,9 +12,11 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 namespace Infrastructure.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    partial class AppDbContextModelSnapshot : ModelSnapshot
+    [Migration("20250505200625_LocationToProduct")]
+    partial class LocationToProduct
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -221,10 +224,6 @@ namespace Infrastructure.Migrations
                         .IsRequired()
                         .HasColumnType("text");
 
-                    b.Property<string>("ShippingNumber")
-                        .IsRequired()
-                        .HasColumnType("text");
-
                     b.Property<string>("Supplier")
                         .IsRequired()
                         .HasColumnType("text");
@@ -242,7 +241,6 @@ namespace Infrastructure.Migrations
                             Id = 1,
                             Number = 101,
                             OrderNumber = "E123",
-                            ShippingNumber = "",
                             Supplier = "TVC"
                         },
                         new
@@ -250,7 +248,6 @@ namespace Infrastructure.Migrations
                             Id = 2,
                             Number = 102,
                             OrderNumber = "E321",
-                            ShippingNumber = "",
                             Supplier = "TVC"
                         });
                 });

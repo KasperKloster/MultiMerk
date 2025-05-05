@@ -16,14 +16,16 @@ public class WeeklistSeeder
                 Id = 1,
                 Number = 101,
                 OrderNumber = "E123",
-                Supplier = "TVC"
+                Supplier = "TVC",
+                ShippingNumber = "Shipment101"
             },
             new Weeklist
             {
                 Id = 2,
                 Number = 102,
                 OrderNumber = "E321",
-                Supplier = "TVC"
+                Supplier = "TVC",
+                ShippingNumber = "Shipment102"
             }
         );
 

@@ -15,6 +15,8 @@ public class Weeklist
     public string OrderNumber { get; set; } = string.Empty;
         
     public string Supplier { get; set; } = string.Empty;
+
+    public string ShippingNumber { get; set; } = string.Empty;
     
     // Relationsship
     // Has many products
