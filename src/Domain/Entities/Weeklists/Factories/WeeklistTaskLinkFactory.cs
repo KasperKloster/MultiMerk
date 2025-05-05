@@ -8,15 +8,17 @@ public static class WeeklistTaskLinkFactory
     public static List<WeeklistTaskLink> CreateLinks(
         int weeklistId,
         List<WeeklistTask> tasks,
-        int firstTaskId,
         int readyStatusId,
         int defaultStatusId,
         Dictionary<string, string> userRoleToUserId,
         Dictionary<int, string> taskIdToRole)
     {
+        // Define which task IDs should get ready status
+        var readyTaskIds = new HashSet<int> { 1, 2, 4 };
+
         return tasks.Select(task =>
         {
-            var statusId = task.Id == firstTaskId ? readyStatusId : defaultStatusId;
+            var statusId = readyTaskIds.Contains(task.Id) ? readyStatusId : defaultStatusId;
 
             string? assignedUserId = null;
             if (taskIdToRole.TryGetValue(task.Id, out var role))

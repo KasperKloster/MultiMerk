@@ -14,26 +14,9 @@ namespace WebAPI.Controllers.WeeklistControllers.WarehouseControllers
             
         }
 
-        [HttpPost("assign-location")]
+        [HttpPost("get-checklist")]
         // [Authorize(Roles = $"{Roles.Admin}")]
-        public async Task<IActionResult> AssignLocation([FromForm] int weeklistId)
-        {
-                            
-            try
-            {
-                // Mark Current task as done, set next to ready
-                var updateTaskResult = await UpdateTaskStatusAndAdvanceNext(weeklistId, WeeklistTaskName.AssignLocation);                
-            }
-            catch (Exception ex)
-            {
-                return StatusCode(500, $"Something went wrong. Please try again. {ex.Message}");
-            }
-            return Ok();
-        }
-
-        [HttpPost("assign-qty")]
-        // [Authorize(Roles = $"{Roles.Admin}")]
-        public async Task<IActionResult> AssignQty([FromForm] int weeklistId)
+        public async Task<IActionResult> GetChecklist([FromForm] int weeklistId)
         {
             try
             {

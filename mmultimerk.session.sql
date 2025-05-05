@@ -1,1 +1,0 @@
-DELETE FROM "Products" WHERE "Id" BETWEEN 10 AND 14;

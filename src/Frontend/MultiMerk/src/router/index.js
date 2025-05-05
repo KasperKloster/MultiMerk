@@ -11,9 +11,8 @@ import UploadAIContentView from '@/views/dashboard/weeklist/tasks/content/Upload
 import AssignEanView from '@/views/dashboard/weeklist/tasks/admin/AssignEanView.vue'
 import CreateFinalListView from '@/views/dashboard/weeklist/tasks/admin/CreateFinalListView.vue'
 import CreateTranslationsView from '@/views/dashboard/weeklist/tasks/admin/CreateTranslationsView.vue'
-import AssignLocationView from '@/views/dashboard/weeklist/tasks/warehouse/AssignLocationView.vue'
-import AssignQtyView from '@/views/dashboard/weeklist/tasks/warehouse/AssignQtyView.vue'
 import ImportProductListView from '@/views/dashboard/weeklist/tasks/admin/ImportProductListView.vue'
+import CreateCheckList from '@/views/dashboard/weeklist/tasks/warehouse/CreateCheckList.vue'
 
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
@@ -64,17 +63,11 @@ const router = createRouter({
       meta: { requiresAuth: true, roles: ['Admin', 'Writer'] }
     },    
     {
-      path: '/weeklist/tasks/warehouse/assign-location/:id',
-      name: 'assign-location',
-      component: AssignLocationView,
+      path: '/weeklist/tasks/warehouse/create-checklist/:id',
+      name: 'create-checklist',
+      component: CreateCheckList,
       meta: { requiresAuth: true, roles: ['Admin', 'WarehouseWorker', 'WarehouseManager'] }
-    },
-    {
-      path: '/weeklist/tasks/warehouse/assign-qty/:id',
-      name: 'assign-qty',
-      component: AssignQtyView,
-      meta: { requiresAuth: true, roles: ['Admin', 'WarehouseWorker', 'WarehouseManager'] }
-    },     
+    },    
     {
       path: '/weeklist/tasks/admin/assign-ean/:id',
       name: 'assign-ean',
