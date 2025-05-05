@@ -30,6 +30,7 @@ public class Product
     public int? Qty { get; set; }
     public float? Weight { get; set; }
     public string? MainImage { get; set; }
+    public int? Template { get; set; }
 
     // Relationsship
     // Has one weeklist

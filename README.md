@@ -32,41 +32,4 @@ https://vueschool.io/articles/vuejs-tutorials/how-to-use-vue-router-a-complete-t
 "default": "Host=127.0.0.1; Port=5432; Database=testing_db; Username=wepack;Password=Luxpack11;Include Error Detail=true"
 "default": "Host=localhost; Port=5432; Database=mmultimerk; Username=kasperkloster;Password=password"
 ##
-DELETE FROM "Products"
-WHERE "Id" BETWEEN 4 AND 8;
-
-
-#
-
-
-public async Task<bool> CanUserPerformTaskAsync(
-    ApplicationUser user,
-    WeeklistTaskLink taskLink,
-    UserManager<ApplicationUser> userManager)
-{
-    if (user == null || taskLink?.WeeklistTask == null)
-        return false;
-
-    var roles = await userManager.GetRolesAsync(user);
-
-    // Admins can always perform tasks
-    if (roles.Contains(Roles.Admin))
-        return true;
-
-    // Check if this user is assigned to this task
-    if (taskLink.AssignedUserId != user.Id)
-        return false;
-
-    // Check if user has required role
-    return roles.Contains(taskLink.WeeklistTask.RequiredRole);
-}
-
-
-var taskLink = await _dbContext.WeeklistTaskLinks
-    .Include(x => x.WeeklistTask)
-    .FirstOrDefaultAsync(x => x.WeeklistId == someId && x.WeeklistTaskId == taskId);
-
-if (!await _authorizationService.CanUserPerformTaskAsync(user, taskLink, _userManager))
-{
-    throw new UnauthorizedAccessException("You're not authorized to do this task.");
-}
+DELETE FROM "Products" WHERE "Id" BETWEEN 4 AND 8;

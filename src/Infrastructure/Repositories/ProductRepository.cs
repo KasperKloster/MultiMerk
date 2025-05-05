@@ -96,7 +96,11 @@ public class ProductRepository : IProductRepository
                 if (updatedProduct.MainImage != null)
                 {
                     existingProduct.MainImage = updatedProduct.MainImage;
-                }                                                       
+                }
+                if (updatedProduct.Template != null)
+                {
+                    existingProduct.Template = updatedProduct.Template;
+                }                                                                       
 
                 if (updatedProduct.WeeklistId.HasValue) 
                 {

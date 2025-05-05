@@ -126,7 +126,8 @@ public class FileParser : IFileParser
                 Cost = GetCellFloat(row, columnMap, "Cost"),
                 Qty = GetCellInt(row, columnMap, "Qty"),
                 Weight = GetCellFloat(row, columnMap, "Weight"),
-                MainImage = GetCellString(row, columnMap, "MainImage")
+                MainImage = GetCellString(row, columnMap, "MainImage"),
+                Template = GetCellInt(row, columnMap, "Template"),
             };
             products.Add(product);
         }
@@ -153,6 +154,7 @@ public class FileParser : IFileParser
             { "qty", new[] { "qty", "quantity" } },
             { "weight", new[] { "weight" } },
             { "mainImage", new[] { "mainImage", "main_image" } },
+            { "template", new[] { "template" } },
         };
         return headerAliases;
     }
