@@ -12,8 +12,8 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 namespace Infrastructure.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    [Migration("20250423174410_WeeklistUpdate")]
-    partial class WeeklistUpdate
+    [Migration("20250505162824_InitialSeeding")]
+    partial class InitialSeeding
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -25,7 +25,7 @@ namespace Infrastructure.Migrations
 
             NpgsqlModelBuilderExtensions.UseIdentityByDefaultColumns(modelBuilder);
 
-            modelBuilder.Entity("Domain.Models.Authentication.ApplicationUser", b =>
+            modelBuilder.Entity("Domain.Entities.Authentication.ApplicationUser", b =>
                 {
                     b.Property<string>("Id")
                         .HasColumnType("text");
@@ -93,7 +93,7 @@ namespace Infrastructure.Migrations
                     b.ToTable("AspNetUsers", (string)null);
                 });
 
-            modelBuilder.Entity("Domain.Models.Authentication.TokenInfo", b =>
+            modelBuilder.Entity("Domain.Entities.Authentication.TokenInfo", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
@@ -119,7 +119,7 @@ namespace Infrastructure.Migrations
                     b.ToTable("TokenInfos");
                 });
 
-            modelBuilder.Entity("Domain.Models.Products.Product", b =>
+            modelBuilder.Entity("Domain.Entities.Products.Product", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
@@ -127,21 +127,86 @@ namespace Infrastructure.Migrations
 
                     NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
 
+                    b.Property<string>("CategoryId")
+                        .HasColumnType("text");
+
+                    b.Property<string>("Color")
+                        .HasColumnType("text");
+
+                    b.Property<float?>("Cost")
+                        .HasColumnType("real");
+
+                    b.Property<string>("Description")
+                        .HasColumnType("text");
+
+                    b.Property<string>("EAN")
+                        .HasColumnType("text");
+
+                    b.Property<string>("MainImage")
+                        .HasColumnType("text");
+
+                    b.Property<string>("Material")
+                        .HasColumnType("text");
+
+                    b.Property<int?>("Price")
+                        .HasColumnType("integer");
+
+                    b.Property<int?>("Qty")
+                        .HasColumnType("integer");
+
+                    b.Property<string>("Series")
+                        .HasColumnType("text");
+
                     b.Property<string>("Sku")
                         .IsRequired()
+                        .HasColumnType("text");
+
+                    b.Property<string>("SupplierSku")
+                        .HasColumnType("text");
+
+                    b.Property<int?>("TemplateId")
+                        .HasColumnType("integer");
+
+                    b.Property<string>("Title")
                         .HasColumnType("text");
 
                     b.Property<int?>("WeeklistId")
                         .HasColumnType("integer");
 
+                    b.Property<float?>("Weight")
+                        .HasColumnType("real");
+
                     b.HasKey("Id");
+
+                    b.HasIndex("Sku")
+                        .IsUnique();
 
                     b.HasIndex("WeeklistId");
 
                     b.ToTable("Products");
+
+                    b.HasData(
+                        new
+                        {
+                            Id = 1,
+                            Sku = "LC01-1001-1",
+                            WeeklistId = 1
+                        },
+                        new
+                        {
+                            Id = 2,
+                            Sku = "LC01-1001-2",
+                            WeeklistId = 1
+                        },
+                        new
+                        {
+                            Id = 3,
+                            Sku = "LC02-2002-1",
+                            WeeklistId = 2
+                        });
                 });
 
-            modelBuilder.Entity("Domain.Models.Weeklists.Weeklist", b =>
+            modelBuilder.Entity("Domain.Entities.Weeklists.Entities.Weeklist", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
@@ -162,10 +227,29 @@ namespace Infrastructure.Migrations
 
                     b.HasKey("Id");
 
+                    b.HasIndex("Number")
+                        .IsUnique();
+
                     b.ToTable("Weeklists");
+
+                    b.HasData(
+                        new
+                        {
+                            Id = 1,
+                            Number = 101,
+                            OrderNumber = "E123",
+                            Supplier = "TVC"
+                        },
+                        new
+                        {
+                            Id = 2,
+                            Number = 102,
+                            OrderNumber = "E321",
+                            Supplier = "TVC"
+                        });
                 });
 
-            modelBuilder.Entity("Domain.Models.Weeklists.WeeklistTaskLinks.WeeklistTaskLink", b =>
+            modelBuilder.Entity("Domain.Entities.Weeklists.WeeklistTaskLinks.WeeklistTaskLink", b =>
                 {
                     b.Property<int>("WeeklistId")
                         .HasColumnType("integer");
@@ -173,19 +257,124 @@ namespace Infrastructure.Migrations
                     b.Property<int>("WeeklistTaskId")
                         .HasColumnType("integer");
 
+                    b.Property<string>("AssignedUserId")
+                        .HasColumnType("text");
+
                     b.Property<int>("WeeklistTaskStatusId")
                         .HasColumnType("integer");
 
                     b.HasKey("WeeklistId", "WeeklistTaskId");
+
+                    b.HasIndex("AssignedUserId");
 
                     b.HasIndex("WeeklistTaskId");
 
                     b.HasIndex("WeeklistTaskStatusId");
 
                     b.ToTable("WeeklistTaskLinks");
+
+                    b.HasData(
+                        new
+                        {
+                            WeeklistId = 1,
+                            WeeklistTaskId = 1,
+                            AssignedUserId = "00000000-0000-0000-0000-000000000001",
+                            WeeklistTaskStatusId = 4
+                        },
+                        new
+                        {
+                            WeeklistId = 1,
+                            WeeklistTaskId = 2,
+                            AssignedUserId = "00000000-0000-0000-0000-000000000004",
+                            WeeklistTaskStatusId = 4
+                        },
+                        new
+                        {
+                            WeeklistId = 1,
+                            WeeklistTaskId = 3,
+                            AssignedUserId = "00000000-0000-0000-0000-000000000004",
+                            WeeklistTaskStatusId = 1
+                        },
+                        new
+                        {
+                            WeeklistId = 1,
+                            WeeklistTaskId = 4,
+                            AssignedUserId = "00000000-0000-0000-0000-000000000005",
+                            WeeklistTaskStatusId = 2
+                        },
+                        new
+                        {
+                            WeeklistId = 1,
+                            WeeklistTaskId = 5,
+                            AssignedUserId = "00000000-0000-0000-0000-000000000001",
+                            WeeklistTaskStatusId = 2
+                        },
+                        new
+                        {
+                            WeeklistId = 1,
+                            WeeklistTaskId = 6,
+                            AssignedUserId = "00000000-0000-0000-0000-000000000001",
+                            WeeklistTaskStatusId = 1
+                        },
+                        new
+                        {
+                            WeeklistId = 1,
+                            WeeklistTaskId = 7,
+                            AssignedUserId = "00000000-0000-0000-0000-000000000001",
+                            WeeklistTaskStatusId = 1
+                        },
+                        new
+                        {
+                            WeeklistId = 2,
+                            WeeklistTaskId = 1,
+                            AssignedUserId = "00000000-0000-0000-0000-000000000001",
+                            WeeklistTaskStatusId = 2
+                        },
+                        new
+                        {
+                            WeeklistId = 2,
+                            WeeklistTaskId = 2,
+                            AssignedUserId = "00000000-0000-0000-0000-000000000004",
+                            WeeklistTaskStatusId = 2
+                        },
+                        new
+                        {
+                            WeeklistId = 2,
+                            WeeklistTaskId = 3,
+                            AssignedUserId = "00000000-0000-0000-0000-000000000004",
+                            WeeklistTaskStatusId = 1
+                        },
+                        new
+                        {
+                            WeeklistId = 2,
+                            WeeklistTaskId = 4,
+                            AssignedUserId = "00000000-0000-0000-0000-000000000005",
+                            WeeklistTaskStatusId = 2
+                        },
+                        new
+                        {
+                            WeeklistId = 2,
+                            WeeklistTaskId = 5,
+                            AssignedUserId = "00000000-0000-0000-0000-000000000001",
+                            WeeklistTaskStatusId = 1
+                        },
+                        new
+                        {
+                            WeeklistId = 2,
+                            WeeklistTaskId = 6,
+                            AssignedUserId = "00000000-0000-0000-0000-000000000001",
+                            WeeklistTaskStatusId = 1
+                        },
+                        new
+                        {
+                            WeeklistId = 2,
+                            WeeklistTaskId = 7,
+                            AssignedUserId = "00000000-0000-0000-0000-000000000001",
+                            WeeklistTaskStatusId = 1
+                        });
                 });
 
-            modelBuilder.Entity("Domain.Models.Weeklists.WeeklistTasks.WeeklistTask", b =>
+            modelBuilder.Entity("Domain.Entities.Weeklists.WeeklistTasks.WeeklistTask", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
@@ -210,41 +399,36 @@ namespace Infrastructure.Migrations
                         new
                         {
                             Id = 2,
-                            Name = "Create AI content list"
+                            Name = "Get AI content list"
                         },
                         new
                         {
                             Id = 3,
-                            Name = "Assign location"
-                        },
-                        new
-                        {
-                            Id = 4,
-                            Name = "Assign correct quantity"
-                        },
-                        new
-                        {
-                            Id = 5,
                             Name = "Upload AI content"
                         },
                         new
                         {
-                            Id = 6,
+                            Id = 4,
+                            Name = "Create Checklist"
+                        },
+                        new
+                        {
+                            Id = 5,
                             Name = "Create final list"
                         },
                         new
                         {
-                            Id = 7,
+                            Id = 6,
                             Name = "Import product list"
                         },
                         new
                         {
-                            Id = 8,
+                            Id = 7,
                             Name = "Create translations"
                         });
                 });
 
-            modelBuilder.Entity("Domain.Models.Weeklists.WeeklistTasks.WeeklistTaskStatus", b =>
+            modelBuilder.Entity("Domain.Entities.Weeklists.WeeklistTasks.WeeklistTaskStatus", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
@@ -280,6 +464,72 @@ namespace Infrastructure.Migrations
                         {
                             Id = 4,
                             Status = "Done"
+                        });
+                });
+
+            modelBuilder.Entity("Domain.Entities.Weeklists.WeeklistTasks.WeeklistTaskUserRoleAssignment", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("integer");
+
+                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
+
+                    b.Property<string>("UserRole")
+                        .IsRequired()
+                        .HasColumnType("text");
+
+                    b.Property<int>("WeeklistTaskId")
+                        .HasColumnType("integer");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("WeeklistTaskId");
+
+                    b.ToTable("WeeklistTaskUserRoleAssignments");
+
+                    b.HasData(
+                        new
+                        {
+                            Id = 1,
+                            UserRole = "Admin",
+                            WeeklistTaskId = 1
+                        },
+                        new
+                        {
+                            Id = 2,
+                            UserRole = "Writer",
+                            WeeklistTaskId = 2
+                        },
+                        new
+                        {
+                            Id = 3,
+                            UserRole = "Writer",
+                            WeeklistTaskId = 3
+                        },
+                        new
+                        {
+                            Id = 4,
+                            UserRole = "WarehouseWorker",
+                            WeeklistTaskId = 4
+                        },
+                        new
+                        {
+                            Id = 5,
+                            UserRole = "Admin",
+                            WeeklistTaskId = 5
+                        },
+                        new
+                        {
+                            Id = 6,
+                            UserRole = "Admin",
+                            WeeklistTaskId = 6
+                        },
+                        new
+                        {
+                            Id = 7,
+                            UserRole = "Admin",
+                            WeeklistTaskId = 7
                         });
                 });
 
@@ -415,9 +665,9 @@ namespace Infrastructure.Migrations
                     b.ToTable("AspNetUserTokens", (string)null);
                 });
 
-            modelBuilder.Entity("Domain.Models.Products.Product", b =>
+            modelBuilder.Entity("Domain.Entities.Products.Product", b =>
                 {
-                    b.HasOne("Domain.Models.Weeklists.Weeklist", "Weeklist")
+                    b.HasOne("Domain.Entities.Weeklists.Entities.Weeklist", "Weeklist")
                         .WithMany("Products")
                         .HasForeignKey("WeeklistId")
                         .OnDelete(DeleteBehavior.Cascade);
@@ -425,31 +675,48 @@ namespace Infrastructure.Migrations
                     b.Navigation("Weeklist");
                 });
 
-            modelBuilder.Entity("Domain.Models.Weeklists.WeeklistTaskLinks.WeeklistTaskLink", b =>
+            modelBuilder.Entity("Domain.Entities.Weeklists.WeeklistTaskLinks.WeeklistTaskLink", b =>
                 {
-                    b.HasOne("Domain.Models.Weeklists.Weeklist", "Weeklist")
+                    b.HasOne("Domain.Entities.Authentication.ApplicationUser", "AssignedUser")
+                        .WithMany()
+                        .HasForeignKey("AssignedUserId");
+
+                    b.HasOne("Domain.Entities.Weeklists.Entities.Weeklist", "Weeklist")
                         .WithMany("WeeklistTaskLinks")
                         .HasForeignKey("WeeklistId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.HasOne("Domain.Models.Weeklists.WeeklistTasks.WeeklistTask", "WeeklistTask")
+                    b.HasOne("Domain.Entities.Weeklists.WeeklistTasks.WeeklistTask", "WeeklistTask")
                         .WithMany()
                         .HasForeignKey("WeeklistTaskId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.HasOne("Domain.Models.Weeklists.WeeklistTasks.WeeklistTaskStatus", "WeeklistTaskStatus")
+                    b.HasOne("Domain.Entities.Weeklists.WeeklistTasks.WeeklistTaskStatus", "WeeklistTaskStatus")
                         .WithMany()
                         .HasForeignKey("WeeklistTaskStatusId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
+
+                    b.Navigation("AssignedUser");
 
                     b.Navigation("Weeklist");
 
                     b.Navigation("WeeklistTask");
 
                     b.Navigation("WeeklistTaskStatus");
+                });
+
+            modelBuilder.Entity("Domain.Entities.Weeklists.WeeklistTasks.WeeklistTaskUserRoleAssignment", b =>
+                {
+                    b.HasOne("Domain.Entities.Weeklists.WeeklistTasks.WeeklistTask", "WeeklistTask")
+                        .WithMany("UserRoleAssignments")
+                        .HasForeignKey("WeeklistTaskId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("WeeklistTask");
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRoleClaim<string>", b =>
@@ -463,7 +730,7 @@ namespace Infrastructure.Migrations
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityUserClaim<string>", b =>
                 {
-                    b.HasOne("Domain.Models.Authentication.ApplicationUser", null)
+                    b.HasOne("Domain.Entities.Authentication.ApplicationUser", null)
                         .WithMany()
                         .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Cascade)
@@ -472,7 +739,7 @@ namespace Infrastructure.Migrations
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityUserLogin<string>", b =>
                 {
-                    b.HasOne("Domain.Models.Authentication.ApplicationUser", null)
+                    b.HasOne("Domain.Entities.Authentication.ApplicationUser", null)
                         .WithMany()
                         .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Cascade)
@@ -487,7 +754,7 @@ namespace Infrastructure.Migrations
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.HasOne("Domain.Models.Authentication.ApplicationUser", null)
+                    b.HasOne("Domain.Entities.Authentication.ApplicationUser", null)
                         .WithMany()
                         .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Cascade)
@@ -496,18 +763,23 @@ namespace Infrastructure.Migrations
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityUserToken<string>", b =>
                 {
-                    b.HasOne("Domain.Models.Authentication.ApplicationUser", null)
+                    b.HasOne("Domain.Entities.Authentication.ApplicationUser", null)
                         .WithMany()
                         .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
                 });
 
-            modelBuilder.Entity("Domain.Models.Weeklists.Weeklist", b =>
+            modelBuilder.Entity("Domain.Entities.Weeklists.Entities.Weeklist", b =>
                 {
                     b.Navigation("Products");
 
                     b.Navigation("WeeklistTaskLinks");
+                });
+
+            modelBuilder.Entity("Domain.Entities.Weeklists.WeeklistTasks.WeeklistTask", b =>
+                {
+                    b.Navigation("UserRoleAssignments");
                 });
 #pragma warning restore 612, 618
         }

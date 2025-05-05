@@ -24,7 +24,7 @@ public class WeeklistTaskUserRoleAssignmentSeeder
             new WeeklistTaskUserRoleAssignment
             {
                 Id = 3,
-                UserRole = Roles.WarehouseWorker,
+                UserRole = Roles.Writer,
                 WeeklistTaskId = 3
             },
             new WeeklistTaskUserRoleAssignment
@@ -36,7 +36,7 @@ public class WeeklistTaskUserRoleAssignmentSeeder
             new WeeklistTaskUserRoleAssignment
             {
                 Id = 5,
-                UserRole = Roles.Writer,
+                UserRole = Roles.Admin,
                 WeeklistTaskId = 5
             },
             new WeeklistTaskUserRoleAssignment
@@ -50,12 +50,6 @@ public class WeeklistTaskUserRoleAssignmentSeeder
                 Id = 7,
                 UserRole = Roles.Admin,
                 WeeklistTaskId = 7
-            },
-            new WeeklistTaskUserRoleAssignment
-            {
-                Id = 8,
-                UserRole = Roles.Admin,
-                WeeklistTaskId = 8
             },
         };
         builder.HasData(userRoleAssignments);

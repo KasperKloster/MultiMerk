@@ -63,49 +63,49 @@ public class WeeklistTaskLinkSeeder
             // Link Weeklist 2
             new WeeklistTaskLink
             {
-                WeeklistId = 1,
+                WeeklistId = 2,
                 WeeklistTaskId = 1, // "Assign EAN"
                 WeeklistTaskStatusId = 2, // "Ready"
                 AssignedUserId = "00000000-0000-0000-0000-000000000001", // Admin  
             },
             new WeeklistTaskLink
             {
-                WeeklistId = 1,
+                WeeklistId = 2,
                 WeeklistTaskId = 2,
                 WeeklistTaskStatusId = 2, // "Ready"
                 AssignedUserId = "00000000-0000-0000-0000-000000000004", // Writer
             },     
             new WeeklistTaskLink
             {
-                WeeklistId = 1,
+                WeeklistId = 2,
                 WeeklistTaskId = 3,
                 WeeklistTaskStatusId = 1, // "Awaiting"
                 AssignedUserId = "00000000-0000-0000-0000-000000000004", // Writer
             }, 
             new WeeklistTaskLink
             {
-                WeeklistId = 1,
+                WeeklistId = 2,
                 WeeklistTaskId = 4,
                 WeeklistTaskStatusId = 2, // "Ready"
                 AssignedUserId = "00000000-0000-0000-0000-000000000005", // WarehouseWorker
             }, 
             new WeeklistTaskLink
             {
-                WeeklistId = 1,
+                WeeklistId = 2,
                 WeeklistTaskId = 5,
                 WeeklistTaskStatusId = 1, // "Awaiting"
                 AssignedUserId = "00000000-0000-0000-0000-000000000001", // Admin
             }, 
             new WeeklistTaskLink
             {
-                WeeklistId = 1,
+                WeeklistId = 2,
                 WeeklistTaskId = 6,
                 WeeklistTaskStatusId = 1, // "Awaiting"
                 AssignedUserId = "00000000-0000-0000-0000-000000000001", // Admin
             },     
             new WeeklistTaskLink
             {
-                WeeklistId = 1,
+                WeeklistId = 2,
                 WeeklistTaskId = 7,
                 WeeklistTaskStatusId = 1, // "Awaiting"
                 AssignedUserId = "00000000-0000-0000-0000-000000000001", // Admin
