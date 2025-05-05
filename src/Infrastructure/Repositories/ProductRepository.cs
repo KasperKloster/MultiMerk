@@ -96,7 +96,11 @@ public class ProductRepository : IProductRepository
                 if (updatedProduct.MainImage != null)
                 {
                     existingProduct.MainImage = updatedProduct.MainImage;
-                }                                                       
+                }
+                if (updatedProduct.TemplateId != null)
+                {
+                    existingProduct.TemplateId = updatedProduct.TemplateId;
+                }                                                                       
 
                 if (updatedProduct.WeeklistId.HasValue) 
                 {
@@ -107,4 +111,14 @@ public class ProductRepository : IProductRepository
 
         await _dbContext.SaveChangesAsync();
     }
+
+    public async Task<List<Product>> GetProductsReadyForAI(int weeklistId)
+    {
+        return await _dbContext.Products
+                    .Where(p => p.WeeklistId == weeklistId && p.TemplateId == null)
+                    .GroupBy(p => p.Series ?? p.Sku) // Group by series, if there, else SKU
+                    .Select(g => g.First())
+                    .ToListAsync();
+    }
+
 }

@@ -17,7 +17,8 @@ public class XlsFileService : IXlsFileService
     public async Task<FilesResult> GetProductsFromXls(IFormFile file)
     {        
         // Is an .xls file        
-        if(!HasValidXlsFileExtension(file)) {
+        if(!HasValidXlsFileExtension(file)) 
+        {
             return FilesResult.Fail(message: "Invalid file extension.");
         }
         // Getting products from .xls

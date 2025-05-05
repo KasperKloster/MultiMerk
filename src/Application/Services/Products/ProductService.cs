@@ -25,15 +25,9 @@ public class ProductService : IProductService
         try
         {
             string FileExtension = GetFileExtension(file);
-            if (FileExtension != "csv" && FileExtension != "xls")
+            if (FileExtension != "xls")
             {
                 return FilesResult.Fail("Unsupported file type.");
-            }
-
-            if(FileExtension == "csv")
-            {
-                char Delimiter = _fileParser.GetDelimiterFromCsv(file);
-                Products = _fileParser.GetProductsFromCsv(file: file, delimiter: Delimiter);
             }
             
             if(FileExtension == "xls")
@@ -64,9 +58,9 @@ public class ProductService : IProductService
     private static string GetFileExtension(IFormFile file)
     {
         string FileExtension = Path.GetExtension(file.FileName);
-        if(FileExtension == ".csv") {
-            return "csv";
-        }
+        // if(FileExtension == ".csv") {
+        //     return "csv";
+        // }
         if(FileExtension == ".xls") {
             return "xls";
         }
