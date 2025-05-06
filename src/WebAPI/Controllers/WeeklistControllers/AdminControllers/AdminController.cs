@@ -60,12 +60,13 @@ namespace WebAPI.Controllers.WeeklistControllers.AdminControllers
                         var updateTaskResult = await UpdateTaskStatusAndAdvanceNext(weeklistId: weeklistId, currentTask: WeeklistTaskName.InsertOutOfStock, newTask: WeeklistTaskName.CreateChecklist);
                     }
                 }
+                
+                return Ok();
             }
             catch (Exception ex)
             {
                 return StatusCode(500, $"Something went wrong. Please try again. {ex.Message}");
             }
-            return Ok();
         }
 
         [HttpPost("create-final-list")]
