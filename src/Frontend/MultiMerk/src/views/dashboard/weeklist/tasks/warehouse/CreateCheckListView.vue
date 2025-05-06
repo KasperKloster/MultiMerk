@@ -4,6 +4,8 @@ import { ref } from 'vue';
 import api from '@/utils/api';
 import Header from '@/components/layout/Header.vue';
 import BackToWeeklistLink from '@/components/layout/BackToWeeklistLink.vue';
+import ErrorAlert from '@/components/layout/alerts/ErrorAlert.vue';
+import SuccessAlert from '@/components/layout/alerts/SuccessAlert.vue';
 
 const route = useRoute();
 const weeklistId = route.params.id;
@@ -109,6 +111,15 @@ const handleUpload = async () => {
 <template>
     <Header title="Create Checklist " />
     <BackToWeeklistLink />
+    <div class="w-full max-w-5xl mx-auto">
+        <div v-if="successMessage">
+            <SuccessAlert :message="successMessage" />
+        </div>
+        <div v-if="errorMessage">
+            <ErrorAlert :message="errorMessage" />
+        </div>
+    </div>
+
     <div class="w-full max-w-5xl mx-auto p-6 bg-white rounded-xl shadow-md space-y-4">
         <button @click="getXlsFile()" type="button"
             class="text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-10 py-2.5 text-center inline-flex items-center me-2 dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800 cursor-pointer">
@@ -144,12 +155,6 @@ const handleUpload = async () => {
                             accept=".xls" />
                     </label>
                     <div v-if="selectedFile" class="mt-4 text-sm text-gray-600">Filename: {{ selectedFile.name }}</div>
-                </div>
-
-                <!-- User messages -->
-                <div>
-                    <p v-if="successMessage" class="text-sm text-emerald-500 font-semibold">{{ successMessage }}</p>
-                    <p v-if="errorMessage" class="text-sm text-red-400 font-semibold">{{ errorMessage }}</p>
                 </div>
 
                 <!-- submit Button -->

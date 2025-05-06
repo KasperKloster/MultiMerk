@@ -4,6 +4,8 @@ import { ref } from 'vue';
 import api from '@/utils/api';
 import Header from '@/components/layout/Header.vue';
 import BackToWeeklistLink from '@/components/layout/BackToWeeklistLink.vue';
+import ErrorAlert from '@/components/layout/alerts/ErrorAlert.vue';
+import SuccessAlert from '@/components/layout/alerts/SuccessAlert.vue';
 
 const route = useRoute();
 const weeklistId = route.params.id;
@@ -62,7 +64,7 @@ const getXlsFile = async () => {
     }
 };
 
-const MarkAsTaskComplete = async () => {    
+const MarkAsTaskComplete = async () => {
     // Reset messages
     successMessage.value = '';
     errorMessage.value = '';
@@ -71,7 +73,7 @@ const MarkAsTaskComplete = async () => {
     const formData = new FormData();
     formData.append('weeklistId', weeklistId);
 
-    try {                                
+    try {
         const response = await api.post('/weeklist/warehouse/mark-as-complete', formData)
         console.log(response);
         successMessage.value = 'Task is completed'
@@ -86,6 +88,15 @@ const MarkAsTaskComplete = async () => {
 <template>
     <Header title="Insert Warehouse list " />
     <BackToWeeklistLink />
+    <div class="w-full max-w-5xl mx-auto">
+        <div v-if="successMessage">
+            <SuccessAlert :message="successMessage" />
+        </div>
+        <div v-if="errorMessage">
+            <ErrorAlert :message="errorMessage" />
+        </div>
+    </div>
+
     <div class="w-full max-w-5xl mx-auto p-6 bg-white rounded-xl shadow-md space-y-4">
         <button @click="getXlsFile()" type="button"
             class="text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-10 py-2.5 text-center inline-flex items-center me-2 dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800 cursor-pointer">
@@ -97,9 +108,7 @@ const MarkAsTaskComplete = async () => {
             </svg>
         </button>
 
-        <button 
-            @click="MarkAsTaskComplete()" 
-            type="button"
+        <button @click="MarkAsTaskComplete()" type="button"
             class="text-white bg-green-700 hover:bg-green-800 focus:ring-4 focus:outline-none focus:ring-green-300 font-medium rounded-lg text-sm px-10 py-2.5 text-center inline-flex items-center me-2 dark:bg-green-600 dark:hover:bg-green-700 dark:focus:ring-green-800 cursor-pointer">
             Mark as Complete
         </button>

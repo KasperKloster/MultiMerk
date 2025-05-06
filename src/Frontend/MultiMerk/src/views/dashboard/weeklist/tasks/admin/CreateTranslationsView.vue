@@ -3,30 +3,33 @@ import { useRoute } from 'vue-router';
 import { ref } from 'vue';
 import api from '@/utils/api';
 import Header from '@/components/layout/Header.vue';
+import BackToWeeklistLink from '@/components/layout/BackToWeeklistLink.vue';
+import ErrorAlert from '@/components/layout/alerts/ErrorAlert.vue';
+import SuccessAlert from '@/components/layout/alerts/SuccessAlert.vue';
 
 const route = useRoute();
 const weeklistId = route.params.id;
 const successMessage = ref('');
 const errorMessage = ref('');
 
-const handleUpload = async () => {    
+const handleUpload = async () => {
     // Reset messages
     successMessage.value = '';
-    errorMessage.value = '';    
+    errorMessage.value = '';
 
     // Setting formdata
     const formData = new FormData();
     // Append
     formData.append('weeklistId', weeklistId);
 
-    try {                
-        const response = await api.post(`/weeklist/admin/create-translations`, formData);        
+    try {
+        const response = await api.post(`/weeklist/admin/create-translations`, formData);
         successMessage.value = `Success`
         console.info("Upload success");
-        
+
     } catch (error) {
         console.log(error);
-        errorMessage.value = `Upload failed: ${error.response.data}`;        
+        errorMessage.value = `Upload failed: ${error.response.data}`;
     }
 };
 
@@ -34,16 +37,19 @@ const handleUpload = async () => {
 
 <template>
     <Header title="Create Translations " />
-    <div class="w-full max-w-5xl mx-auto mt-10 p-6 bg-white rounded-xl shadow-md space-y-4">    
+    <BackToWeeklistLink />
+    <div class="w-full max-w-5xl mx-auto">
+        <div v-if="successMessage">
+            <SuccessAlert :message="successMessage" />
+        </div>
+        <div v-if="errorMessage">
+            <ErrorAlert :message="errorMessage" />
+        </div>
+    </div>
+
+    <div class="w-full max-w-5xl mx-auto mt-10 p-6 bg-white rounded-xl shadow-md space-y-4">
         <form @submit.prevent="handleUpload">
             <div class="space-y-12">
-
-
-                <!-- User messages -->
-                <div>
-                    <p v-if="successMessage" class="text-sm text-emerald-500 font-semibold">{{ successMessage }}</p>                    
-                    <p v-if="errorMessage" class="text-sm text-red-400 font-semibold">{{ errorMessage }}</p>
-                </div>
 
                 <!-- submit Button -->
                 <button type="submit"
@@ -51,7 +57,7 @@ const handleUpload = async () => {
                     Upload
                 </button>
 
-            </div>  
+            </div>
         </form>
-    </div>     
+    </div>
 </template>
