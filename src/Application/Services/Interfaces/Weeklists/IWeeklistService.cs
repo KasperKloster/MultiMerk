@@ -10,4 +10,5 @@ public interface IWeeklistService
 {
     Task<FilesResult> CreateWeeklist(IFormFile file, Weeklist weeklist);
     Task<List<WeeklistDto>> GetAllWeeklistsAsync();
+    Task<WeeklistDto> GetWeeklistAsync(int weeklistId);
 }

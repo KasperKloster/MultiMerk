@@ -1,3 +1,4 @@
+using Application.DTOs.Weeklists;
 using Application.Files.Interfaces;
 using Application.Services.Interfaces.Products;
 using Application.Services.Interfaces.Tasks;
@@ -15,13 +16,14 @@ namespace WebAPI.Controllers.WeeklistControllers.WarehouseControllers
         private readonly IContentService _contentService;
         private readonly IProductService _productService;
         private readonly IXlsFileService _xlsFileService;
+        private readonly IWeeklistService _weeklistService;
 
-
-        public WarehouseController(IWeeklistTaskLinkService weeklistTaskLinkService, IProductService productService, IContentService contentService, IXlsFileService xlsFileService) : base(weeklistTaskLinkService)
+        public WarehouseController(IWeeklistTaskLinkService weeklistTaskLinkService, IProductService productService, IContentService contentService, IXlsFileService xlsFileService, IWeeklistService weeklistService) : base(weeklistTaskLinkService)
         {
             _productService = productService;
             _contentService = contentService;
             _xlsFileService = xlsFileService;
+            _weeklistService = weeklistService;
         }
 
         [HttpPost("get-checklist")]
@@ -32,14 +34,15 @@ namespace WebAPI.Controllers.WeeklistControllers.WarehouseControllers
                 // Getting products
                 List<Product> products = await _contentService.GetProductsReadyForAI(weeklistId);
                 byte[] xlsBytes = _xlsFileService.GetProductChecklist(products);
-                string fileName = $"{weeklistId}-Checklist.xls";
-                 return File(xlsBytes, "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet", fileName);
+                // Get weeklist to create filename
+                WeeklistDto weeklist = await _weeklistService.GetWeeklistAsync(weeklistId);
+                string fileName = $"{weeklist.Number}-{weeklist.OrderNumber}({weeklist.ShippingNumber})-Checklist.xls";
+                return File(xlsBytes, "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet", fileName);
             }
             catch (Exception ex)
             {
                 return StatusCode(500, $"Something went wrong. Please try again. {ex.Message}");
-            }
-            return Ok();
+            }            
         }  
 
         [HttpPost("upload-checklist")]
@@ -55,7 +58,7 @@ namespace WebAPI.Controllers.WeeklistControllers.WarehouseControllers
                 }
 
                 // Mark Current task as done, set next to ready
-                var updateTaskResult = await UpdateTaskStatusAndAdvanceNext(weeklistId, WeeklistTaskName.AssignCorrectQuantity);                
+                var updateTaskResult = await UpdateTaskStatusAndAdvanceNext(weeklistId, WeeklistTaskName.CreateChecklist, WeeklistTaskName.InsertWarehouseList);                
             }
             catch (Exception ex)
             {

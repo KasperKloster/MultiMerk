@@ -4,6 +4,7 @@ using Application.Services.Interfaces.Products;
 using Domain.Entities.Files;
 using Domain.Entities.Products;
 using Microsoft.AspNetCore.Http;
+using Microsoft.EntityFrameworkCore.Migrations.Operations;
 
 namespace Application.Services.Products;
 
@@ -20,51 +21,68 @@ public class ProductService : IProductService
 
     public async Task<FilesResult> UpdateProductsFromFile(IFormFile file)
     {
-        List<Product> Products = [];
         // Getting products from file
+        List<Product> products;
         try
         {
-            string FileExtension = GetFileExtension(file);
-            if (FileExtension != "xls")
+            if (!IsSupportedXlsFile(file))
             {
                 return FilesResult.Fail("Unsupported file type.");
             }
-            
-            if(FileExtension == "xls")
-            {                
-                Products = _fileParser.GetProductsFromXls(file: file);
-            }
+            products = _fileParser.GetProductsFromXls(file);
         }
         catch (Exception ex)
         {
             return FilesResult.Fail($"Error getting products from file: {ex.Message}");
         }
-        
         // Update products
         try
         {
-            await _productRepository.UpdateRangeAsync(products: Products);            
+            await _productRepository.UpdateRangeAsync(products);
         }
         catch (Exception ex)
         {
-            
             return FilesResult.Fail($"Could not update products: {ex.Message}");
-        }        
-        
-        // Return success        
-        return FilesResult.SuccessResult();        
+        }
+        return FilesResult.SuccessResult();
     }
 
-    private static string GetFileExtension(IFormFile file)
+    public FilesResult GetProductsFromOutOfStock(IFormFile file)
     {
-        string FileExtension = Path.GetExtension(file.FileName);
-        // if(FileExtension == ".csv") {
-        //     return "csv";
-        // }
-        if(FileExtension == ".xls") {
-            return "xls";
+
+        try
+        {
+            if (!IsSupportedXlsFile(file))
+            {
+                return FilesResult.Fail("Unsupported file type.");
+            }
+
+            Dictionary<string, int> stockProducts = _fileParser.GetProductsFromOutOfStock(file);
+            return FilesResult.SuccessResultWithOutOfStock(stockProducts);
         }
-        
-        return string.Empty;
+        catch (Exception ex)
+        {
+            return FilesResult.Fail($"Error getting products from file: {ex.Message}");
+        }
     }
+
+    public async Task<FilesResult> UpdateProductsFromStockProducts(Dictionary<string, int> stockProducts)
+    {
+        try
+        {
+            await _productRepository.UpdateQtyFromStockProducts(stockProducts);
+        }
+        catch (Exception ex)
+        {
+            return FilesResult.Fail($"Error updating with stock products: {ex.Message}");
+        }
+        return FilesResult.SuccessResult();
+    }
+
+    private static bool IsSupportedXlsFile(IFormFile file)
+    {
+        return string.Equals(Path.GetExtension(file.FileName), ".xls", StringComparison.OrdinalIgnoreCase);
+    }
+
+
 }

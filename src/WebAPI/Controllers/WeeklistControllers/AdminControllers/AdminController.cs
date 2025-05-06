@@ -1,5 +1,8 @@
+using System.Diagnostics;
 using Application.Services.Interfaces.Products;
 using Application.Services.Interfaces.Tasks;
+using Domain.Entities.Files;
+using Domain.Entities.Products;
 using Domain.Enums;
 using Microsoft.AspNetCore.Mvc;
 
@@ -30,13 +33,40 @@ namespace WebAPI.Controllers.WeeklistControllers.AdminControllers
                 }
 
                 // Mark Current task as done, set next to ready                
-                var updateTaskResult = await UpdateTaskStatusAndAdvanceNext(weeklistId, WeeklistTaskName.AssignEAN);                
+                var updateTaskResult = await UpdateTaskStatus(weeklistId, WeeklistTaskName.AssignEAN, WeeklistTaskStatus.Done);
             }
             catch (Exception ex)
             {
                 return StatusCode(500, $"Something went wrong. Please try again. {ex.Message}");
             }
             return Ok();
+        }
+
+        [HttpPost("insert-out-of-stock")]
+        // [Authorize(Roles = $"{Roles.Admin}")]
+        public async Task<IActionResult> UploadOutOfStock([FromForm] IFormFile file, [FromForm] int weeklistId)
+        {
+            try
+            {
+                // Get products from list
+                FilesResult result = _productService.GetProductsFromOutOfStock(file);
+                if (result.Success && result.StockProducts is not null && result.StockProducts.Count > 0)
+                {
+                    Dictionary<string, int> stockProducts = result.StockProducts;
+                    FilesResult updateResult = await _productService.UpdateProductsFromStockProducts(stockProducts);
+                    
+                    if(updateResult.Success){
+                        // Mark Current task as done, set next to ready                
+                        var updateTaskResult = await UpdateTaskStatusAndAdvanceNext(weeklistId: weeklistId, currentTask: WeeklistTaskName.InsertOutOfStock, newTask: WeeklistTaskName.CreateChecklist);
+                    }
+                }
+                
+                return Ok();
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, $"Something went wrong. Please try again. {ex.Message}");
+            }
         }
 
         [HttpPost("create-final-list")]
@@ -46,7 +76,7 @@ namespace WebAPI.Controllers.WeeklistControllers.AdminControllers
             try
             {
                 // Mark Current task as done, set next to ready                          
-                var updateTaskResult = await UpdateTaskStatusAndAdvanceNext(weeklistId, WeeklistTaskName.CreateFinalList);
+                var updateTaskResult = await UpdateTaskStatusAndAdvanceNext(weeklistId, WeeklistTaskName.CreateFinalList, WeeklistTaskName.ImportProductList);
 
             }
             catch (Exception ex)
@@ -64,7 +94,7 @@ namespace WebAPI.Controllers.WeeklistControllers.AdminControllers
             {
 
                 // Mark Current task as done, set next to ready                
-                var updateTaskResult = await UpdateTaskStatusAndAdvanceNext(weeklistId, WeeklistTaskName.ImportProductList);                
+                var updateTaskResult = await UpdateTaskStatusAndAdvanceNext(weeklistId, WeeklistTaskName.ImportProductList, WeeklistTaskName.CreateTranslations);                
             }
             catch (Exception ex)
             {
@@ -84,7 +114,7 @@ namespace WebAPI.Controllers.WeeklistControllers.AdminControllers
                 var updateResult = await _weeklistTaskLinkService.UpdateTaskStatus(
                     weeklistId: weeklistId,
                     currentTask: WeeklistTaskName.CreateTranslations,
-                    taskStatus: WeeklistTaskStatus.Done);
+                    newTaskStatus: WeeklistTaskStatus.Done);
 
                 if (!updateResult.Success)
                 {

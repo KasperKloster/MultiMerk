@@ -31,4 +31,9 @@ public class WeeklistRepository : IWeeklistRepository
         await _dbContext.SaveChangesAsync();
     }
 
+    public async Task<Weeklist> GetWeeklist(int weeklistId)
+    {
+        return await _dbContext.Weeklists.FirstOrDefaultAsync(w => w.Id == weeklistId);
+        
+    }
 }

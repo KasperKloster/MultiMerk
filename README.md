@@ -3,6 +3,7 @@ dotnet user-secrets init
 dotnet user-secrets set "JWT:secret" "your-32-characters-long-super-strong-jwt-secret-key"
 
 dotnet ef database drop --startup-project src/WebAPI/WebAPI.csproj --project src/Infrastructure
+dotnet ef migrations add --startup-project src/WebAPI/WebAPI.csproj --project src/Infrastructure
 dotnet ef database update --startup-project src/WebAPI/WebAPI.csproj --project src/Infrastructure
 
 ## Backend:

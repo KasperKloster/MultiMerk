@@ -12,8 +12,8 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 namespace Infrastructure.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    [Migration("20250505200625_LocationToProduct")]
-    partial class LocationToProduct
+    [Migration("20250506121100_Seeding")]
+    partial class Seeding
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -200,12 +200,6 @@ namespace Infrastructure.Migrations
                             Id = 2,
                             Sku = "LC01-1001-2",
                             WeeklistId = 1
-                        },
-                        new
-                        {
-                            Id = 3,
-                            Sku = "LC02-2002-1",
-                            WeeklistId = 2
                         });
                 });
 
@@ -221,6 +215,10 @@ namespace Infrastructure.Migrations
                         .HasColumnType("integer");
 
                     b.Property<string>("OrderNumber")
+                        .IsRequired()
+                        .HasColumnType("text");
+
+                    b.Property<string>("ShippingNumber")
                         .IsRequired()
                         .HasColumnType("text");
 
@@ -241,13 +239,7 @@ namespace Infrastructure.Migrations
                             Id = 1,
                             Number = 101,
                             OrderNumber = "E123",
-                            Supplier = "TVC"
-                        },
-                        new
-                        {
-                            Id = 2,
-                            Number = 102,
-                            OrderNumber = "E321",
+                            ShippingNumber = "Shipment101",
                             Supplier = "TVC"
                         });
                 });
@@ -282,41 +274,41 @@ namespace Infrastructure.Migrations
                             WeeklistId = 1,
                             WeeklistTaskId = 1,
                             AssignedUserId = "00000000-0000-0000-0000-000000000001",
-                            WeeklistTaskStatusId = 4
+                            WeeklistTaskStatusId = 2
                         },
                         new
                         {
                             WeeklistId = 1,
                             WeeklistTaskId = 2,
-                            AssignedUserId = "00000000-0000-0000-0000-000000000004",
-                            WeeklistTaskStatusId = 4
+                            AssignedUserId = "00000000-0000-0000-0000-000000000001",
+                            WeeklistTaskStatusId = 2
                         },
                         new
                         {
                             WeeklistId = 1,
                             WeeklistTaskId = 3,
                             AssignedUserId = "00000000-0000-0000-0000-000000000004",
-                            WeeklistTaskStatusId = 1
+                            WeeklistTaskStatusId = 2
                         },
                         new
                         {
                             WeeklistId = 1,
                             WeeklistTaskId = 4,
-                            AssignedUserId = "00000000-0000-0000-0000-000000000005",
-                            WeeklistTaskStatusId = 2
+                            AssignedUserId = "00000000-0000-0000-0000-000000000004",
+                            WeeklistTaskStatusId = 1
                         },
                         new
                         {
                             WeeklistId = 1,
                             WeeklistTaskId = 5,
-                            AssignedUserId = "00000000-0000-0000-0000-000000000001",
-                            WeeklistTaskStatusId = 2
+                            AssignedUserId = "00000000-0000-0000-0000-000000000005",
+                            WeeklistTaskStatusId = 1
                         },
                         new
                         {
                             WeeklistId = 1,
                             WeeklistTaskId = 6,
-                            AssignedUserId = "00000000-0000-0000-0000-000000000001",
+                            AssignedUserId = "00000000-0000-0000-0000-000000000006",
                             WeeklistTaskStatusId = 1
                         },
                         new
@@ -328,50 +320,15 @@ namespace Infrastructure.Migrations
                         },
                         new
                         {
-                            WeeklistId = 2,
-                            WeeklistTaskId = 1,
-                            AssignedUserId = "00000000-0000-0000-0000-000000000001",
-                            WeeklistTaskStatusId = 2
-                        },
-                        new
-                        {
-                            WeeklistId = 2,
-                            WeeklistTaskId = 2,
-                            AssignedUserId = "00000000-0000-0000-0000-000000000004",
-                            WeeklistTaskStatusId = 2
-                        },
-                        new
-                        {
-                            WeeklistId = 2,
-                            WeeklistTaskId = 3,
-                            AssignedUserId = "00000000-0000-0000-0000-000000000004",
-                            WeeklistTaskStatusId = 1
-                        },
-                        new
-                        {
-                            WeeklistId = 2,
-                            WeeklistTaskId = 4,
-                            AssignedUserId = "00000000-0000-0000-0000-000000000005",
-                            WeeklistTaskStatusId = 2
-                        },
-                        new
-                        {
-                            WeeklistId = 2,
-                            WeeklistTaskId = 5,
+                            WeeklistId = 1,
+                            WeeklistTaskId = 8,
                             AssignedUserId = "00000000-0000-0000-0000-000000000001",
                             WeeklistTaskStatusId = 1
                         },
                         new
                         {
-                            WeeklistId = 2,
-                            WeeklistTaskId = 6,
-                            AssignedUserId = "00000000-0000-0000-0000-000000000001",
-                            WeeklistTaskStatusId = 1
-                        },
-                        new
-                        {
-                            WeeklistId = 2,
-                            WeeklistTaskId = 7,
+                            WeeklistId = 1,
+                            WeeklistTaskId = 9,
                             AssignedUserId = "00000000-0000-0000-0000-000000000001",
                             WeeklistTaskStatusId = 1
                         });
@@ -402,31 +359,41 @@ namespace Infrastructure.Migrations
                         new
                         {
                             Id = 2,
-                            Name = "Get AI content list"
+                            Name = "Insert out of stock"
                         },
                         new
                         {
                             Id = 3,
-                            Name = "Upload AI content"
+                            Name = "Get AI content list"
                         },
                         new
                         {
                             Id = 4,
-                            Name = "Create Checklist"
+                            Name = "Upload AI content"
                         },
                         new
                         {
                             Id = 5,
-                            Name = "Create final list"
+                            Name = "Create Checklist"
                         },
                         new
                         {
                             Id = 6,
-                            Name = "Import product list"
+                            Name = "Insert warehouse list"
                         },
                         new
                         {
                             Id = 7,
+                            Name = "Create final list"
+                        },
+                        new
+                        {
+                            Id = 8,
+                            Name = "Import product list"
+                        },
+                        new
+                        {
+                            Id = 9,
                             Name = "Create translations"
                         });
                 });
@@ -501,7 +468,7 @@ namespace Infrastructure.Migrations
                         new
                         {
                             Id = 2,
-                            UserRole = "Writer",
+                            UserRole = "Admin",
                             WeeklistTaskId = 2
                         },
                         new
@@ -513,19 +480,19 @@ namespace Infrastructure.Migrations
                         new
                         {
                             Id = 4,
-                            UserRole = "WarehouseWorker",
+                            UserRole = "Writer",
                             WeeklistTaskId = 4
                         },
                         new
                         {
                             Id = 5,
-                            UserRole = "Admin",
+                            UserRole = "WarehouseWorker",
                             WeeklistTaskId = 5
                         },
                         new
                         {
                             Id = 6,
-                            UserRole = "Admin",
+                            UserRole = "WarehouseManager",
                             WeeklistTaskId = 6
                         },
                         new
@@ -533,6 +500,18 @@ namespace Infrastructure.Migrations
                             Id = 7,
                             UserRole = "Admin",
                             WeeklistTaskId = 7
+                        },
+                        new
+                        {
+                            Id = 8,
+                            UserRole = "Admin",
+                            WeeklistTaskId = 8
+                        },
+                        new
+                        {
+                            Id = 9,
+                            UserRole = "Admin",
+                            WeeklistTaskId = 9
                         });
                 });
 
