@@ -133,7 +133,7 @@ public class ProductRepository : IProductRepository
         var supplierSkus = stockProducts.Keys.ToList();
 
         // Step 2: Find all matching products in the database
-        var existingProducts = await _dbContext.Products.Where(p => supplierSkus.Contains(p.SupplierSku)).ToListAsync();
+        var existingProducts = await _dbContext.Products.Where(p => p.SupplierSku != null && supplierSkus.Contains(p.SupplierSku)).ToListAsync();
 
         // Step 3: Update the Qty field
         foreach (var product in existingProducts)
@@ -148,4 +148,10 @@ public class ProductRepository : IProductRepository
         // Step 4: Save changes to database
         await _dbContext.SaveChangesAsync();
     }
+
+    public async Task<List<Product>> GetProductsFromWeeklist(int weeklistId)
+    {
+        return await _dbContext.Products.Where(p =>p.WeeklistId == weeklistId).ToListAsync();
+    }
+
 }

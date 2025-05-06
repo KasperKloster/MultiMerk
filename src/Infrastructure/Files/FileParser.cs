@@ -162,7 +162,9 @@ public class FileParser : IFileParser
         }
 
         if (!columnMap.ContainsKey("SupplierSku") || !columnMap.ContainsKey("Qty"))
+        {
             throw new InvalidDataException("Required columns 'SupplierSku' and 'Qty' not found.");
+        }
 
         // Step 3: Parse rows
         for (int rowIndex = headerRowIndex + 1; rowIndex <= sheet.LastRowNum; rowIndex++)

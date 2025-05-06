@@ -13,15 +13,14 @@ namespace WebAPI.Controllers.WeeklistControllers.WarehouseControllers
     [ApiController]
     public class WarehouseController : WeeklistBaseController
     {
-        private readonly IContentService _contentService;
+        
         private readonly IProductService _productService;
         private readonly IXlsFileService _xlsFileService;
         private readonly IWeeklistService _weeklistService;
 
-        public WarehouseController(IWeeklistTaskLinkService weeklistTaskLinkService, IProductService productService, IContentService contentService, IXlsFileService xlsFileService, IWeeklistService weeklistService) : base(weeklistTaskLinkService)
+        public WarehouseController(IWeeklistTaskLinkService weeklistTaskLinkService, IProductService productService, IXlsFileService xlsFileService, IWeeklistService weeklistService) : base(weeklistTaskLinkService)
         {
-            _productService = productService;
-            _contentService = contentService;
+            _productService = productService;            
             _xlsFileService = xlsFileService;
             _weeklistService = weeklistService;
         }
@@ -32,7 +31,7 @@ namespace WebAPI.Controllers.WeeklistControllers.WarehouseControllers
             try
             {
                 // Getting products
-                List<Product> products = await _contentService.GetProductsReadyForAI(weeklistId);
+                List<Product> products = await _productService.GetProductsFromWeeklist(weeklistId);
                 byte[] xlsBytes = _xlsFileService.GetProductChecklist(products);
                 // Get weeklist to create filename
                 WeeklistDto weeklist = await _weeklistService.GetWeeklistAsync(weeklistId);
@@ -65,7 +64,45 @@ namespace WebAPI.Controllers.WeeklistControllers.WarehouseControllers
                 return StatusCode(500, $"Something went wrong. Please try again. {ex.Message}");
             }
             return Ok();
-        }   
+        }
+
+        [HttpPost("get-warehouse-list")]
+        // [Authorize(Roles = $"{Roles.Admin}")]
+        public async Task<IActionResult> GetWarehouselist([FromForm] int weeklistId)
+        {
+            try
+            {
+                List<Product> products = await _productService.GetProductsFromWeeklist(weeklistId);
+                byte[] xlsBytes = _xlsFileService.GetProductWarehouselist(products);
+                // Get weeklist to create filename
+                WeeklistDto weeklist = await _weeklistService.GetWeeklistAsync(weeklistId);
+                string fileName = $"{weeklist.Number}-Warehouselist.xls";
+                // Mark Current task as done, set next to ready                
+                return File(xlsBytes, "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet", fileName);
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, $"Something went wrong. Please try again. {ex.Message}");
+            }
+        }  
+
+        [HttpPost("mark-as-complete")]
+        // [Authorize(Roles = $"{Roles.Admin}")]
+        public async Task<IActionResult> MarkTaskAsComplete([FromForm] int weeklistId)
+        {
+            try
+            {
+                // Mark Current task as done, set next to ready
+                var updateTaskResult = await UpdateTaskStatus(weeklistId, WeeklistTaskName.InsertWarehouseList, WeeklistTaskStatus.Done);
+                return Ok();                
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, $"Something went wrong. Please try again. {ex.Message}");
+            }
+        }  
+
+
 
     }
 }

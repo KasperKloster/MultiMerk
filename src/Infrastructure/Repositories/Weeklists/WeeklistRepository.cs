@@ -33,7 +33,6 @@ public class WeeklistRepository : IWeeklistRepository
 
     public async Task<Weeklist> GetWeeklist(int weeklistId)
     {
-        return await _dbContext.Weeklists.FirstOrDefaultAsync(w => w.Id == weeklistId);
-        
+        return await _dbContext.Weeklists.FirstAsync(w => w.Id == weeklistId);        
     }
 }

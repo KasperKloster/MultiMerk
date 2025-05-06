@@ -4,7 +4,6 @@ using Application.Services.Interfaces.Products;
 using Domain.Entities.Files;
 using Domain.Entities.Products;
 using Microsoft.AspNetCore.Http;
-using Microsoft.EntityFrameworkCore.Migrations.Operations;
 
 namespace Application.Services.Products;
 
@@ -17,6 +16,15 @@ public class ProductService : IProductService
     {
         _fileParser = fileParser;
         _productRepository = productRepository;
+    }
+    public async Task<List<Product>> GetProductsFromWeeklist(int weeklistId)
+    {
+        try{
+            List<Product> products = await _productRepository.GetProductsFromWeeklist(weeklistId);
+            return products;
+        } catch(Exception ex) {
+            throw new Exception(ex.Message);
+        }
     }
 
     public async Task<FilesResult> UpdateProductsFromFile(IFormFile file)

@@ -66,9 +66,7 @@ public class WeeklistServiceTests
         // Arrange
         var file = CreateMockFile("invalid.csv");
         var weeklist = CreateWeeklist();
-        _xlsFileService
-            .Setup(x => x.GetProductsFromXls(It.IsAny<IFormFile>()))
-            .ReturnsAsync(FilesResult.Fail("Invalid file extension."));
+        _xlsFileService.Setup(x => x.GetProductsFromXls(It.IsAny<IFormFile>())).Returns(FilesResult.Fail("Invalid file extension."));
 
         var service = CreateService();
 
@@ -87,9 +85,7 @@ public class WeeklistServiceTests
         // Arrange
         var file = CreateMockFile("test.xls");
         var weeklist = CreateWeeklist();
-        _xlsFileService
-            .Setup(x => x.GetProductsFromXls(It.IsAny<IFormFile>()))
-            .ReturnsAsync(FilesResult.Fail("No products found in the file."));
+        _xlsFileService.Setup(x => x.GetProductsFromXls(It.IsAny<IFormFile>())).Returns(FilesResult.Fail("No products found in the file."));
 
         var service = CreateService();
 

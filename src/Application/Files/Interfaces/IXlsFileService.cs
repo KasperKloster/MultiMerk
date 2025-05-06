@@ -6,6 +6,7 @@ namespace Application.Files.Interfaces;
 
 public interface IXlsFileService
 {    
-    Task<FilesResult> GetProductsFromXls(IFormFile file);
+    FilesResult GetProductsFromXls(IFormFile file);
     public byte[] GetProductChecklist(List<Product> products);
+    public byte[] GetProductWarehouselist(List<Product> products);
 }

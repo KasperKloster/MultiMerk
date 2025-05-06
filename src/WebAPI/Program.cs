@@ -41,6 +41,7 @@ builder.Services.AddIdentity<ApplicationUser, IdentityRole>().AddEntityFramework
 builder.Services.AddScoped<ITokenService, TokenService>();
 builder.Services.AddScoped<IAuthService, AuthService>();
 
+var jwtSecret = builder.Configuration["JWT:secret"] ?? throw new InvalidOperationException("JWT secret is not configured.");
 builder.Services.AddAuthentication(options =>
     {
       options.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
@@ -59,7 +60,7 @@ builder.Services.AddAuthentication(options =>
          ValidAudience = builder.Configuration["JWT:ValidAudience"],
          ValidIssuer = builder.Configuration["JWT:ValidIssuer"],
          ClockSkew = TimeSpan.Zero,
-         IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(builder.Configuration["JWT:secret"])),
+         IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(jwtSecret)),
          RoleClaimType = ClaimTypes.Role
        };
      }
@@ -82,7 +83,6 @@ builder.Services.AddScoped<IWeeklistService, WeeklistService>();
 builder.Services.AddScoped<IProductService, ProductService>();
 builder.Services.AddScoped<IWeeklistTaskLinkService, WeeklistTaskLinkService>();
 builder.Services.AddScoped<IContentService, ContentService>();
-
 
 // Allow CORS for your frontend
 builder.Services.AddCors(options =>

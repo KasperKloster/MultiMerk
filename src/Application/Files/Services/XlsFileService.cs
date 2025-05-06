@@ -15,7 +15,7 @@ public class XlsFileService : IXlsFileService
         _fileparser = fileparser;
     }
 
-    public async Task<FilesResult> GetProductsFromXls(IFormFile file)
+    public FilesResult GetProductsFromXls(IFormFile file)
     {
         // Is an .xls file        
         if (!HasValidXlsFileExtension(file))
@@ -70,4 +70,32 @@ public class XlsFileService : IXlsFileService
         workbook.SaveAs(stream);
         return stream.ToArray();
     }
+
+    public byte[] GetProductWarehouselist(List<Product> products)
+    {
+        using var workbook = new XLWorkbook();
+        var worksheet = workbook.Worksheets.Add("Products");
+
+        // Header        
+        worksheet.Cell(1, 1).Value = "SKU";
+        worksheet.Cell(1, 2).Value = "Title";        
+        worksheet.Cell(1, 3).Value = "Qty";
+
+        // Data
+        for (int i = 0; i < products.Count; i++)
+        {
+            var row = i + 2;
+            var product = products[i];            
+            worksheet.Cell(row, 1).Value = product.Sku;
+            worksheet.Cell(row, 2).Value = product.Title;            
+            worksheet.Cell(row, 3).Value = product.Qty;            
+        }
+
+        using var stream = new MemoryStream();
+        workbook.SaveAs(stream);
+        return stream.ToArray();
+    }
+
+
+    
 }

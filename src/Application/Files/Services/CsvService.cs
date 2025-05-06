@@ -19,12 +19,15 @@ public class CsvService : ICsvService
         return Encoding.UTF8.GetBytes(sb.ToString());
     }
 
-    private static string Escape(string input)
+    private static string Escape(string? input)
     {
+        if (string.IsNullOrEmpty(input)) return "";
+
         if (input.Contains(',') || input.Contains('"') || input.Contains('\n'))
         {
             return $"\"{input.Replace("\"", "\"\"")}\"";
-        }            
+        }
+
         return input;
     }
 

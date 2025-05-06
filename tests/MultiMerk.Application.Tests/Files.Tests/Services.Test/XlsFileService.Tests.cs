@@ -27,7 +27,7 @@ public class XlsFileServiceTests
         var invalidFile = CreateMockFile("invalid.csv");
 
         // Act
-        var result = await service.GetProductsFromXls(invalidFile);
+        var result = service.GetProductsFromXls(invalidFile);
 
         // Assert
         Assert.False(result.Success);
@@ -43,7 +43,7 @@ public class XlsFileServiceTests
         var file = CreateMockFile("valid.xls");
 
         // Act
-        var result = await service.GetProductsFromXls(file);
+        var result = service.GetProductsFromXls(file);
 
         // Assert
         Assert.False(result.Success);
@@ -60,7 +60,7 @@ public class XlsFileServiceTests
         var file = CreateMockFile("valid.xls");
 
         // Act
-        var result = await service.GetProductsFromXls(file);
+        var result = service.GetProductsFromXls(file);
 
         // Assert
         Assert.True(result.Success);

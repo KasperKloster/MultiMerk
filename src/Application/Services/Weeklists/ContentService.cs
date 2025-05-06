@@ -15,7 +15,16 @@ public class ContentService : IContentService
 
     public async Task<List<Product>> GetProductsReadyForAI(int weeklistId)
     {
-        List<Product> products = await _productRepository.GetProductsReadyForAI(weeklistId);
-        return products;        
+        try
+        {
+            List<Product> products = await _productRepository.GetProductsReadyForAI(weeklistId);
+            return products;
+        }
+        catch (Exception ex)
+        {
+            throw new Exception(ex.Message);
+        }
+
     }
 }
+

@@ -14,12 +14,16 @@ public class ProductSeeder
             new Product(sku : "LC01-1001-1")
             {
                 Id = 1,                
-                WeeklistId = 1 
+                WeeklistId = 1,
+                Title = "Product One",
+                Qty = 0
             },
             new Product(sku : "LC01-1001-2")
             {
                 Id = 2,                
-                WeeklistId = 1
+                WeeklistId = 1,
+                Title = "Product Two",
+                Qty = 3
             }
         );
     }
