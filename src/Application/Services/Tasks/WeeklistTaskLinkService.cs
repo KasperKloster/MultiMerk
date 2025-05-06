@@ -19,8 +19,8 @@ public class WeeklistTaskLinkService : IWeeklistTaskLinkService
         return await _weeklistTaskLinkRepository.UpdateTaskStatus(weeklistId, currentTask, newTaskStatus);
     }
 
-    public async Task<OperationResult> UpdateTaskStatusAndAdvanceNext(int weeklistId, WeeklistTaskName currentTask, WeeklistTaskStatus taskStatus)
+    public async Task<OperationResult> UpdateTaskStatusAndAdvanceNext(int weeklistId, WeeklistTaskName currentTask, WeeklistTaskName newTask)
     {
-        return await _weeklistTaskLinkRepository.UpdateTaskStatusAndAdvanceNext(weeklistId, currentTask, taskStatus);
+        return await _weeklistTaskLinkRepository.UpdateTaskStatusAndAdvanceNext(weeklistId, currentTask, newTask);
     }
 }

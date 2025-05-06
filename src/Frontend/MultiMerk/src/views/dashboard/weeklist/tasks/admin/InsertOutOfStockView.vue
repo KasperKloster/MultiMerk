@@ -36,7 +36,6 @@ const handleUpload = async () => {
     const formData = new FormData();
     // Getting the file
     formData.append('file', selectedFile.value);
-
     // Append
     formData.append('weeklistId', weeklistId);
 
@@ -58,7 +57,7 @@ const handleUpload = async () => {
 </script>
 
 <template>
-    <Header title="Assign EAN" />
+    <Header title="Upload Out of Stock list" />
     <BackToWeeklistLink />
 
     <div class="w-full max-w-5xl mx-auto mt-10 p-6 bg-white rounded-xl shadow-md space-y-4">    

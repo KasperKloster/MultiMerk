@@ -37,17 +37,19 @@ public class WeeklistTaskLinkRepository : IWeeklistTaskLinkRepository
         return OperationResult.Ok();
     }
 
-    public async Task<OperationResult> AdvanceNextTask(int weeklistId, WeeklistTaskName currentTask)
+    public async Task<OperationResult> AdvanceNextTask(int weeklistId, WeeklistTaskName newTask)
     {
-        int nextTaskId = (int)currentTask + 1;
+        int newTaskId = (int)newTask;
 
-        var nextTaskLink = await _dbContext.WeeklistTaskLinks.FirstOrDefaultAsync(link => link.WeeklistId == weeklistId && link.WeeklistTaskId == nextTaskId);
+        // int nextTaskId = (int)currentTask + 1;
+
+        var nextTaskLink = await _dbContext.WeeklistTaskLinks.FirstOrDefaultAsync(link => link.WeeklistId == weeklistId && link.WeeklistTaskId == newTaskId);
 
         if (nextTaskLink == null)
         {
-            return OperationResult.Fail($"Next task (id {nextTaskId}) not found for Weeklist {weeklistId}.");
+            return OperationResult.Fail($"Next task (id {newTaskId}) not found for Weeklist {weeklistId}.");
         }
-
+ 
         if (nextTaskLink.WeeklistTaskStatusId == (int)WeeklistTaskStatus.Awaiting)
         {
             nextTaskLink.WeeklistTaskStatusId = (int)WeeklistTaskStatus.Ready;
@@ -58,16 +60,16 @@ public class WeeklistTaskLinkRepository : IWeeklistTaskLinkRepository
         return OperationResult.Ok();
     }
 
-    public async Task<OperationResult> UpdateTaskStatusAndAdvanceNext(int weeklistId, WeeklistTaskName currentTask, WeeklistTaskStatus newStatus)
+    public async Task<OperationResult> UpdateTaskStatusAndAdvanceNext(int weeklistId, WeeklistTaskName currentTask, WeeklistTaskName newTask)
     {
-        var updateResult = await UpdateTaskStatus(weeklistId, currentTask, newStatus);
+        var updateResult = await UpdateTaskStatus(weeklistId, currentTask, WeeklistTaskStatus.Done);
 
         if (!updateResult.Success)
         {
             return updateResult;
         }
 
-        var advanceResult = await AdvanceNextTask(weeklistId, currentTask);
+        var advanceResult = await AdvanceNextTask(weeklistId, newTask);
 
         if (!advanceResult.Success)
         {

@@ -30,7 +30,7 @@ namespace WebAPI.Controllers.WeeklistControllers.AdminControllers
                 }
 
                 // Mark Current task as done, set next to ready                
-                var updateTaskResult = await UpdateTaskStatus(weeklistId, WeeklistTaskName.AssignEAN, WeeklistTaskName.Done);
+                var updateTaskResult = await UpdateTaskStatus(weeklistId, WeeklistTaskName.AssignEAN, WeeklistTaskStatus.Done);
             }
             catch (Exception ex)
             {
@@ -41,7 +41,7 @@ namespace WebAPI.Controllers.WeeklistControllers.AdminControllers
 
         [HttpPost("insert-of-of-stock")]
         // [Authorize(Roles = $"{Roles.Admin}")]
-        public async Task<IActionResult> UploadOutOfStock([FromForm] IFormFile file)
+        public async Task<IActionResult> UploadOutOfStock([FromForm] IFormFile file, int weeklistId)
         {
             try
             {
@@ -53,7 +53,7 @@ namespace WebAPI.Controllers.WeeklistControllers.AdminControllers
                 }
 
                 // Mark Current task as done, set next to ready                
-                var updateTaskResult = await UpdateTaskStatus(weeklistId, WeeklistTaskName.InsertOutOfStock, WeeklistTaskName.Done);
+                var updateTaskResult = await UpdateTaskStatus(weeklistId, WeeklistTaskName.InsertOutOfStock, WeeklistTaskStatus.Done);
             }
             catch (Exception ex)
             {
@@ -69,7 +69,7 @@ namespace WebAPI.Controllers.WeeklistControllers.AdminControllers
             try
             {
                 // Mark Current task as done, set next to ready                          
-                var updateTaskResult = await UpdateTaskStatusAndAdvanceNext(weeklistId, WeeklistTaskName.CreateFinalList);
+                var updateTaskResult = await UpdateTaskStatusAndAdvanceNext(weeklistId, WeeklistTaskName.CreateFinalList, WeeklistTaskName.ImportProductList);
 
             }
             catch (Exception ex)
@@ -87,7 +87,7 @@ namespace WebAPI.Controllers.WeeklistControllers.AdminControllers
             {
 
                 // Mark Current task as done, set next to ready                
-                var updateTaskResult = await UpdateTaskStatusAndAdvanceNext(weeklistId, WeeklistTaskName.ImportProductList);                
+                var updateTaskResult = await UpdateTaskStatusAndAdvanceNext(weeklistId, WeeklistTaskName.ImportProductList, WeeklistTaskName.CreateTranslations);                
             }
             catch (Exception ex)
             {
@@ -107,7 +107,7 @@ namespace WebAPI.Controllers.WeeklistControllers.AdminControllers
                 var updateResult = await _weeklistTaskLinkService.UpdateTaskStatus(
                     weeklistId: weeklistId,
                     currentTask: WeeklistTaskName.CreateTranslations,
-                    taskStatus: WeeklistTaskStatus.Done);
+                    newTaskStatus: WeeklistTaskStatus.Done);
 
                 if (!updateResult.Success)
                 {
