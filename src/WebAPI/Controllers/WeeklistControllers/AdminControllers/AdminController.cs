@@ -39,21 +39,21 @@ namespace WebAPI.Controllers.WeeklistControllers.AdminControllers
             return Ok();
         }
 
-        [HttpPost("insert-of-of-stock")]
+        [HttpPost("insert-out-of-stock")]
         // [Authorize(Roles = $"{Roles.Admin}")]
-        public async Task<IActionResult> UploadOutOfStock([FromForm] IFormFile file, int weeklistId)
+        public async Task<IActionResult> UploadOutOfStock([FromForm] IFormFile file, [FromForm] int weeklistId)
         {
             try
             {
                 // Send to product service
-                var result = await _productService.UpdateProductsFromFile(file);
-                if (!result.Success)
-                {
-                    return BadRequest(result.Message);
-                }
+                // var result = await _productService.UpdateProductsFromFile(file);
+                // if (!result.Success)
+                // {
+                //     return BadRequest(result.Message);
+                // }
 
                 // Mark Current task as done, set next to ready                
-                var updateTaskResult = await UpdateTaskStatus(weeklistId, WeeklistTaskName.InsertOutOfStock, WeeklistTaskStatus.Done);
+                var updateTaskResult = await UpdateTaskStatusAndAdvanceNext(weeklistId: weeklistId, currentTask: WeeklistTaskName.InsertOutOfStock, newTask: WeeklistTaskName.CreateChecklist);
             }
             catch (Exception ex)
             {

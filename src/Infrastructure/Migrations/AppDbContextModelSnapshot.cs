@@ -299,7 +299,7 @@ namespace Infrastructure.Migrations
                             WeeklistId = 1,
                             WeeklistTaskId = 5,
                             AssignedUserId = "00000000-0000-0000-0000-000000000005",
-                            WeeklistTaskStatusId = 2
+                            WeeklistTaskStatusId = 1
                         },
                         new
                         {

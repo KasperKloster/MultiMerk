@@ -13,6 +13,7 @@ import CreateFinalListView from '@/views/dashboard/weeklist/tasks/admin/CreateFi
 import CreateTranslationsView from '@/views/dashboard/weeklist/tasks/admin/CreateTranslationsView.vue'
 import ImportProductListView from '@/views/dashboard/weeklist/tasks/admin/ImportProductListView.vue'
 import CreateCheckList from '@/views/dashboard/weeklist/tasks/warehouse/CreateCheckList.vue'
+import InsertOutOfStockView from '@/views/dashboard/weeklist/tasks/admin/InsertOutOfStockView.vue'
 
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
@@ -83,7 +84,7 @@ const router = createRouter({
     {
       path: '/weeklist/tasks/admin/insert-out-of-stock/:id',
       name: 'insert-out-of-stock',
-      component: AssignEanView,
+      component: InsertOutOfStockView,
       meta: { requiresAuth: true, roles: ['Admin'] }
     },       
     {
