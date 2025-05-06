@@ -1,5 +1,8 @@
+using System.Diagnostics;
 using Application.Services.Interfaces.Products;
 using Application.Services.Interfaces.Tasks;
+using Domain.Entities.Files;
+using Domain.Entities.Products;
 using Domain.Enums;
 using Microsoft.AspNetCore.Mvc;
 
@@ -45,15 +48,18 @@ namespace WebAPI.Controllers.WeeklistControllers.AdminControllers
         {
             try
             {
-                // Send to product service
-                // var result = await _productService.UpdateProductsFromFile(file);
-                // if (!result.Success)
-                // {
-                //     return BadRequest(result.Message);
-                // }
-
-                // Mark Current task as done, set next to ready                
-                var updateTaskResult = await UpdateTaskStatusAndAdvanceNext(weeklistId: weeklistId, currentTask: WeeklistTaskName.InsertOutOfStock, newTask: WeeklistTaskName.CreateChecklist);
+                // Get products from list
+                FilesResult result = _productService.GetProductsFromOutOfStock(file);
+                if (result.Success && result.StockProducts is not null && result.StockProducts.Count > 0)
+                {
+                    Dictionary<string, int> stockProducts = result.StockProducts;
+                    FilesResult updateResult = await _productService.UpdateProductsFromStockProducts(stockProducts);
+                    
+                    if(updateResult.Success){
+                        // Mark Current task as done, set next to ready                
+                        var updateTaskResult = await UpdateTaskStatusAndAdvanceNext(weeklistId: weeklistId, currentTask: WeeklistTaskName.InsertOutOfStock, newTask: WeeklistTaskName.CreateChecklist);
+                    }
+                }
             }
             catch (Exception ex)
             {

@@ -42,17 +42,17 @@ public class ProductRepository : IProductRepository
                 if (updatedProduct.Title != null)
                 {
                     existingProduct.Title = updatedProduct.Title;
-                }     
+                }
 
                 if (updatedProduct.Description != null)
                 {
                     existingProduct.Description = updatedProduct.Description;
-                }          
+                }
 
                 if (updatedProduct.EAN != null)
                 {
                     existingProduct.EAN = updatedProduct.EAN;
-                } 
+                }
 
                 if (updatedProduct.CategoryId != null)
                 {
@@ -62,13 +62,13 @@ public class ProductRepository : IProductRepository
                 if (updatedProduct.Series != null)
                 {
                     existingProduct.Series = updatedProduct.Series;
-                }                 
+                }
 
                 if (updatedProduct.Color != null)
                 {
                     existingProduct.Color = updatedProduct.Color;
                 }
-                    
+
                 if (updatedProduct.Material != null)
                 {
                     existingProduct.Material = updatedProduct.Material;
@@ -82,16 +82,16 @@ public class ProductRepository : IProductRepository
                 if (updatedProduct.Cost != null)
                 {
                     existingProduct.Cost = updatedProduct.Cost;
-                }  
+                }
                 if (updatedProduct.Qty != null)
                 {
                     existingProduct.Qty = updatedProduct.Qty;
-                }  
+                }
 
                 if (updatedProduct.Weight != null)
                 {
                     existingProduct.Weight = updatedProduct.Weight;
-                }    
+                }
 
                 if (updatedProduct.MainImage != null)
                 {
@@ -101,18 +101,18 @@ public class ProductRepository : IProductRepository
                 if (updatedProduct.TemplateId != null)
                 {
                     existingProduct.TemplateId = updatedProduct.TemplateId;
-                }                                                                       
+                }
 
                 if (updatedProduct.Location != null)
                 {
                     existingProduct.Location = updatedProduct.Location;
                 }
 
-                if (updatedProduct.WeeklistId.HasValue) 
+                if (updatedProduct.WeeklistId.HasValue)
                 {
                     existingProduct.WeeklistId = updatedProduct.WeeklistId;
                 }
-            }            
+            }
         }
 
         await _dbContext.SaveChangesAsync();
@@ -127,4 +127,25 @@ public class ProductRepository : IProductRepository
                     .ToListAsync();
     }
 
+    public async Task UpdateQtyFromStockProducts(Dictionary<string, int> stockProducts)
+    {
+        // Step 1: Extract the SupplierSkus from the dictionary
+        var supplierSkus = stockProducts.Keys.ToList();
+
+        // Step 2: Find all matching products in the database
+        var existingProducts = await _dbContext.Products.Where(p => supplierSkus.Contains(p.SupplierSku)).ToListAsync();
+
+        // Step 3: Update the Qty field
+        foreach (var product in existingProducts)
+        {
+            if (product.SupplierSku != null && stockProducts.TryGetValue(product.SupplierSku, out int stockQty))
+            {
+                // Ensure Qty is not null before subtraction
+                product.Qty = (product.Qty ?? 0) - stockQty;
+            }
+        }
+
+        // Step 4: Save changes to database
+        await _dbContext.SaveChangesAsync();
+    }
 }

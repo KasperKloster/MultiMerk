@@ -74,6 +74,117 @@ public class FileParser : IFileParser
         return products;
     }
 
+    // Helpers
+    private static string? GetCellString(IRow row, Dictionary<string, int> map, string column)
+    {
+        return map.TryGetValue(column, out var idx) ? row.GetCell(idx)?.ToString()?.Trim() : null;
+    }
+
+    private static int? GetCellInt(IRow row, Dictionary<string, int> map, string column)
+    {
+        if (!map.TryGetValue(column, out var idx)) return null;
+        var cell = row.GetCell(idx);
+        if (cell == null) return null;
+
+        var cellValue = cell.ToString()?.Trim();
+        if (string.IsNullOrWhiteSpace(cellValue)) return null;
+
+        return int.TryParse(cellValue, out var value) ? value : null;
+    }
+
+    private static float? GetCellFloat(IRow row, Dictionary<string, int> map, string column)
+    {
+        if (!map.TryGetValue(column, out var idx)) return null;
+        var cell = row.GetCell(idx);
+        return float.TryParse(cell?.ToString(), out var value) ? value : null;
+    }
+
+    public Dictionary<string, int> GetProductsFromOutOfStock(IFormFile file)
+    {
+        var outOfStockProducts = new Dictionary<string, int>(StringComparer.OrdinalIgnoreCase);
+
+        using var stream = file.OpenReadStream();
+        var workbook = new HSSFWorkbook(stream);
+        var sheet = workbook.GetSheetAt(0) ?? throw new InvalidDataException("Excel file has no worksheet.");
+
+        var headerAliases = GetHeaderAliases();
+        IRow headerRow = null;
+        int headerRowIndex = -1;
+
+        // Step 1: Find header row dynamically
+        for (int i = 0; i <= sheet.LastRowNum; i++)
+        {
+            var row = sheet.GetRow(i);
+            if (row == null) continue;
+
+            int matchCount = 0;
+            for (int j = 0; j < row.LastCellNum; j++)
+            {
+                var cellValue = row.GetCell(j)?.ToString()?.Trim();
+                if (string.IsNullOrEmpty(cellValue)) continue;
+
+                foreach (var entry in headerAliases)
+                {
+                    if (entry.Value.Contains(cellValue, StringComparer.OrdinalIgnoreCase))
+                    {
+                        matchCount++;
+                        break;
+                    }
+                }
+            }
+
+            if (matchCount >= 2)
+            {
+                headerRow = row;
+                headerRowIndex = i;
+                break;
+            }
+        }
+
+        if (headerRow == null)
+            throw new InvalidDataException("Could not detect header row in Excel file.");
+
+        // Step 2: Build column map
+        var columnMap = new Dictionary<string, int>(StringComparer.OrdinalIgnoreCase);
+        for (int i = 0; i < headerRow.LastCellNum; i++)
+        {
+            var cellValue = headerRow.GetCell(i)?.ToString()?.Trim();
+            if (string.IsNullOrEmpty(cellValue)) continue;
+
+            foreach (var entry in headerAliases)
+            {
+                if (entry.Value.Contains(cellValue, StringComparer.OrdinalIgnoreCase))
+                {
+                    columnMap[entry.Key] = i;
+                    break;
+                }
+            }
+        }
+
+        if (!columnMap.ContainsKey("SupplierSku") || !columnMap.ContainsKey("Qty"))
+            throw new InvalidDataException("Required columns 'SupplierSku' and 'Qty' not found.");
+
+        // Step 3: Parse rows
+        for (int rowIndex = headerRowIndex + 1; rowIndex <= sheet.LastRowNum; rowIndex++)
+        {
+            var row = sheet.GetRow(rowIndex);
+            if (row == null) continue;
+
+            var supplierSku = GetCellString(row, columnMap, "SupplierSku");
+            if (string.IsNullOrWhiteSpace(supplierSku)) continue;
+
+            var qty = GetCellInt(row, columnMap, "Qty");
+
+            // Optionally skip zero-qty items
+            if (qty == 0) continue;
+
+            // Handle duplicates gracefully
+            outOfStockProducts[supplierSku] = qty ?? 0;
+        }
+
+        return outOfStockProducts;
+    }
+
     private static Dictionary<string, string[]> GetHeaderAliases()
     {
         // Define aliases for headers, if a column name is spelled differently
@@ -90,7 +201,7 @@ public class FileParser : IFileParser
             { "material", new[] { "material" } },
             { "price", new[] { "price" } },
             { "cost", new[] { "cost" } },
-            { "qty", new[] { "qty", "quantity" } },
+            { "qty", new[] { "qty", "qty (unit)", "quantity" } },
             { "weight", new[] { "weight" } },
             { "mainImage", new[] { "mainImage", "main_image" } },
             { "template", new[] { "template" } },
@@ -98,25 +209,4 @@ public class FileParser : IFileParser
         };
         return headerAliases;
     }
-
-    // Helpers
-    private static string? GetCellString(IRow row, Dictionary<string, int> map, string column)
-    {
-        return map.TryGetValue(column, out var idx) ? row.GetCell(idx)?.ToString()?.Trim() : null;
-    }
-
-    private static int? GetCellInt(IRow row, Dictionary<string, int> map, string column)
-    {
-        if (!map.TryGetValue(column, out var idx)) return null;
-        var cell = row.GetCell(idx);
-        return int.TryParse(cell?.ToString(), out var value) ? value : null;
-    }
-
-    private static float? GetCellFloat(IRow row, Dictionary<string, int> map, string column)
-    {
-        if (!map.TryGetValue(column, out var idx)) return null;
-        var cell = row.GetCell(idx);
-        return float.TryParse(cell?.ToString(), out var value) ? value : null;
-    }
-
 }
