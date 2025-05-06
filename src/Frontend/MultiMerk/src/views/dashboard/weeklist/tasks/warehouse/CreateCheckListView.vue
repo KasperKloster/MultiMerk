@@ -97,7 +97,7 @@ const handleUpload = async () => {
                 'Content-Type': 'multipart/form-data'
             }
         });
-        successMessage.value = `Success`
+        successMessage.value = `Qty and Location has been updated`
         selectedFile.value = null;
 
     } catch (error) {

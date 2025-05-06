@@ -34,12 +34,12 @@ namespace WebAPI.Controllers.WeeklistControllers.AdminControllers
 
                 // Mark Current task as done, set next to ready                
                 var updateTaskResult = await UpdateTaskStatus(weeklistId, WeeklistTaskName.AssignEAN, WeeklistTaskStatus.Done);
+                return Ok();
             }
             catch (Exception ex)
             {
                 return StatusCode(500, $"Something went wrong. Please try again. {ex.Message}");
             }
-            return Ok();
         }
 
         [HttpPost("insert-out-of-stock")]

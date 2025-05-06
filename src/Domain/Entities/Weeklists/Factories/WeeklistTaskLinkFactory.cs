@@ -14,7 +14,7 @@ public static class WeeklistTaskLinkFactory
         Dictionary<int, string> taskIdToRole)
     {
         // Define which task IDs should get ready status
-        var readyTaskIds = new HashSet<int> { 1, 2, 4 };
+        var readyTaskIds = new HashSet<int> { 1, 2, 3 };
 
         return tasks.Select(task =>
         {

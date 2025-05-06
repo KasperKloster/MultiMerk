@@ -48,7 +48,7 @@ const handleUpload = async () => {
                 'Content-Type': 'multipart/form-data'
             }
         });
-        successMessage.value = `EAN been imported`
+        successMessage.value = `EAN has been imported`
         console.info("Upload success");
         selectedFile.value = null;
 
