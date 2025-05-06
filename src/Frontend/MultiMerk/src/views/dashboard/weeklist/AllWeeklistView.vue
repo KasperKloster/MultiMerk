@@ -41,21 +41,27 @@ const goToTask = (taskId, weeklistId) => {
         router.push({ name: 'assign-ean', params: { id: weeklistId } });
     }
     if (taskId === 2) {
+        router.push({ name: 'insert-out-of-stock', params: { id: weeklistId } });
+    }    
+    if (taskId === 3) {
         router.push({ name: 'get-ai-content', params: { id: weeklistId } });
     }
-    if (taskId === 3) {
+    if (taskId === 4) {
         router.push({ name: 'upload-ai-content', params: { id: weeklistId } });
     }    
-    if (taskId === 4) {        
+    if (taskId === 5) {        
         router.push({ name: 'create-checklist', params: { id: weeklistId } });
     }    
-    if (taskId === 5) {
+    if (taskId === 6) {        
+        router.push({ name: 'insert-warehouse-list', params: { id: weeklistId } });
+    }        
+    if (taskId === 7) {
         router.push({ name: 'create-final-list', params: { id: weeklistId } });
     }
-    if (taskId === 6) {
+    if (taskId === 8) {
         router.push({ name: 'import-product-list', params: { id: weeklistId } });
     }
-    if (taskId === 7) {
+    if (taskId === 9) {
         router.push({ name: 'create-translations', params: { id: weeklistId } });
     }                        
 };
@@ -85,6 +91,9 @@ const goToTask = (taskId, weeklistId) => {
                             Assign EAN
                         </th>
                         <th scope="col" class="px-6 py-3">
+                            Insert Out of Stock
+                        </th>                        
+                        <th scope="col" class="px-6 py-3">
                             Get AI Content
                         </th>
                         <th scope="col" class="px-6 py-3">
@@ -93,6 +102,9 @@ const goToTask = (taskId, weeklistId) => {
                         <th scope="col" class="px-6 py-3">
                             Create Checklist
                         </th>
+                        <th scope="col" class="px-6 py-3">
+                            Insert Warehouse List
+                        </th>                        
                         <th scope="col" class="px-6 py-3">
                             Create Final List
                         </th>

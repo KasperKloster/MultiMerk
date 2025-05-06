@@ -14,9 +14,9 @@ public class WeeklistTaskLinkService : IWeeklistTaskLinkService
     {
         _weeklistTaskLinkRepository = weeklistTaskLinkRepository;
     }
-    public async Task<OperationResult> UpdateTaskStatus(int weeklistId, WeeklistTaskName currentTask, WeeklistTaskStatus taskStatus)
+    public async Task<OperationResult> UpdateTaskStatus(int weeklistId, WeeklistTaskName currentTask, WeeklistTaskStatus newTaskStatus)
     {
-        return await _weeklistTaskLinkRepository.UpdateTaskStatus(weeklistId, currentTask, taskStatus);
+        return await _weeklistTaskLinkRepository.UpdateTaskStatus(weeklistId, currentTask, newTaskStatus);
     }
 
     public async Task<OperationResult> UpdateTaskStatusAndAdvanceNext(int weeklistId, WeeklistTaskName currentTask, WeeklistTaskStatus taskStatus)

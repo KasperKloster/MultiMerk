@@ -58,7 +58,7 @@ namespace WebAPI.Controllers.WeeklistControllers.WarehouseControllers
                 }
 
                 // Mark Current task as done, set next to ready
-                var updateTaskResult = await UpdateTaskStatusAndAdvanceNext(weeklistId, WeeklistTaskName.AssignCorrectQuantity);                
+                var updateTaskResult = await UpdateTaskStatusAndAdvanceNext(weeklistId, WeeklistTaskName.CreateChecklist);                
             }
             catch (Exception ex)
             {

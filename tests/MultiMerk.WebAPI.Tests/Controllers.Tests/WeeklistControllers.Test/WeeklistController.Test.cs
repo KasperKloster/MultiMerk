@@ -34,7 +34,7 @@ namespace MultiMerk.WebAPI.Tests.Controllers.Tests.WeeklistControllers.Test
                 .ReturnsAsync(FilesResult.SuccessResult());
 
             // Act
-            var result = await _weeklistController.CreateWeeklist(fileMock, weeklistMock.Number, weeklistMock.OrderNumber, weeklistMock.Supplier);
+            var result = await _weeklistController.CreateWeeklist(fileMock, weeklistMock.Number, weeklistMock.OrderNumber, weeklistMock.Supplier, weeklistMock.ShippingNumber);
 
             // Assert
             var okResult = Assert.IsType<OkResult>(result);
@@ -53,7 +53,7 @@ namespace MultiMerk.WebAPI.Tests.Controllers.Tests.WeeklistControllers.Test
                 .ReturnsAsync(FilesResult.Fail("Upload failed"));
 
             // Act
-            var result = await _weeklistController.CreateWeeklist(fileMock, weeklistMock.Number, weeklistMock.OrderNumber, weeklistMock.Supplier);
+            var result = await _weeklistController.CreateWeeklist(fileMock, weeklistMock.Number, weeklistMock.OrderNumber, weeklistMock.Supplier, weeklistMock.ShippingNumber);
 
             // Assert
             var badRequest = Assert.IsType<BadRequestObjectResult>(result);
@@ -81,7 +81,8 @@ namespace MultiMerk.WebAPI.Tests.Controllers.Tests.WeeklistControllers.Test
                 Id = 1,
                 Number = 568,
                 OrderNumber = "EX123456",
-                Supplier = "TVC"
+                Supplier = "TVC",
+                ShippingNumber = "Shipment123456"
             };
         }
     }

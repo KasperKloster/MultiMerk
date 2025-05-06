@@ -1,4 +1,5 @@
 using System;
+using Domain.Enums;
 using Domain.Entities.Weeklists.WeeklistTaskLinks;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
@@ -13,103 +14,66 @@ public class WeeklistTaskLinkSeeder
             new WeeklistTaskLink
             {
                 WeeklistId = 1,
-                WeeklistTaskId = 1, // "Assign EAN"
-                WeeklistTaskStatusId = 4, // "Done"
+                WeeklistTaskId = (int)WeeklistTaskName.AssignEAN, // "AssignEAN"
+                WeeklistTaskStatusId = (int)WeeklistTaskStatus.Ready, // "Ready"
                 AssignedUserId = "00000000-0000-0000-0000-000000000001", // Admin  
             },
             new WeeklistTaskLink
             {
                 WeeklistId = 1,
-                WeeklistTaskId = 2,
-                WeeklistTaskStatusId = 4, // "Done"
-                AssignedUserId = "00000000-0000-0000-0000-000000000004", // Writer
-            },     
-            new WeeklistTaskLink
-            {
-                WeeklistId = 1,
-                WeeklistTaskId = 3,
-                WeeklistTaskStatusId = 1, // "Awaiting"
-                AssignedUserId = "00000000-0000-0000-0000-000000000004", // Writer
-            }, 
-            new WeeklistTaskLink
-            {
-                WeeklistId = 1,
-                WeeklistTaskId = 4,
-                WeeklistTaskStatusId = 2, // "Done"
-                AssignedUserId = "00000000-0000-0000-0000-000000000005", // WarehouseWorker
-            }, 
-            new WeeklistTaskLink
-            {
-                WeeklistId = 1,
-                WeeklistTaskId = 5,
-                WeeklistTaskStatusId = 2, // "Ready"
-                AssignedUserId = "00000000-0000-0000-0000-000000000001", // Admin
-            }, 
-            new WeeklistTaskLink
-            {
-                WeeklistId = 1,
-                WeeklistTaskId = 6,
-                WeeklistTaskStatusId = 1, // "Awaiting"
-                AssignedUserId = "00000000-0000-0000-0000-000000000001", // Admin
-            },     
-            new WeeklistTaskLink
-            {
-                WeeklistId = 1,
-                WeeklistTaskId = 7,
-                WeeklistTaskStatusId = 1, // "Awaiting"
-                AssignedUserId = "00000000-0000-0000-0000-000000000001", // Admin
-            },     
-              
-            // Link Weeklist 2
-            new WeeklistTaskLink
-            {
-                WeeklistId = 2,
-                WeeklistTaskId = 1, // "Assign EAN"
-                WeeklistTaskStatusId = 2, // "Ready"
+                WeeklistTaskId = (int)WeeklistTaskName.InsertOutOfStock, // InsertOutOfStock
+                WeeklistTaskStatusId = (int)WeeklistTaskStatus.Ready, // "Ready"
                 AssignedUserId = "00000000-0000-0000-0000-000000000001", // Admin  
-            },
-            new WeeklistTaskLink
-            {
-                WeeklistId = 2,
-                WeeklistTaskId = 2,
-                WeeklistTaskStatusId = 2, // "Ready"
-                AssignedUserId = "00000000-0000-0000-0000-000000000004", // Writer
             },     
             new WeeklistTaskLink
             {
-                WeeklistId = 2,
-                WeeklistTaskId = 3,
-                WeeklistTaskStatusId = 1, // "Awaiting"
+                WeeklistId = 1,
+                WeeklistTaskId = (int)WeeklistTaskName.GetAIContentList, // GetAIContentList                
+                WeeklistTaskStatusId = (int)WeeklistTaskStatus.Ready, // "Ready"
                 AssignedUserId = "00000000-0000-0000-0000-000000000004", // Writer
             }, 
             new WeeklistTaskLink
             {
-                WeeklistId = 2,
-                WeeklistTaskId = 4,
-                WeeklistTaskStatusId = 2, // "Ready"
+                WeeklistId = 1,
+                WeeklistTaskId = (int)WeeklistTaskName.UploadAIContent, // UploadAIContent
+                WeeklistTaskStatusId = (int)WeeklistTaskStatus.Awaiting, // "Awaiting"
+                AssignedUserId = "00000000-0000-0000-0000-000000000004", // Writer
+            }, 
+            new WeeklistTaskLink
+            {
+                WeeklistId = 1,
+                WeeklistTaskId = (int)WeeklistTaskName.CreateChecklist,
+                WeeklistTaskStatusId = (int)WeeklistTaskStatus.Awaiting, // "Awaiting"
                 AssignedUserId = "00000000-0000-0000-0000-000000000005", // WarehouseWorker
             }, 
             new WeeklistTaskLink
             {
-                WeeklistId = 2,
-                WeeklistTaskId = 5,
-                WeeklistTaskStatusId = 1, // "Awaiting"
-                AssignedUserId = "00000000-0000-0000-0000-000000000001", // Admin
-            }, 
-            new WeeklistTaskLink
-            {
-                WeeklistId = 2,
-                WeeklistTaskId = 6,
-                WeeklistTaskStatusId = 1, // "Awaiting"
-                AssignedUserId = "00000000-0000-0000-0000-000000000001", // Admin
+                WeeklistId = 1,
+                WeeklistTaskId = (int)WeeklistTaskName.InsertWarehouseList,
+                WeeklistTaskStatusId = (int)WeeklistTaskStatus.Awaiting, // "Awaiting"
+                AssignedUserId = "00000000-0000-0000-0000-000000000006", // WarehouseManager
             },     
             new WeeklistTaskLink
             {
-                WeeklistId = 2,
-                WeeklistTaskId = 7,
-                WeeklistTaskStatusId = 1, // "Awaiting"
+                WeeklistId = 1,
+                WeeklistTaskId = (int)WeeklistTaskName.CreateFinalList,
+                WeeklistTaskStatusId = (int)WeeklistTaskStatus.Awaiting, // "Awaiting"
                 AssignedUserId = "00000000-0000-0000-0000-000000000001", // Admin
-            }                  
+            },        
+            new WeeklistTaskLink
+            {
+                WeeklistId = 1,
+                WeeklistTaskId = (int)WeeklistTaskName.ImportProductList,
+                WeeklistTaskStatusId = (int)WeeklistTaskStatus.Awaiting, // "Awaiting"
+                AssignedUserId = "00000000-0000-0000-0000-000000000001", // Admin
+            },   
+            new WeeklistTaskLink
+            {
+                WeeklistId = 1,
+                WeeklistTaskId = (int)WeeklistTaskName.CreateTranslations,
+                WeeklistTaskStatusId = (int)WeeklistTaskStatus.Awaiting, // "Awaiting"
+                AssignedUserId = "00000000-0000-0000-0000-000000000001", // Admin
+            }                                
         );
     }
 }

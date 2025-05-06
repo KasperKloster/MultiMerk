@@ -18,14 +18,6 @@ public class WeeklistSeeder
                 OrderNumber = "E123",
                 Supplier = "TVC",
                 ShippingNumber = "Shipment101"
-            },
-            new Weeklist
-            {
-                Id = 2,
-                Number = 102,
-                OrderNumber = "E321",
-                Supplier = "TVC",
-                ShippingNumber = "Shipment102"
             }
         );
 

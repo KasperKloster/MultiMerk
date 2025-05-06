@@ -20,12 +20,6 @@ public class ProductSeeder
             {
                 Id = 2,                
                 WeeklistId = 1
-            },
-            // Links to Weeklist with Id 2
-            new Product(sku : "LC02-2002-1")
-            {
-                Id = 3,                
-                WeeklistId = 2 
             }
         );
     }

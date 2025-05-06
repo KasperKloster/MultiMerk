@@ -13,6 +13,27 @@ public abstract class WeeklistBaseController : ControllerBase
         _weeklistTaskLinkService = weeklistTaskLinkService;
     }
 
+    protected async Task<IActionResult> UpdateTaskStatus(int weeklistId, WeeklistTaskName taskName)
+    {
+        try
+        {
+            var result = await _weeklistTaskLinkService.UpdateTaskStatus(
+                weeklistId: weeklistId,
+                currentTask: taskName,
+                newTaskStatus: WeeklistTaskStatus.Done);
+
+            if (!result.Success) {
+                return BadRequest(result.Message);
+            }
+
+            return Ok();
+        }
+        catch (Exception ex)
+        {
+            return StatusCode(500, $"Something went wrong. Please try again. {ex.Message}");
+        }
+    }
+
     protected async Task<IActionResult> UpdateTaskStatusAndAdvanceNext(int weeklistId, WeeklistTaskName taskName)
     {
         try

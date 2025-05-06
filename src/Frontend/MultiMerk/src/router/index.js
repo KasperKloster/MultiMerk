@@ -69,11 +69,23 @@ const router = createRouter({
       meta: { requiresAuth: true, roles: ['Admin', 'WarehouseWorker', 'WarehouseManager'] }
     },    
     {
+      path: '/weeklist/tasks/warehouse/insert-warehouse-list/:id',
+      name: 'insert-warehouse-list',
+      component: CreateCheckList,
+      meta: { requiresAuth: true, roles: ['Admin', 'WarehouseWorker', 'WarehouseManager'] }
+    },      
+    {
       path: '/weeklist/tasks/admin/assign-ean/:id',
       name: 'assign-ean',
       component: AssignEanView,
       meta: { requiresAuth: true, roles: ['Admin'] }
-    },    
+    },   
+    {
+      path: '/weeklist/tasks/admin/insert-out-of-stock/:id',
+      name: 'insert-out-of-stock',
+      component: AssignEanView,
+      meta: { requiresAuth: true, roles: ['Admin'] }
+    },       
     {
       path: '/weeklist/tasks/admin/create-final-list/:id',
       name: 'create-final-list',

@@ -37,10 +37,10 @@ namespace WebAPI.Controllers.WeeklistControllers.ContentControllers
                 WeeklistDto weeklist = await _weeklistService.GetWeeklistAsync(weeklistId);
                 var fileName = $"{weeklist.Number}-Ready-For-AI.csv";
                 // Mark Current task as done, set next to ready                
-                var updateTaskResult = await UpdateTaskStatusAndAdvanceNext(weeklistId, WeeklistTaskName.CreateAIcontentList);
+                var updateTaskResult = await UpdateTaskStatusAndAdvanceNext(weeklistId, WeeklistTaskName.GetAIContentList);
                 return File(csvBytes, "text/csv", fileName);
-
             }
+
             catch (Exception ex)
             {
                 return StatusCode(500, $"Something went wrong. Please try again. {ex.Message}");
