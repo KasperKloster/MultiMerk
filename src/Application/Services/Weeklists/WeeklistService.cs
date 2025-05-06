@@ -1,3 +1,4 @@
+using System.Diagnostics.CodeAnalysis;
 using Application.DTOs.Authentication;
 using Application.DTOs.Weeklists;
 using Application.Files.Interfaces;
@@ -206,4 +207,21 @@ public class WeeklistService : IWeeklistService
         return FilesResult.SuccessResult();
     }
 
+    public async Task<WeeklistDto> GetWeeklistAsync(int weeklistId)
+    {
+        try {
+            Weeklist weeklist = await _weeklistRepository.GetWeeklist(weeklistId: weeklistId);
+            WeeklistDto weeklistDto = new WeeklistDto{
+                Id = weeklist.Id,
+                Number = weeklist.Number,
+                OrderNumber = weeklist.OrderNumber,
+                Supplier = weeklist.Supplier,
+                ShippingNumber = weeklist.ShippingNumber,
+            };
+            return weeklistDto;
+
+        } catch (Exception ex){
+            throw new Exception("Could not fetch weeklist", ex);
+        }
+    }
 }

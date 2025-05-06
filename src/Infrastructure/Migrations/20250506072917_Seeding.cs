@@ -7,7 +7,7 @@
 namespace Infrastructure.Migrations
 {
     /// <inheritdoc />
-    public partial class InitialSeeding : Migration
+    public partial class Seeding : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
@@ -39,21 +39,21 @@ namespace Infrastructure.Migrations
 
             migrationBuilder.InsertData(
                 table: "Weeklists",
-                columns: new[] { "Id", "Number", "OrderNumber", "Supplier" },
+                columns: new[] { "Id", "Number", "OrderNumber", "ShippingNumber", "Supplier" },
                 values: new object[,]
                 {
-                    { 1, 101, "E123", "TVC" },
-                    { 2, 102, "E321", "TVC" }
+                    { 1, 101, "E123", "Shipment101", "TVC" },
+                    { 2, 102, "E321", "Shipment102", "TVC" }
                 });
 
             migrationBuilder.InsertData(
                 table: "Products",
-                columns: new[] { "Id", "CategoryId", "Color", "Cost", "Description", "EAN", "MainImage", "Material", "Price", "Qty", "Series", "Sku", "SupplierSku", "TemplateId", "Title", "WeeklistId", "Weight" },
+                columns: new[] { "Id", "CategoryId", "Color", "Cost", "Description", "EAN", "Location", "MainImage", "Material", "Price", "Qty", "Series", "Sku", "SupplierSku", "TemplateId", "Title", "WeeklistId", "Weight" },
                 values: new object[,]
                 {
-                    { 1, null, null, null, null, null, null, null, null, null, null, "LC01-1001-1", null, null, null, 1, null },
-                    { 2, null, null, null, null, null, null, null, null, null, null, "LC01-1001-2", null, null, null, 1, null },
-                    { 3, null, null, null, null, null, null, null, null, null, null, "LC02-2002-1", null, null, null, 2, null }
+                    { 1, null, null, null, null, null, null, null, null, null, null, null, "LC01-1001-1", null, null, null, 1, null },
+                    { 2, null, null, null, null, null, null, null, null, null, null, null, "LC01-1001-2", null, null, null, 1, null },
+                    { 3, null, null, null, null, null, null, null, null, null, null, null, "LC02-2002-1", null, null, null, 2, null }
                 });
 
             migrationBuilder.InsertData(

@@ -12,8 +12,8 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 namespace Infrastructure.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    [Migration("20250505200625_LocationToProduct")]
-    partial class LocationToProduct
+    [Migration("20250506072917_Seeding")]
+    partial class Seeding
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -224,6 +224,10 @@ namespace Infrastructure.Migrations
                         .IsRequired()
                         .HasColumnType("text");
 
+                    b.Property<string>("ShippingNumber")
+                        .IsRequired()
+                        .HasColumnType("text");
+
                     b.Property<string>("Supplier")
                         .IsRequired()
                         .HasColumnType("text");
@@ -241,6 +245,7 @@ namespace Infrastructure.Migrations
                             Id = 1,
                             Number = 101,
                             OrderNumber = "E123",
+                            ShippingNumber = "Shipment101",
                             Supplier = "TVC"
                         },
                         new
@@ -248,6 +253,7 @@ namespace Infrastructure.Migrations
                             Id = 2,
                             Number = 102,
                             OrderNumber = "E321",
+                            ShippingNumber = "Shipment102",
                             Supplier = "TVC"
                         });
                 });

@@ -75,7 +75,8 @@ namespace Infrastructure.Migrations
                         .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn),
                     Number = table.Column<int>(type: "integer", nullable: false),
                     OrderNumber = table.Column<string>(type: "text", nullable: false),
-                    Supplier = table.Column<string>(type: "text", nullable: false)
+                    Supplier = table.Column<string>(type: "text", nullable: false),
+                    ShippingNumber = table.Column<string>(type: "text", nullable: false)
                 },
                 constraints: table =>
                 {
@@ -235,6 +236,7 @@ namespace Infrastructure.Migrations
                     Weight = table.Column<float>(type: "real", nullable: true),
                     MainImage = table.Column<string>(type: "text", nullable: true),
                     TemplateId = table.Column<int>(type: "integer", nullable: true),
+                    Location = table.Column<string>(type: "text", nullable: true),
                     WeeklistId = table.Column<int>(type: "integer", nullable: true)
                 },
                 constraints: table =>

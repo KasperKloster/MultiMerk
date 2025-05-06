@@ -32,6 +32,22 @@ namespace WebAPI.Controllers.WeeklistControllers
             }
         }
 
+        [HttpGet("single")]
+        [Authorize]
+        public async Task<IActionResult> GetWeeklist(int weeklistId)
+        {
+            try
+            {
+                var weeklists = await _weeklistService.GetWeeklistAsync(weeklistId);
+                return Ok(weeklists);
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, $"Something went wrong. Please try again. {ex.Message}");
+            }
+        }
+
+
         [HttpPost("create")]
         [Authorize(Roles = $"{Roles.Admin},{Roles.Freelancer}")]
         public async Task<IActionResult> CreateWeeklist([FromForm] IFormFile file, [FromForm] int Number, [FromForm] string OrderNumber, [FromForm] string Supplier, [FromForm] string ShippingNumber)

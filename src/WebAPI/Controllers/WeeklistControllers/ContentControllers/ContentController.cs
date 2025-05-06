@@ -1,3 +1,4 @@
+using Application.DTOs.Weeklists;
 using Application.Files.Interfaces;
 using Application.Services.Interfaces.Tasks;
 using Application.Services.Interfaces.Weeklists;
@@ -13,11 +14,13 @@ namespace WebAPI.Controllers.WeeklistControllers.ContentControllers
     {
         private readonly IContentService _contentService;
         private readonly ICsvService _csvService;
+        private readonly IWeeklistService _weeklistService;
 
-        public ContentController(IWeeklistTaskLinkService weeklistTaskLinkService, IContentService contentService, ICsvService csvService) : base(weeklistTaskLinkService)
+        public ContentController(IWeeklistTaskLinkService weeklistTaskLinkService, IContentService contentService, ICsvService csvService, IWeeklistService weeklistService) : base(weeklistTaskLinkService)
         {
             _contentService = contentService;
             _csvService = csvService;
+            _weeklistService = weeklistService;
         }
 
         [HttpPost("get-products-ready-for-ai-content")]
@@ -30,7 +33,9 @@ namespace WebAPI.Controllers.WeeklistControllers.ContentControllers
                 List<Product> products = await _contentService.GetProductsReadyForAI(weeklistId);
                 // Converts products to csv (byte array)
                 var csvBytes = _csvService.GenerateProductsReadyForAICSV(products);
-                var fileName = $"{weeklistId}-Ready-For-AI.csv";
+                // Get weeklist to create filename
+                WeeklistDto weeklist = await _weeklistService.GetWeeklistAsync(weeklistId);
+                var fileName = $"{weeklist.Number}-Ready-For-AI.csv";
                 // Mark Current task as done, set next to ready                
                 var updateTaskResult = await UpdateTaskStatusAndAdvanceNext(weeklistId, WeeklistTaskName.CreateAIcontentList);
                 return File(csvBytes, "text/csv", fileName);
