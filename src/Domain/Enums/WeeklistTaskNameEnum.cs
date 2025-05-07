@@ -1,6 +1,6 @@
 namespace Domain.Enums;
 
-public enum WeeklistTaskName
+public enum WeeklistTaskNameEnum
 {
     AssignEAN = 1,
     InsertOutOfStock = 2,

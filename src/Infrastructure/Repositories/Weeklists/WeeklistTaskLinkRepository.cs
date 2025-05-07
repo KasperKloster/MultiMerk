@@ -22,7 +22,7 @@ public class WeeklistTaskLinkRepository : IWeeklistTaskLinkRepository
         await _dbContext.SaveChangesAsync();
     }
 
-    public async Task<OperationResult> UpdateTaskStatus(int weeklistId, WeeklistTaskName currentTask, WeeklistTaskStatus newTaskStatus)
+    public async Task<OperationResult> UpdateTaskStatus(int weeklistId, WeeklistTaskNameEnum currentTask, WeeklistTaskStatusEnum newTaskStatus)
     {
         // Find the row in DB, where weeklistId and CurrentTask(Enum.id) has a match
         int taskId = (int)currentTask;
@@ -37,7 +37,7 @@ public class WeeklistTaskLinkRepository : IWeeklistTaskLinkRepository
         return OperationResult.Ok();
     }
 
-    public async Task<OperationResult> AdvanceNextTask(int weeklistId, WeeklistTaskName newTask)
+    public async Task<OperationResult> AdvanceNextTask(int weeklistId, WeeklistTaskNameEnum newTask)
     {
         int newTaskId = (int)newTask;
 
@@ -50,9 +50,9 @@ public class WeeklistTaskLinkRepository : IWeeklistTaskLinkRepository
             return OperationResult.Fail($"Next task (id {newTaskId}) not found for Weeklist {weeklistId}.");
         }
  
-        if (nextTaskLink.WeeklistTaskStatusId == (int)WeeklistTaskStatus.Awaiting)
+        if (nextTaskLink.WeeklistTaskStatusId == (int)WeeklistTaskStatusEnum.Awaiting)
         {
-            nextTaskLink.WeeklistTaskStatusId = (int)WeeklistTaskStatus.Ready;
+            nextTaskLink.WeeklistTaskStatusId = (int)WeeklistTaskStatusEnum.Ready;
             await _dbContext.SaveChangesAsync();
             return OperationResult.Ok();
         }
@@ -60,9 +60,9 @@ public class WeeklistTaskLinkRepository : IWeeklistTaskLinkRepository
         return OperationResult.Ok();
     }
 
-    public async Task<OperationResult> UpdateTaskStatusAndAdvanceNext(int weeklistId, WeeklistTaskName currentTask, WeeklistTaskName newTask)
+    public async Task<OperationResult> UpdateTaskStatusAndAdvanceNext(int weeklistId, WeeklistTaskNameEnum currentTask, WeeklistTaskNameEnum newTask)
     {
-        var updateResult = await UpdateTaskStatus(weeklistId, currentTask, WeeklistTaskStatus.Done);
+        var updateResult = await UpdateTaskStatus(weeklistId, currentTask, WeeklistTaskStatusEnum.Done);
 
         if (!updateResult.Success)
         {

@@ -1,6 +1,6 @@
 namespace Domain.Enums;
 
-public enum WeeklistTaskStatus
+public enum WeeklistTaskStatusEnum
 {
     Awaiting = 1,
     Ready = 2,

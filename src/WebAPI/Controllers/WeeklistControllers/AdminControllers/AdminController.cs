@@ -1,4 +1,3 @@
-using System.IO.Compression;
 using Application.DTOs.Weeklists;
 using Application.Files.Interfaces;
 using Application.Services.Interfaces.Products;
@@ -42,7 +41,7 @@ namespace WebAPI.Controllers.WeeklistControllers.AdminControllers
                 }
 
                 // Mark Current task as done, set next to ready                
-                var updateTaskResult = await UpdateTaskStatus(weeklistId, WeeklistTaskName.AssignEAN, WeeklistTaskStatus.Done);
+                var updateTaskResult = await UpdateTaskStatus(weeklistId, WeeklistTaskNameEnum.AssignEAN, WeeklistTaskStatusEnum.Done);
                 return Ok();
             }
             catch (Exception ex)
@@ -66,7 +65,7 @@ namespace WebAPI.Controllers.WeeklistControllers.AdminControllers
                     
                     if(updateResult.Success){
                         // Mark Current task as done, set next to ready                
-                        var updateTaskResult = await UpdateTaskStatusAndAdvanceNext(weeklistId: weeklistId, currentTask: WeeklistTaskName.InsertOutOfStock, newTask: WeeklistTaskName.CreateChecklist);
+                        var updateTaskResult = await UpdateTaskStatusAndAdvanceNext(weeklistId: weeklistId, currentTask: WeeklistTaskNameEnum.InsertOutOfStock, newTask: WeeklistTaskNameEnum.CreateChecklist);
                     }
                 }
                 
@@ -88,7 +87,7 @@ namespace WebAPI.Controllers.WeeklistControllers.AdminControllers
                 List<Product> products = await _productService.GetProductsFromWeeklist(weeklistId);
                 byte[] zipBytes = await _zipService.CreateZipAdminImportAsync(weeklist, products);
                 // Mark Current task as done, set next to ready                
-                await UpdateTaskStatusAndAdvanceNext(weeklistId, WeeklistTaskName.ImportProductList, WeeklistTaskName.CreateTranslations);
+                await UpdateTaskStatusAndAdvanceNext(weeklistId, WeeklistTaskNameEnum.ImportProductList, WeeklistTaskNameEnum.CreateTranslations);
                 return File(zipBytes, "application/zip", $"{weeklist.Number}-Admin.zip");
             }
             catch (Exception ex)
@@ -107,8 +106,8 @@ namespace WebAPI.Controllers.WeeklistControllers.AdminControllers
                 // Mark Current task as done
                 var updateResult = await _weeklistTaskLinkService.UpdateTaskStatus(
                     weeklistId: weeklistId,
-                    currentTask: WeeklistTaskName.CreateTranslations,
-                    newTaskStatus: WeeklistTaskStatus.Done);
+                    currentTask: WeeklistTaskNameEnum.CreateTranslations,
+                    newTaskStatus: WeeklistTaskStatusEnum.Done);
 
                 if (!updateResult.Success)
                 {
