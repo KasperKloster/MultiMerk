@@ -34,32 +34,3 @@ export async function downloadFile({ url, formData, defaultFileName, mimeType, o
         onError?.(errorText);
     }
 };
-
-// import { downloadFile } from '@/utils/fileDownloader';
-
-// const downloadCsvFile = async () => {
-//     successMessage.value = '';
-//     errorMessage.value = '';
-
-//     const formData = new FormData();
-//     formData.append('weeklistId', weeklistId);
-
-//     await downloadFile({
-//         url: '/weeklist/content/get-products-ready-for-ai-content',
-//         formData,
-//         defaultFileName: `products-weeklist-${weeklistId}.csv`,
-//         mimeType: 'text/csv',
-//         onSuccess: () => successMessage.value = 'Download successful',
-//         onError: (msg) => errorMessage.value = `Download failed: ${msg}`
-//     });
-// };
-
-
-// await downloadFile({
-//     url: '/weeklist/warehouse/get-checklist',
-//     formData,
-//     defaultFileName: `${weeklistId}-Checklist.xls`,
-//     mimeType: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet',
-//     onSuccess: () => successMessage.value = 'Download successful',
-//     onError: (msg) => errorMessage.value = `Download failed: ${msg}`
-// });

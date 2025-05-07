@@ -46,12 +46,13 @@ namespace WebAPI.Controllers.WeeklistControllers.ContentControllers
 
         [HttpPost("upload-ai-content")]
         // [Authorize(Roles = $"{Roles.Admin}")]
-        public async Task<IActionResult> UploadAIContent([FromForm] int weeklistId)
+        public async Task<IActionResult> UploadAIContent([FromForm] IFormFile file, [FromForm] int weeklistId)
         {
             try
             {
+
                 // Mark Current task as done, set next to ready                
-                var updateTaskResult = await UpdateTaskStatus(weeklistId, WeeklistTaskNameEnum.UploadAIContent, WeeklistTaskStatusEnum.Done);
+                // var updateTaskResult = await UpdateTaskStatus(weeklistId, WeeklistTaskNameEnum.UploadAIContent, WeeklistTaskStatusEnum.Done);
             }
             catch (Exception ex)
             {
