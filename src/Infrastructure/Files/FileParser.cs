@@ -197,7 +197,7 @@ public class FileParser : IFileParser
             { "title", new[] { "title", "name" } },
             { "description", new[] { "description", "product description" } },
             { "ean", new[] { "ean" } },
-            { "categoryId", new[] { "categoryId", "category id", "category_id" } },
+            { "categoryId", new[] { "categoryId", "category id", "category_id", "cat id" } },
             { "series", new[] { "series" } },
             { "color", new[] { "color", "colour" } },
             { "material", new[] { "material" } },
@@ -205,7 +205,7 @@ public class FileParser : IFileParser
             { "cost", new[] { "cost" } },
             { "qty", new[] { "qty", "qty (unit)", "quantity" } },
             { "weight", new[] { "weight" } },
-            { "mainImage", new[] { "mainImage", "main_image" } },
+            { "mainImage", new[] { "mainImage", "main_image", "main image" } },
             { "template", new[] { "template" } },
             { "location", new[] { "location" } },
         };

@@ -14,16 +14,12 @@ namespace WebAPI.Controllers.WeeklistControllers.AdminControllers
     [ApiController]
     public class AdminController : WeeklistBaseController
     {
-        private readonly IProductService _productService;
-        private readonly ICsvService _csvService;
-        private readonly IWeeklistService _weeklistService;
+        private readonly IProductService _productService;                
         private readonly IZipService _zipService;
 
-        public AdminController(IProductService productService, IWeeklistTaskLinkService weeklistTaskLinkService, ICsvService csvService, IWeeklistService weeklistService, IZipService zipService) : base(weeklistTaskLinkService)
+        public AdminController(IProductService productService, IWeeklistService weeklistService, IWeeklistTaskLinkService weeklistTaskLinkService, IZipService zipService) : base(weeklistService, weeklistTaskLinkService)
         {
             _productService = productService;
-            _csvService = csvService;
-            _weeklistService = weeklistService;
             _zipService = zipService;
         }
 
@@ -67,8 +63,7 @@ namespace WebAPI.Controllers.WeeklistControllers.AdminControllers
                         // Mark Current task as done, set next to ready                
                         var updateTaskResult = await UpdateTaskStatusAndAdvanceNext(weeklistId: weeklistId, currentTask: WeeklistTaskNameEnum.InsertOutOfStock, newTask: WeeklistTaskNameEnum.CreateChecklist);
                     }
-                }
-                
+                }                
                 return Ok();
             }
             catch (Exception ex)
@@ -102,7 +97,6 @@ namespace WebAPI.Controllers.WeeklistControllers.AdminControllers
         {
             try
             {
-
                 // Mark Current task as done
                 var updateResult = await _weeklistTaskLinkService.UpdateTaskStatus(
                     weeklistId: weeklistId,

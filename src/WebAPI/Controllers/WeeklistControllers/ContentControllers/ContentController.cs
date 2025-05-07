@@ -13,14 +13,12 @@ namespace WebAPI.Controllers.WeeklistControllers.ContentControllers
     public class ContentController : WeeklistBaseController
     {
         private readonly IContentService _contentService;
-        private readonly ICsvService _csvService;
-        private readonly IWeeklistService _weeklistService;
+        private readonly ICsvService _csvService;        
 
-        public ContentController(IWeeklistTaskLinkService weeklistTaskLinkService, IContentService contentService, ICsvService csvService, IWeeklistService weeklistService) : base(weeklistTaskLinkService)
+        public ContentController(IWeeklistService weeklistService, IWeeklistTaskLinkService weeklistTaskLinkService, IContentService contentService, ICsvService csvService) : base(weeklistService, weeklistTaskLinkService)
         {
             _contentService = contentService;
-            _csvService = csvService;
-            _weeklistService = weeklistService;
+            _csvService = csvService;            
         }
 
         [HttpPost("get-products-ready-for-ai-content")]
@@ -40,7 +38,6 @@ namespace WebAPI.Controllers.WeeklistControllers.ContentControllers
                 var updateTaskResult = await UpdateTaskStatusAndAdvanceNext(weeklistId, WeeklistTaskNameEnum.GetAIContentList, WeeklistTaskNameEnum.UploadAIContent);
                 return File(csvBytes, "text/csv", fileName);
             }
-
             catch (Exception ex)
             {
                 return StatusCode(500, $"Something went wrong. Please try again. {ex.Message}");
