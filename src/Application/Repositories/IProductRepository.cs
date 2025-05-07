@@ -8,5 +8,6 @@ public interface IProductRepository
     Task UpdateRangeAsync(List<Product> products);
     Task<List<Product>> GetProductsFromWeeklist(int weeklistId);
     Task<List<Product>> GetProductsReadyForAI(int weeklistId);
+    Task UpdateProductsFromAI(List<Product> aiProducts);
     Task UpdateQtyFromStockProducts(Dictionary<string, int> stockProducts);
 }

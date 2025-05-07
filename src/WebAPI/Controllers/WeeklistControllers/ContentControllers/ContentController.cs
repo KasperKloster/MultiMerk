@@ -2,6 +2,7 @@ using Application.DTOs.Weeklists;
 using Application.Files.Interfaces;
 using Application.Services.Interfaces.Tasks;
 using Application.Services.Interfaces.Weeklists;
+using Domain.Entities.Files;
 using Domain.Entities.Products;
 using Domain.Enums;
 using Microsoft.AspNetCore.Mvc;
@@ -50,15 +51,22 @@ namespace WebAPI.Controllers.WeeklistControllers.ContentControllers
         {
             try
             {
+                FilesResult aiProducts = _csvService.GetProductsFromAI(file);                
+                if (!aiProducts.Success)
+                {
+                    return BadRequest(aiProducts.Message);
+                }
+                
+                await _contentService.InsertAIProductContent(aiProducts.Products);
 
                 // Mark Current task as done, set next to ready                
                 // var updateTaskResult = await UpdateTaskStatus(weeklistId, WeeklistTaskNameEnum.UploadAIContent, WeeklistTaskStatusEnum.Done);
+                return Ok();
             }
             catch (Exception ex)
             {
                 return StatusCode(500, $"Something went wrong. Please try again. {ex.Message}");
             }
-            return Ok();
         }
     }
 }

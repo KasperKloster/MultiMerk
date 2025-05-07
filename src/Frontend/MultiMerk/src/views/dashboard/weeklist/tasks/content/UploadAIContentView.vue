@@ -28,8 +28,7 @@ const onFileChange = (event) => {
 
 const handleUpload = async () => {
     successMessage.value = '';
-    errorMessage.value = '';
-
+    errorMessage.value = '';    
     if (!selectedFile.value) return;
 
     const formData = new FormData();
@@ -40,31 +39,13 @@ const handleUpload = async () => {
         url: '/weeklist/content/upload-ai-content',
         formData,
         onSuccess: (data) => {
-            successMessage.value = `Weeklist ${weeklistNumber} has been created`;
+            successMessage.value = `Products has been updated`;
             selectedFile.value = null;
         },
         onError: (msg) => {
             errorMessage.value = `Upload failed: ${msg}`;
         },
     });
-
-    // Reset messages
-    // successMessage.value = '';
-    // errorMessage.value = '';
-
-    // // Setting formdata
-    // const formData = new FormData();
-    // // Append
-
-    // try {
-    //     const response = await api.post(`/weeklist/content/upload-ai-content`, formData);
-    //     successMessage.value = `Success`
-    //     console.info("Upload success");
-
-    // } catch (error) {
-    //     console.log(error);
-    //     errorMessage.value = `Upload failed: ${error.response.data}`;
-    // }
 };
 
 </script>

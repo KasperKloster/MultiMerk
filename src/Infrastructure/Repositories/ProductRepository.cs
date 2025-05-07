@@ -127,6 +127,51 @@ public class ProductRepository : IProductRepository
                     .ToListAsync();
     }
 
+    public async Task UpdateProductsFromAI(List<Product> aiProducts)
+    {
+        // Get all series values from AI products (ignoring nulls)
+        var aiSeriesList = aiProducts
+            .Where(p => !string.IsNullOrWhiteSpace(p.Series))
+            .Select(p => p.Series)
+            .Distinct()
+            .ToList();
+
+        // Get all SKUs from AI products that don't have a Series
+        var aiSkuList = aiProducts
+            .Where(p => string.IsNullOrWhiteSpace(p.Series))
+            .Select(p => p.Sku)
+            .Distinct()
+            .ToList();
+
+        // Query existing products that match by Series or by SKU (if no series)
+        var existingProducts = await _dbContext.Products
+            .Where(p => (p.Series != null && aiSeriesList.Contains(p.Series)) || aiSkuList.Contains(p.Sku))
+            .ToListAsync();
+
+        foreach (var aiProduct in aiProducts)
+        {
+            // Prefer match by Series if available, otherwise by SKU
+            var existingProduct = !string.IsNullOrWhiteSpace(aiProduct.Series)
+                ? existingProducts.FirstOrDefault(p => p.Series == aiProduct.Series)
+                : existingProducts.FirstOrDefault(p => p.Sku == aiProduct.Sku);
+
+            if (existingProduct != null)
+            {
+                // Update fields only if AI version has a value
+                if (!string.IsNullOrWhiteSpace(aiProduct.Title)){
+                    existingProduct.Title = aiProduct.Title;
+                }
+
+                if (!string.IsNullOrWhiteSpace(aiProduct.Description)){
+                    existingProduct.Description = aiProduct.Description;
+                }
+            }
+        }
+
+        // Save changes to DB
+        await _dbContext.SaveChangesAsync();
+    }
+
     public async Task UpdateQtyFromStockProducts(Dictionary<string, int> stockProducts)
     {
         // Step 1: Extract the SupplierSkus from the dictionary
@@ -151,7 +196,7 @@ public class ProductRepository : IProductRepository
 
     public async Task<List<Product>> GetProductsFromWeeklist(int weeklistId)
     {
-        return await _dbContext.Products.Where(p =>p.WeeklistId == weeklistId).ToListAsync();
+        return await _dbContext.Products.Where(p => p.WeeklistId == weeklistId).ToListAsync();
     }
 
 }

@@ -1,5 +1,6 @@
 using Application.Repositories;
 using Application.Services.Interfaces.Weeklists;
+using Domain.Entities.Files;
 using Domain.Entities.Products;
 
 namespace Application.Services.Weeklists;
@@ -24,7 +25,19 @@ public class ContentService : IContentService
         {
             throw new Exception(ex.Message);
         }
+    }
 
+    public async Task<FilesResult> InsertAIProductContent(List<Product> aiProducts)
+    {
+        try
+        {
+            await _productRepository.UpdateProductsFromAI(aiProducts);            
+            return FilesResult.SuccessResult();
+        }
+        catch (Exception ex)
+        {
+            throw new Exception(ex.Message);
+        }
     }
 }
 
