@@ -1,6 +1,8 @@
+using System.Globalization;
 using Application.Files.Interfaces;
 using Domain.Entities.Products;
 using Microsoft.AspNetCore.Http;
+using Microsoft.VisualBasic.FileIO;
 using NPOI.HSSF.UserModel;
 using NPOI.SS.UserModel;
 
@@ -71,6 +73,62 @@ public class FileParser : IFileParser
             products.Add(product);
         }
 
+        return products;
+    }
+
+    public List<Product> GetProductsFromAI(IFormFile file)
+    {
+        // List to hold the final Product objects        
+        var products = new List<Product>();
+        
+        // Temporary list to hold each CSV row as a dictionary (column name -> value)
+        var result = new List<Dictionary<string, string>>();
+
+        // Open and read the uploaded CSV file
+        using var reader = new StreamReader(file.OpenReadStream());
+        using var parser = new TextFieldParser(reader)
+        {
+            TextFieldType = FieldType.Delimited
+        };
+        
+        // Delimiter
+        parser.SetDelimiters(";");
+
+        string[]? headers = null;
+        
+        // Remove spaces, lowercase, etc. from headers
+        if (!parser.EndOfData)
+        {
+            headers = parser.ReadFields()?.Select(h => h.Trim().ToLowerInvariant().Replace(" ", "").Replace("_", "")).ToArray();
+        }
+
+        // Parse each row into a dictionary based on headers
+        while (!parser.EndOfData)
+        {
+            var fields = parser.ReadFields();
+            if (headers == null || fields == null || fields.Length != headers.Length){
+                continue;
+            }
+            var row = headers.Zip(fields, (key, value) => new { key, value }).ToDictionary(x => x.key, x => x.value?.Trim());
+            result.Add(row);
+        }
+        
+        // Convert each dictionary into a Product object
+        foreach (var row in result)
+        {
+            // Sku is an required field
+            if (!row.TryGetValue("sku", out var sku) || string.IsNullOrWhiteSpace(sku)){
+                continue;
+            }
+            // Populate the Products
+            var product = new Product(sku)
+            {                
+                Title = row.GetValueOrDefault("title"),
+                Description = row.GetValueOrDefault("description"),
+                Series = row.GetValueOrDefault("series"),            
+            };
+            products.Add(product);
+        }
         return products;
     }
 
@@ -162,7 +220,7 @@ public class FileParser : IFileParser
         return outOfStockProducts;
     }
 
-    // Helpers
+    // Helpers fpr .xls
     private static string? GetCellString(IRow row, Dictionary<string, int> map, string column)
     {
         return map.TryGetValue(column, out var idx) ? row.GetCell(idx)?.ToString()?.Trim() : null;
@@ -187,6 +245,11 @@ public class FileParser : IFileParser
         return float.TryParse(cell?.ToString(), out var value) ? value : null;
     }
 
+    // Helpers for .csv
+
+
+
+    // Both helpers
     private static Dictionary<string, string[]> GetHeaderAliases()
     {
         // Define aliases for headers, if a column name is spelled differently
@@ -197,7 +260,7 @@ public class FileParser : IFileParser
             { "title", new[] { "title", "name" } },
             { "description", new[] { "description", "product description" } },
             { "ean", new[] { "ean" } },
-            { "categoryId", new[] { "categoryId", "category id", "category_id" } },
+            { "categoryId", new[] { "categoryId", "category id", "category_id", "cat id" } },
             { "series", new[] { "series" } },
             { "color", new[] { "color", "colour" } },
             { "material", new[] { "material" } },
@@ -205,10 +268,12 @@ public class FileParser : IFileParser
             { "cost", new[] { "cost" } },
             { "qty", new[] { "qty", "qty (unit)", "quantity" } },
             { "weight", new[] { "weight" } },
-            { "mainImage", new[] { "mainImage", "main_image" } },
+            { "mainImage", new[] { "mainImage", "main_image", "main image" } },
             { "template", new[] { "template" } },
             { "location", new[] { "location" } },
         };
         return headerAliases;
     }
+
+
 }

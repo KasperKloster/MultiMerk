@@ -12,14 +12,12 @@ const weeklistId = route.params.id;
 const successMessage = ref('');
 const errorMessage = ref('');
 
-
 const downloadCsvFile = async () => {
     successMessage.value = '';
     errorMessage.value = '';
-
     const formData = new FormData();
     formData.append('weeklistId', weeklistId);
-
+    
     await downloadFile({
         url: '/weeklist/content/get-products-ready-for-ai-content',
         formData,
@@ -29,6 +27,7 @@ const downloadCsvFile = async () => {
         onError: (msg) => errorMessage.value = `Download failed: ${msg}`
     });
 };
+
 
 </script>
 
@@ -44,17 +43,16 @@ const downloadCsvFile = async () => {
         </div>
     </div>
 
-    <div class="w-full max-w-5xl mx-auto mt-10 p-6 bg-white rounded-xl shadow-md space-y-4">
-        <form>
-            <div class="space-y-12">
-                <!-- submit Button -->
-                <button @click="downloadCsvFile" type="submit"
-                    class="w-full inline-flex justify-center items-center px-4 py-2 bg-indigo-600 hover:bg-indigo-700 text-white text-sm font-medium rounded-md shadow focus:outline-none focus:ring-2 focus:ring-indigo-500 disabled:bg-indigo-300 cursor-pointer">
-                    Download
-                </button>
-
-            </div>
-        </form>
+    <div class="w-full max-w-5xl mx-auto mt-10 p-6 bg-white rounded-xl shadow-md space-y-4">        
+        <div class="space-y-12">
+            <!-- submit Button -->
+            <button 
+                @click="downloadCsvFile" 
+                type="submit"
+                class="w-full inline-flex justify-center items-center px-4 py-2 bg-indigo-600 hover:bg-indigo-700 text-white text-sm font-medium rounded-md shadow focus:outline-none focus:ring-2 focus:ring-indigo-500 disabled:bg-indigo-300 cursor-pointer">
+                Download
+            </button>
+        </div>        
     </div>
 
 </template>

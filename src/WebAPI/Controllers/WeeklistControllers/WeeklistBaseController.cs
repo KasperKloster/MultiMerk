@@ -1,4 +1,5 @@
 using Application.Services.Interfaces.Tasks;
+using Application.Services.Interfaces.Weeklists;
 using Domain.Enums;
 using Microsoft.AspNetCore.Mvc;
 
@@ -6,10 +7,12 @@ namespace WebAPI.Controllers.WeeklistControllers;
 
 public abstract class WeeklistBaseController : ControllerBase
 {
+    protected readonly IWeeklistService _weeklistService;
     protected readonly IWeeklistTaskLinkService _weeklistTaskLinkService;
-    
-    protected WeeklistBaseController(IWeeklistTaskLinkService weeklistTaskLinkService)
+
+    protected WeeklistBaseController(IWeeklistService weeklistService, IWeeklistTaskLinkService weeklistTaskLinkService)
     {
+        _weeklistService = weeklistService;
         _weeklistTaskLinkService = weeklistTaskLinkService;
     }
 
@@ -21,11 +24,10 @@ public abstract class WeeklistBaseController : ControllerBase
                 weeklistId: weeklistId,
                 currentTask: taskName,
                 newTaskStatus: newTaskStatus);
-
-            if (!result.Success) {
+            if (!result.Success) 
+            {
                 return BadRequest(result.Message);
             }
-
             return Ok();
         }
         catch (Exception ex)
@@ -42,11 +44,10 @@ public abstract class WeeklistBaseController : ControllerBase
                 weeklistId: weeklistId,
                 currentTask: currentTask,
                 newTask: newTask);
-
-            if (!result.Success) {
+            if (!result.Success) 
+            {
                 return BadRequest(result.Message);
             }
-
             return Ok();
         }
         catch (Exception ex)
@@ -54,6 +55,4 @@ public abstract class WeeklistBaseController : ControllerBase
             return StatusCode(500, $"Something went wrong. Please try again. {ex.Message}");
         }
     }
-
-
 }

@@ -2,6 +2,7 @@ using Application.DTOs.Weeklists;
 using Application.Files.Interfaces;
 using Application.Services.Interfaces.Tasks;
 using Application.Services.Interfaces.Weeklists;
+using Domain.Entities.Files;
 using Domain.Entities.Products;
 using Domain.Enums;
 using Microsoft.AspNetCore.Mvc;
@@ -13,14 +14,12 @@ namespace WebAPI.Controllers.WeeklistControllers.ContentControllers
     public class ContentController : WeeklistBaseController
     {
         private readonly IContentService _contentService;
-        private readonly ICsvService _csvService;
-        private readonly IWeeklistService _weeklistService;
+        private readonly ICsvService _csvService;        
 
-        public ContentController(IWeeklistTaskLinkService weeklistTaskLinkService, IContentService contentService, ICsvService csvService, IWeeklistService weeklistService) : base(weeklistTaskLinkService)
+        public ContentController(IWeeklistService weeklistService, IWeeklistTaskLinkService weeklistTaskLinkService, IContentService contentService, ICsvService csvService) : base(weeklistService, weeklistTaskLinkService)
         {
             _contentService = contentService;
-            _csvService = csvService;
-            _weeklistService = weeklistService;
+            _csvService = csvService;            
         }
 
         [HttpPost("get-products-ready-for-ai-content")]
@@ -40,7 +39,6 @@ namespace WebAPI.Controllers.WeeklistControllers.ContentControllers
                 var updateTaskResult = await UpdateTaskStatusAndAdvanceNext(weeklistId, WeeklistTaskNameEnum.GetAIContentList, WeeklistTaskNameEnum.UploadAIContent);
                 return File(csvBytes, "text/csv", fileName);
             }
-
             catch (Exception ex)
             {
                 return StatusCode(500, $"Something went wrong. Please try again. {ex.Message}");
@@ -49,18 +47,26 @@ namespace WebAPI.Controllers.WeeklistControllers.ContentControllers
 
         [HttpPost("upload-ai-content")]
         // [Authorize(Roles = $"{Roles.Admin}")]
-        public async Task<IActionResult> UploadAIContent([FromForm] int weeklistId)
+        public async Task<IActionResult> UploadAIContent([FromForm] IFormFile file, [FromForm] int weeklistId)
         {
             try
             {
+                FilesResult aiProducts = _csvService.GetProductsFromAI(file);                
+                if (!aiProducts.Success)
+                {
+                    return BadRequest(aiProducts.Message);
+                }
+                
+                await _contentService.InsertAIProductContent(aiProducts.Products);
+
                 // Mark Current task as done, set next to ready                
-                var updateTaskResult = await UpdateTaskStatus(weeklistId, WeeklistTaskNameEnum.UploadAIContent, WeeklistTaskStatusEnum.Done);
+                // var updateTaskResult = await UpdateTaskStatus(weeklistId, WeeklistTaskNameEnum.UploadAIContent, WeeklistTaskStatusEnum.Done);
+                return Ok();
             }
             catch (Exception ex)
             {
                 return StatusCode(500, $"Something went wrong. Please try again. {ex.Message}");
             }
-            return Ok();
         }
     }
 }

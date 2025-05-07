@@ -15,14 +15,12 @@ namespace WebAPI.Controllers.WeeklistControllers.WarehouseControllers
     {
         
         private readonly IProductService _productService;
-        private readonly IXlsFileService _xlsFileService;
-        private readonly IWeeklistService _weeklistService;
+        private readonly IXlsFileService _xlsFileService;        
 
-        public WarehouseController(IWeeklistTaskLinkService weeklistTaskLinkService, IProductService productService, IXlsFileService xlsFileService, IWeeklistService weeklistService) : base(weeklistTaskLinkService)
+        public WarehouseController(IWeeklistService weeklistService, IWeeklistTaskLinkService weeklistTaskLinkService, IProductService productService, IXlsFileService xlsFileService) : base(weeklistService, weeklistTaskLinkService)
         {
             _productService = productService;            
-            _xlsFileService = xlsFileService;
-            _weeklistService = weeklistService;
+            _xlsFileService = xlsFileService;            
         }
 
         [HttpPost("get-checklist")]

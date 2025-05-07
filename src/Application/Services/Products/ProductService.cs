@@ -57,7 +57,6 @@ public class ProductService : IProductService
 
     public FilesResult GetProductsFromOutOfStock(IFormFile file)
     {
-
         try
         {
             if (!IsSupportedXlsFile(file))

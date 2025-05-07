@@ -1,12 +1,37 @@
 using System.Globalization;
 using System.Text;
 using Application.Files.Interfaces;
+using Domain.Entities.Files;
 using Domain.Entities.Products;
+using Microsoft.AspNetCore.Http;
 
 namespace Application.Files.Services;
 
 public class CsvService : ICsvService
 {
+    private readonly IFileParser _fileparser;
+
+    public CsvService(IFileParser fileparser)
+    {
+        _fileparser = fileparser;
+    }
+
+    public FilesResult GetProductsFromAI(IFormFile file)
+    {
+        if (Path.GetExtension(file.FileName) != ".csv")
+        {
+            return FilesResult.Fail(message: "Invalid file extension.");            
+        }
+        // Getting products from .xls
+        List<Product> products = _fileparser.GetProductsFromAI(file);
+        if (products.Count == 0)
+        {
+            return FilesResult.Fail("No products found in the file.");
+        }
+
+        return FilesResult.SuccessResultWithProducts(products);
+    }
+
     public byte[] GenerateProductsReadyForAICSV(List<Product> products)
     {
         var sb = new StringBuilder();
