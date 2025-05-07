@@ -1,7 +1,7 @@
 <script setup>
+import { downloadFile } from '@/utils/fileDownloader';
 import { useRoute } from 'vue-router';
 import { ref } from 'vue';
-import api from '@/utils/api';
 import Header from '@/components/layout/Header.vue';
 import BackToWeeklistLink from '@/components/layout/BackToWeeklistLink.vue';
 import ErrorAlert from '@/components/layout/alerts/ErrorAlert.vue';
@@ -12,54 +12,22 @@ const weeklistId = route.params.id;
 const successMessage = ref('');
 const errorMessage = ref('');
 
-const getCsvFile = async () => {
-    // Reset messages
+
+const downloadCsvFile = async () => {
     successMessage.value = '';
     errorMessage.value = '';
 
-    // Setting formdata
     const formData = new FormData();
     formData.append('weeklistId', weeklistId);
 
-    try {
-        const response = await api.post(
-            '/weeklist/content/get-products-ready-for-ai-content',
-            formData,
-            { responseType: 'blob' }
-        );
-
-        // Default filename
-        let fileName = `products-weeklist-${weeklistId}.csv`;
-
-        // Extract filename from content-disposition header
-        const disposition = response.headers['content-disposition'];
-        if (disposition) {
-            const utf8Match = disposition.match(/filename\*\=UTF-8''(.+?)(?:;|$)/);
-            const asciiMatch = disposition.match(/filename="?(.*?)"?(\s*;|$)/);
-
-            if (utf8Match?.[1]) {
-                fileName = decodeURIComponent(utf8Match[1]);
-            } else if (asciiMatch?.[1]) {
-                fileName = asciiMatch[1];
-            }
-        }
-
-        const blob = new Blob([response.data], { type: 'text/csv' });
-        const url = window.URL.createObjectURL(blob);
-        const link = document.createElement('a');
-        link.href = url;
-        link.setAttribute('download', fileName);
-        document.body.appendChild(link);
-        link.click();
-        link.remove();
-
-        successMessage.value = 'Download successful';
-    } catch (error) {
-        console.error(error);
-        const errorText = await error?.response?.data?.text?.() ?? 'An unknown error occurred.';
-        errorMessage.value = `Download failed: ${errorText}`;
-    }
-
+    await downloadFile({
+        url: '/weeklist/content/get-products-ready-for-ai-content',
+        formData,
+        defaultFileName: `products-weeklist-${weeklistId}.csv`,        
+        mimeType: 'text/csv',
+        onSuccess: () => successMessage.value = 'Download successful',
+        onError: (msg) => errorMessage.value = `Download failed: ${msg}`
+    });
 };
 
 </script>
@@ -80,9 +48,9 @@ const getCsvFile = async () => {
         <form>
             <div class="space-y-12">
                 <!-- submit Button -->
-                <button @click="getCsvFile" type="submit"
+                <button @click="downloadCsvFile" type="submit"
                     class="w-full inline-flex justify-center items-center px-4 py-2 bg-indigo-600 hover:bg-indigo-700 text-white text-sm font-medium rounded-md shadow focus:outline-none focus:ring-2 focus:ring-indigo-500 disabled:bg-indigo-300 cursor-pointer">
-                    Get
+                    Download
                 </button>
 
             </div>

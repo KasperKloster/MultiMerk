@@ -32,16 +32,6 @@ public class XlsFileService : IXlsFileService
         return FilesResult.SuccessResultWithProducts(products);
     }
 
-    private static bool HasValidXlsFileExtension(IFormFile file)
-    {
-        string FileExtension = Path.GetExtension(file.FileName);
-        if (FileExtension != ".xls")
-        {
-            return false;
-        }
-        return true;
-    }
-
     public byte[] GetProductChecklist(List<Product> products)
     {
         using var workbook = new XLWorkbook();
@@ -96,6 +86,13 @@ public class XlsFileService : IXlsFileService
         return stream.ToArray();
     }
 
-
-    
+    private static bool HasValidXlsFileExtension(IFormFile file)
+    {
+        string FileExtension = Path.GetExtension(file.FileName);
+        if (FileExtension != ".xls")
+        {
+            return false;
+        }
+        return true;
+    }
 }

@@ -93,8 +93,8 @@ namespace WebAPI.Controllers.WeeklistControllers.WarehouseControllers
             try
             {
                 // Mark Current task as done, set next to ready
-                var updateTaskResult = await UpdateTaskStatus(weeklistId, WeeklistTaskName.InsertWarehouseList, WeeklistTaskStatus.Done);
-                return Ok();                
+                var updateTaskResult = await UpdateTaskStatusAndAdvanceNext(weeklistId, WeeklistTaskName.InsertWarehouseList, WeeklistTaskName.ImportProductList);
+                return Ok();
             }
             catch (Exception ex)
             {

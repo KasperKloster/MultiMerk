@@ -7,7 +7,7 @@
 namespace Infrastructure.Migrations
 {
     /// <inheritdoc />
-    public partial class Seeding : Migration
+    public partial class Seed : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
@@ -34,9 +34,8 @@ namespace Infrastructure.Migrations
                     { 4, "Upload AI content" },
                     { 5, "Create Checklist" },
                     { 6, "Insert warehouse list" },
-                    { 7, "Create final list" },
-                    { 8, "Import product list" },
-                    { 9, "Create translations" }
+                    { 7, "Import product list" },
+                    { 8, "Create translations" }
                 });
 
             migrationBuilder.InsertData(
@@ -49,8 +48,8 @@ namespace Infrastructure.Migrations
                 columns: new[] { "Id", "CategoryId", "Color", "Cost", "Description", "EAN", "Location", "MainImage", "Material", "Price", "Qty", "Series", "Sku", "SupplierSku", "TemplateId", "Title", "WeeklistId", "Weight" },
                 values: new object[,]
                 {
-                    { 1, null, null, null, null, null, null, null, null, null, null, null, "LC01-1001-1", null, null, null, 1, null },
-                    { 2, null, null, null, null, null, null, null, null, null, null, null, "LC01-1001-2", null, null, null, 1, null }
+                    { 1, null, null, null, null, null, null, null, null, null, 0, null, "LC01-1001-1", null, null, "Product One", 1, null },
+                    { 2, null, null, null, null, null, null, null, null, null, 3, null, "LC01-1001-2", null, null, "Product Two", 1, null }
                 });
 
             migrationBuilder.InsertData(
@@ -65,8 +64,7 @@ namespace Infrastructure.Migrations
                     { 1, 5, "00000000-0000-0000-0000-000000000005", 1 },
                     { 1, 6, "00000000-0000-0000-0000-000000000006", 1 },
                     { 1, 7, "00000000-0000-0000-0000-000000000001", 1 },
-                    { 1, 8, "00000000-0000-0000-0000-000000000001", 1 },
-                    { 1, 9, "00000000-0000-0000-0000-000000000001", 1 }
+                    { 1, 8, "00000000-0000-0000-0000-000000000001", 1 }
                 });
 
             migrationBuilder.InsertData(
@@ -81,8 +79,7 @@ namespace Infrastructure.Migrations
                     { 5, "WarehouseWorker", 5 },
                     { 6, "WarehouseManager", 6 },
                     { 7, "Admin", 7 },
-                    { 8, "Admin", 8 },
-                    { 9, "Admin", 9 }
+                    { 8, "Admin", 8 }
                 });
         }
 
@@ -140,11 +137,6 @@ namespace Infrastructure.Migrations
                 keyValues: new object[] { 1, 8 });
 
             migrationBuilder.DeleteData(
-                table: "WeeklistTaskLinks",
-                keyColumns: new[] { "WeeklistId", "WeeklistTaskId" },
-                keyValues: new object[] { 1, 9 });
-
-            migrationBuilder.DeleteData(
                 table: "WeeklistTaskStatus",
                 keyColumn: "Id",
                 keyValue: 3);
@@ -195,11 +187,6 @@ namespace Infrastructure.Migrations
                 keyValue: 8);
 
             migrationBuilder.DeleteData(
-                table: "WeeklistTaskUserRoleAssignments",
-                keyColumn: "Id",
-                keyValue: 9);
-
-            migrationBuilder.DeleteData(
                 table: "WeeklistTaskStatus",
                 keyColumn: "Id",
                 keyValue: 1);
@@ -248,11 +235,6 @@ namespace Infrastructure.Migrations
                 table: "WeeklistTasks",
                 keyColumn: "Id",
                 keyValue: 8);
-
-            migrationBuilder.DeleteData(
-                table: "WeeklistTasks",
-                keyColumn: "Id",
-                keyValue: 9);
 
             migrationBuilder.DeleteData(
                 table: "Weeklists",

@@ -15,10 +15,9 @@ public class WeeklistTaskSeeder
             new WeeklistTask { Id = 3, Name = "Get AI content list" },
             new WeeklistTask { Id = 4, Name = "Upload AI content" },
             new WeeklistTask { Id = 5, Name = "Create Checklist" },
-            new WeeklistTask { Id = 6, Name = "Insert warehouse list" },
-            new WeeklistTask { Id = 7, Name = "Create final list" },
-            new WeeklistTask { Id = 8, Name = "Import product list" },
-            new WeeklistTask { Id = 9, Name = "Create translations" }
+            new WeeklistTask { Id = 6, Name = "Insert warehouse list" },            
+            new WeeklistTask { Id = 7, Name = "Import product list" },
+            new WeeklistTask { Id = 8, Name = "Create translations" }
         );
     }
 }

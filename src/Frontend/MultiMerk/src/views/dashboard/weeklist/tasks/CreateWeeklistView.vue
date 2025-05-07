@@ -146,7 +146,7 @@ const handleUpload = async () => {
                                     d="M3 16.5V19a2.5 2.5 0 002.5 2.5h13a2.5 2.5 0 002.5-2.5v-2.5M16.5 12.75L12 17.25m0 0l-4.5-4.5M12 17.25V4.5" />
                             </svg>
                             <p class="mb-2 text-sm text-gray-500">
-                                <span class="font-semibold">Click to upload</span> or drag and drop
+                                <span class="font-semibold">Click to upload</span>
                             </p>
                             <p class="text-xs text-gray-400">.xls files only</p>
                         </div>

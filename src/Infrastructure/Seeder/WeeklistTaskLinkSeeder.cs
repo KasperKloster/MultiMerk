@@ -56,13 +56,6 @@ public class WeeklistTaskLinkSeeder
             new WeeklistTaskLink
             {
                 WeeklistId = 1,
-                WeeklistTaskId = (int)WeeklistTaskName.CreateFinalList,
-                WeeklistTaskStatusId = (int)WeeklistTaskStatus.Awaiting, // "Awaiting"
-                AssignedUserId = "00000000-0000-0000-0000-000000000001", // Admin
-            },        
-            new WeeklistTaskLink
-            {
-                WeeklistId = 1,
                 WeeklistTaskId = (int)WeeklistTaskName.ImportProductList,
                 WeeklistTaskStatusId = (int)WeeklistTaskStatus.Awaiting, // "Awaiting"
                 AssignedUserId = "00000000-0000-0000-0000-000000000001", // Admin

@@ -83,6 +83,8 @@ builder.Services.AddScoped<IWeeklistService, WeeklistService>();
 builder.Services.AddScoped<IProductService, ProductService>();
 builder.Services.AddScoped<IWeeklistTaskLinkService, WeeklistTaskLinkService>();
 builder.Services.AddScoped<IContentService, ContentService>();
+builder.Services.AddScoped<IZipService, ZipService>();
+
 
 // Allow CORS for your frontend
 builder.Services.AddCors(options =>

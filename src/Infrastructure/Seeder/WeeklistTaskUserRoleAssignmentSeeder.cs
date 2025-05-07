@@ -50,17 +50,11 @@ public class WeeklistTaskUserRoleAssignmentSeeder
             {
                 Id = 7,
                 UserRole = Roles.Admin,
-                WeeklistTaskId = (int)WeeklistTaskName.CreateFinalList
-            },      
-            new WeeklistTaskUserRoleAssignment
-            {
-                Id = 8,
-                UserRole = Roles.Admin,
                 WeeklistTaskId = (int)WeeklistTaskName.ImportProductList
             },
             new WeeklistTaskUserRoleAssignment
             {
-                Id = 9,
+                Id = 8,
                 UserRole = Roles.Admin,
                 WeeklistTaskId = (int)WeeklistTaskName.CreateTranslations
             },                   
