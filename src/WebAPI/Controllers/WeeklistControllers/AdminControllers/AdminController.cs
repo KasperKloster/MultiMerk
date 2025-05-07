@@ -1,6 +1,8 @@
-using System.Diagnostics;
+using Application.DTOs.Weeklists;
+using Application.Files.Interfaces;
 using Application.Services.Interfaces.Products;
 using Application.Services.Interfaces.Tasks;
+using Application.Services.Interfaces.Weeklists;
 using Domain.Entities.Files;
 using Domain.Entities.Products;
 using Domain.Enums;
@@ -12,11 +14,17 @@ namespace WebAPI.Controllers.WeeklistControllers.AdminControllers
     [ApiController]
     public class AdminController : WeeklistBaseController
     {
-        private readonly IProductService _productService;        
+        private readonly IProductService _productService;
+        private readonly ICsvService _csvService;
+        private readonly IWeeklistService _weeklistService;
+        private readonly IZipService _zipService;
 
-        public AdminController(IProductService productService, IWeeklistTaskLinkService weeklistTaskLinkService) : base(weeklistTaskLinkService)
+        public AdminController(IProductService productService, IWeeklistTaskLinkService weeklistTaskLinkService, ICsvService csvService, IWeeklistService weeklistService, IZipService zipService) : base(weeklistTaskLinkService)
         {
-            _productService = productService;            
+            _productService = productService;
+            _csvService = csvService;
+            _weeklistService = weeklistService;
+            _zipService = zipService;
         }
 
         [HttpPost("assign-ean")]
@@ -33,7 +41,7 @@ namespace WebAPI.Controllers.WeeklistControllers.AdminControllers
                 }
 
                 // Mark Current task as done, set next to ready                
-                var updateTaskResult = await UpdateTaskStatus(weeklistId, WeeklistTaskName.AssignEAN, WeeklistTaskStatus.Done);
+                var updateTaskResult = await UpdateTaskStatus(weeklistId, WeeklistTaskNameEnum.AssignEAN, WeeklistTaskStatusEnum.Done);
                 return Ok();
             }
             catch (Exception ex)
@@ -57,7 +65,7 @@ namespace WebAPI.Controllers.WeeklistControllers.AdminControllers
                     
                     if(updateResult.Success){
                         // Mark Current task as done, set next to ready                
-                        var updateTaskResult = await UpdateTaskStatusAndAdvanceNext(weeklistId: weeklistId, currentTask: WeeklistTaskName.InsertOutOfStock, newTask: WeeklistTaskName.CreateChecklist);
+                        var updateTaskResult = await UpdateTaskStatusAndAdvanceNext(weeklistId: weeklistId, currentTask: WeeklistTaskNameEnum.InsertOutOfStock, newTask: WeeklistTaskNameEnum.CreateChecklist);
                     }
                 }
                 
@@ -69,38 +77,23 @@ namespace WebAPI.Controllers.WeeklistControllers.AdminControllers
             }
         }
 
-        [HttpPost("create-final-list")]
-        // [Authorize(Roles = $"{Roles.Admin}")]
-        public async Task<IActionResult> CreateFinalList([FromForm] int weeklistId)
-        {
-            try
-            {
-                // Mark Current task as done, set next to ready                          
-                var updateTaskResult = await UpdateTaskStatusAndAdvanceNext(weeklistId, WeeklistTaskName.CreateFinalList, WeeklistTaskName.ImportProductList);
-
-            }
-            catch (Exception ex)
-            {
-                return StatusCode(500, $"Something went wrong. Please try again. {ex.Message}");
-            }
-            return Ok();
-        }
-
         [HttpPost("import-product-list")]
         // [Authorize(Roles = $"{Roles.Admin}")]
         public async Task<IActionResult> ImportProductList([FromForm] int weeklistId)
         {
-            try
+            try            
             {
-
+                WeeklistDto weeklist = await _weeklistService.GetWeeklistAsync(weeklistId);
+                List<Product> products = await _productService.GetProductsFromWeeklist(weeklistId);
+                byte[] zipBytes = await _zipService.CreateZipAdminImportAsync(weeklist, products);
                 // Mark Current task as done, set next to ready                
-                var updateTaskResult = await UpdateTaskStatusAndAdvanceNext(weeklistId, WeeklistTaskName.ImportProductList, WeeklistTaskName.CreateTranslations);                
+                await UpdateTaskStatusAndAdvanceNext(weeklistId, WeeklistTaskNameEnum.ImportProductList, WeeklistTaskNameEnum.CreateTranslations);
+                return File(zipBytes, "application/zip", $"{weeklist.Number}-Admin.zip");
             }
             catch (Exception ex)
             {
                 return StatusCode(500, $"Something went wrong. Please try again. {ex.Message}");
-            }
-            return Ok();
+            }            
         }
 
         [HttpPost("create-translations")]
@@ -113,13 +106,14 @@ namespace WebAPI.Controllers.WeeklistControllers.AdminControllers
                 // Mark Current task as done
                 var updateResult = await _weeklistTaskLinkService.UpdateTaskStatus(
                     weeklistId: weeklistId,
-                    currentTask: WeeklistTaskName.CreateTranslations,
-                    newTaskStatus: WeeklistTaskStatus.Done);
+                    currentTask: WeeklistTaskNameEnum.CreateTranslations,
+                    newTaskStatus: WeeklistTaskStatusEnum.Done);
 
                 if (!updateResult.Success)
                 {
                     return BadRequest(updateResult.Message);
                 }
+                return Ok();
                 
             }
             catch (Exception ex)
@@ -127,7 +121,6 @@ namespace WebAPI.Controllers.WeeklistControllers.AdminControllers
                 return StatusCode(500, $"Something went wrong. Please try again. {ex.Message}");
             }
 
-            return Ok();
         }
 
     }

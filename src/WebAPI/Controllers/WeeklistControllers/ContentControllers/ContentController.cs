@@ -37,7 +37,7 @@ namespace WebAPI.Controllers.WeeklistControllers.ContentControllers
                 WeeklistDto weeklist = await _weeklistService.GetWeeklistAsync(weeklistId);
                 var fileName = $"{weeklist.Number}-Ready-For-AI.csv";
                 // Mark Current task as done, set next to ready                
-                var updateTaskResult = await UpdateTaskStatusAndAdvanceNext(weeklistId, WeeklistTaskName.GetAIContentList, WeeklistTaskName.UploadAIContent);
+                var updateTaskResult = await UpdateTaskStatusAndAdvanceNext(weeklistId, WeeklistTaskNameEnum.GetAIContentList, WeeklistTaskNameEnum.UploadAIContent);
                 return File(csvBytes, "text/csv", fileName);
             }
 
@@ -54,7 +54,7 @@ namespace WebAPI.Controllers.WeeklistControllers.ContentControllers
             try
             {
                 // Mark Current task as done, set next to ready                
-                var updateTaskResult = await UpdateTaskStatus(weeklistId, WeeklistTaskName.UploadAIContent, WeeklistTaskStatus.Done);
+                var updateTaskResult = await UpdateTaskStatus(weeklistId, WeeklistTaskNameEnum.UploadAIContent, WeeklistTaskStatusEnum.Done);
             }
             catch (Exception ex)
             {

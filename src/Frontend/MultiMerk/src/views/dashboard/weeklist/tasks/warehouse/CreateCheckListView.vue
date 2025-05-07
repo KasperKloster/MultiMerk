@@ -1,4 +1,5 @@
 <script setup>
+import { downloadFile } from '@/utils/fileDownloader';
 import { useRoute } from 'vue-router';
 import { ref } from 'vue';
 import api from '@/utils/api';
@@ -13,57 +14,21 @@ const successMessage = ref('');
 const errorMessage = ref('');
 const selectedFile = ref(null);
 
-
-const getXlsFile = async () => {
-    // Reset messages
+const downloadXlsFile = async () => {
     successMessage.value = '';
     errorMessage.value = '';
 
-    // Setting formdata
     const formData = new FormData();
     formData.append('weeklistId', weeklistId);
 
-    try {
-        const response = await api.post(
-            '/weeklist/warehouse/get-checklist',
-            formData,
-            { responseType: 'blob' }
-        );
-
-        // Default filename    
-        let fileName = `${weeklistId}-Checklist.xls`;
-
-        // Extract filename from content-disposition header
-        const disposition = response.headers['content-disposition'];
-        if (disposition) {
-            const utf8Match = disposition.match(/filename\*\=UTF-8''(.+?)(?:;|$)/);
-            const asciiMatch = disposition.match(/filename="?(.*?)"?(\s*;|$)/);
-
-            if (utf8Match?.[1]) {
-                fileName = decodeURIComponent(utf8Match[1]);
-            } else if (asciiMatch?.[1]) {
-                fileName = asciiMatch[1];
-            }
-        }
-
-        const blob = new Blob([response.data], {
-            type: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet'
-        });
-        const url = window.URL.createObjectURL(blob);
-        const link = document.createElement('a');
-        link.href = url;
-        link.setAttribute('download', fileName);
-        document.body.appendChild(link);
-        link.click();
-        link.remove();
-
-        successMessage.value = 'Download successful';
-    } catch (error) {
-        console.error(error);
-        const errorText = await error?.response?.data?.text?.() ?? 'An unknown error occurred.';
-        errorMessage.value = `Download failed: ${errorText}`;
-    }
-
+    await downloadFile({
+        url: '/weeklist/warehouse/get-checklist',
+        formData,
+        defaultFileName: `${weeklistId}-Checklist.xls`,
+        mimeType: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet',
+        onSuccess: () => successMessage.value = 'Download successful',
+        onError: (msg) => errorMessage.value = `Download failed: ${msg}`
+    });
 };
 
 // Upload
@@ -121,7 +86,7 @@ const handleUpload = async () => {
     </div>
 
     <div class="w-full max-w-5xl mx-auto p-6 bg-white rounded-xl shadow-md space-y-4">
-        <button @click="getXlsFile()" type="button"
+        <button @click="downloadXlsFile()" type="button"
             class="text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-10 py-2.5 text-center inline-flex items-center me-2 dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800 cursor-pointer">
             Download Checklist
             <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" class="size-6 ml-2">

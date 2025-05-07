@@ -1,7 +1,7 @@
 <script setup>
+import { downloadFile } from '@/utils/fileDownloader';
 import { useRoute } from 'vue-router';
 import { ref } from 'vue';
-import api from '@/utils/api';
 import Header from '@/components/layout/Header.vue'
 import BackToWeeklistLink from '@/components/layout/BackToWeeklistLink.vue';
 import ErrorAlert from '@/components/layout/alerts/ErrorAlert.vue';
@@ -12,25 +12,21 @@ const weeklistId = route.params.id;
 const successMessage = ref('');
 const errorMessage = ref('');
 
-const handleUpload = async () => {
-    // Reset messages
+const downloadCsvFile = async () => {
     successMessage.value = '';
     errorMessage.value = '';
 
-    // Setting formdata
     const formData = new FormData();
-    // Append
     formData.append('weeklistId', weeklistId);
 
-    try {
-        const response = await api.post(`/weeklist/admin/import-product-list`, formData);
-        successMessage.value = `Success`
-        console.info("Upload success");
-
-    } catch (error) {
-        console.log(error);
-        errorMessage.value = `Upload failed: ${error.response.data}`;
-    }
+    await downloadFile({
+        url: '/weeklist/admin/import-product-list',
+        formData,
+        defaultFileName: `${weeklistId}-Admin.csv`,        
+        mimeType: 'application/zip',
+        onSuccess: () => successMessage.value = 'Download successful',
+        onError: (msg) => errorMessage.value = `Download failed: ${msg}`
+    });
 };
 
 </script>
@@ -48,12 +44,14 @@ const handleUpload = async () => {
     </div>
 
     <div class="w-full max-w-5xl mx-auto mt-10 p-6 bg-white rounded-xl shadow-md space-y-4">
-        <form @submit.prevent="handleUpload">
+        <form @submit.prevent="getImportLists">
             <div class="space-y-12">
                 <!-- submit Button -->
-                <button type="submit"
+                <button 
+                    @click="downloadCsvFile"
+                    type="submit"
                     class="w-full inline-flex justify-center items-center px-4 py-2 bg-indigo-600 hover:bg-indigo-700 text-white text-sm font-medium rounded-md shadow focus:outline-none focus:ring-2 focus:ring-indigo-500 disabled:bg-indigo-300 cursor-pointer">
-                    Upload
+                    Download files
                 </button>
 
             </div>

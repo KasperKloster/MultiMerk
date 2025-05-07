@@ -56,12 +56,9 @@ const goToTask = (taskId, weeklistId) => {
         router.push({ name: 'insert-warehouse-list', params: { id: weeklistId } });
     }        
     if (taskId === 7) {
-        router.push({ name: 'create-final-list', params: { id: weeklistId } });
-    }
-    if (taskId === 8) {
         router.push({ name: 'import-product-list', params: { id: weeklistId } });
     }
-    if (taskId === 9) {
+    if (taskId === 8) {
         router.push({ name: 'create-translations', params: { id: weeklistId } });
     }                        
 };
@@ -104,9 +101,6 @@ const goToTask = (taskId, weeklistId) => {
                         </th>
                         <th scope="col" class="px-6 py-3">
                             Insert Warehouse List
-                        </th>                        
-                        <th scope="col" class="px-6 py-3">
-                            Create Final List
                         </th>
                         <th scope="col" class="px-6 py-3">
                             Import Product List

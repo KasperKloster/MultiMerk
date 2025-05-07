@@ -14,55 +14,49 @@ public class WeeklistTaskUserRoleAssignmentSeeder
             new WeeklistTaskUserRoleAssignment{
                 Id = 1,
                 UserRole = Roles.Admin,
-                WeeklistTaskId = (int)(int)WeeklistTaskName.AssignEAN
+                WeeklistTaskId = (int)WeeklistTaskNameEnum.AssignEAN
             },
             new WeeklistTaskUserRoleAssignment
             {
                 Id = 2,
                 UserRole = Roles.Admin,
-                WeeklistTaskId = (int)WeeklistTaskName.InsertOutOfStock
+                WeeklistTaskId = (int)WeeklistTaskNameEnum.InsertOutOfStock
             },
             new WeeklistTaskUserRoleAssignment
             {
                 Id = 3,
                 UserRole = Roles.Writer,
-                WeeklistTaskId = (int)WeeklistTaskName.GetAIContentList
+                WeeklistTaskId = (int)WeeklistTaskNameEnum.GetAIContentList
             },
             new WeeklistTaskUserRoleAssignment
             {
                 Id = 4,
                 UserRole = Roles.Writer,
-                WeeklistTaskId = (int)WeeklistTaskName.UploadAIContent
+                WeeklistTaskId = (int)WeeklistTaskNameEnum.UploadAIContent
             },
             new WeeklistTaskUserRoleAssignment
             {
                 Id = 5,
                 UserRole = Roles.WarehouseWorker,
-                WeeklistTaskId = (int)WeeklistTaskName.CreateChecklist
+                WeeklistTaskId = (int)WeeklistTaskNameEnum.CreateChecklist
             },
             new WeeklistTaskUserRoleAssignment
             {
                 Id = 6,
                 UserRole = Roles.WarehouseManager,
-                WeeklistTaskId = (int)WeeklistTaskName.InsertWarehouseList
+                WeeklistTaskId = (int)WeeklistTaskNameEnum.InsertWarehouseList
             },
             new WeeklistTaskUserRoleAssignment
             {
                 Id = 7,
                 UserRole = Roles.Admin,
-                WeeklistTaskId = (int)WeeklistTaskName.CreateFinalList
-            },      
+                WeeklistTaskId = (int)WeeklistTaskNameEnum.ImportProductList
+            },
             new WeeklistTaskUserRoleAssignment
             {
                 Id = 8,
                 UserRole = Roles.Admin,
-                WeeklistTaskId = (int)WeeklistTaskName.ImportProductList
-            },
-            new WeeklistTaskUserRoleAssignment
-            {
-                Id = 9,
-                UserRole = Roles.Admin,
-                WeeklistTaskId = (int)WeeklistTaskName.CreateTranslations
+                WeeklistTaskId = (int)WeeklistTaskNameEnum.CreateTranslations
             },                   
         };
         builder.HasData(userRoleAssignments);

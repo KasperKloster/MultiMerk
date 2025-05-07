@@ -74,31 +74,6 @@ public class FileParser : IFileParser
         return products;
     }
 
-    // Helpers
-    private static string? GetCellString(IRow row, Dictionary<string, int> map, string column)
-    {
-        return map.TryGetValue(column, out var idx) ? row.GetCell(idx)?.ToString()?.Trim() : null;
-    }
-
-    private static int? GetCellInt(IRow row, Dictionary<string, int> map, string column)
-    {
-        if (!map.TryGetValue(column, out var idx)) return null;
-        var cell = row.GetCell(idx);
-        if (cell == null) return null;
-
-        var cellValue = cell.ToString()?.Trim();
-        if (string.IsNullOrWhiteSpace(cellValue)) return null;
-
-        return int.TryParse(cellValue, out var value) ? value : null;
-    }
-
-    private static float? GetCellFloat(IRow row, Dictionary<string, int> map, string column)
-    {
-        if (!map.TryGetValue(column, out var idx)) return null;
-        var cell = row.GetCell(idx);
-        return float.TryParse(cell?.ToString(), out var value) ? value : null;
-    }
-
     public Dictionary<string, int> GetProductsFromOutOfStock(IFormFile file)
     {
         var outOfStockProducts = new Dictionary<string, int>(StringComparer.OrdinalIgnoreCase);
@@ -185,6 +160,31 @@ public class FileParser : IFileParser
         }
 
         return outOfStockProducts;
+    }
+
+    // Helpers
+    private static string? GetCellString(IRow row, Dictionary<string, int> map, string column)
+    {
+        return map.TryGetValue(column, out var idx) ? row.GetCell(idx)?.ToString()?.Trim() : null;
+    }
+
+    private static int? GetCellInt(IRow row, Dictionary<string, int> map, string column)
+    {
+        if (!map.TryGetValue(column, out var idx)) return null;
+        var cell = row.GetCell(idx);
+        if (cell == null) return null;
+
+        var cellValue = cell.ToString()?.Trim();
+        if (string.IsNullOrWhiteSpace(cellValue)) return null;
+
+        return int.TryParse(cellValue, out var value) ? value : null;
+    }
+
+    private static float? GetCellFloat(IRow row, Dictionary<string, int> map, string column)
+    {
+        if (!map.TryGetValue(column, out var idx)) return null;
+        var cell = row.GetCell(idx);
+        return float.TryParse(cell?.ToString(), out var value) ? value : null;
     }
 
     private static Dictionary<string, string[]> GetHeaderAliases()

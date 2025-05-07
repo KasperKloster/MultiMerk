@@ -182,16 +182,12 @@ public class WeeklistService : IWeeklistService
             }
         }
 
-        // Map all Weeklisttasks to WeeklistTaskLink        
-        // int defaultStatusId = 1; // Default status ID - "Awaiting".        
-        // int readyStatusId = 2; // WeeklistTaskStatus: Ready                      
+        // Map all Weeklisttasks to WeeklistTaskLink
         var weeklistTaskLinks = WeeklistTaskLinkFactory.CreateLinks(
             weeklist.Id,
             allWeeklistTasks,
-            readyStatusId: 2,
-            defaultStatusId: 1,
             userRoleToUserId,
-            taskIdToRole);
+            taskIdToRole);        
 
         // Save WeeklistTaskLinks
         try

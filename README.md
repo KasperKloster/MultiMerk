@@ -34,3 +34,5 @@ https://vueschool.io/articles/vuejs-tutorials/how-to-use-vue-router-a-complete-t
 "default": "Host=localhost; Port=5432; Database=mmultimerk; Username=kasperkloster;Password=password"
 ##
 DELETE FROM "Products" WHERE "Id" BETWEEN 4 AND 37;
+
+UPDATE "WeeklistTaskLinks" SET "WeeklistTaskStatusId" = 2 WHERE "WeeklistId" = 2 AND "WeeklistTaskId" = 7;

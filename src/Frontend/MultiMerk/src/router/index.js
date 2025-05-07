@@ -9,7 +9,6 @@ import { jwtDecode } from "jwt-decode";
 import CreateAIContentView from '@/views/dashboard/weeklist/tasks/content/GetAIContentView.vue'
 import UploadAIContentView from '@/views/dashboard/weeklist/tasks/content/UploadAIContentView.vue'
 import AssignEanView from '@/views/dashboard/weeklist/tasks/admin/AssignEanView.vue'
-import CreateFinalListView from '@/views/dashboard/weeklist/tasks/admin/CreateFinalListView.vue'
 import CreateTranslationsView from '@/views/dashboard/weeklist/tasks/admin/CreateTranslationsView.vue'
 import ImportProductListView from '@/views/dashboard/weeklist/tasks/admin/ImportProductListView.vue'
 import CreateCheckList from '@/views/dashboard/weeklist/tasks/warehouse/CreateCheckListView.vue'
@@ -88,12 +87,6 @@ const router = createRouter({
       component: InsertOutOfStockView,
       meta: { requiresAuth: true, roles: ['Admin'] }
     },       
-    {
-      path: '/weeklist/tasks/admin/create-final-list/:id',
-      name: 'create-final-list',
-      component: CreateFinalListView,
-      meta: { requiresAuth: true, roles: ['Admin'] }
-    },
     {
       path: '/weeklist/tasks/admin/import-product-list/:id',
       name: 'import-product-list',

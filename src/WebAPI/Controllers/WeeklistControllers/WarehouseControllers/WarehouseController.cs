@@ -57,7 +57,7 @@ namespace WebAPI.Controllers.WeeklistControllers.WarehouseControllers
                 }
 
                 // Mark Current task as done, set next to ready
-                var updateTaskResult = await UpdateTaskStatusAndAdvanceNext(weeklistId, WeeklistTaskName.CreateChecklist, WeeklistTaskName.InsertWarehouseList);                
+                var updateTaskResult = await UpdateTaskStatusAndAdvanceNext(weeklistId, WeeklistTaskNameEnum.CreateChecklist, WeeklistTaskNameEnum.InsertWarehouseList);                
             }
             catch (Exception ex)
             {
@@ -93,8 +93,8 @@ namespace WebAPI.Controllers.WeeklistControllers.WarehouseControllers
             try
             {
                 // Mark Current task as done, set next to ready
-                var updateTaskResult = await UpdateTaskStatus(weeklistId, WeeklistTaskName.InsertWarehouseList, WeeklistTaskStatus.Done);
-                return Ok();                
+                var updateTaskResult = await UpdateTaskStatusAndAdvanceNext(weeklistId, WeeklistTaskNameEnum.InsertWarehouseList, WeeklistTaskNameEnum.ImportProductList);
+                return Ok();
             }
             catch (Exception ex)
             {

@@ -13,7 +13,7 @@ public abstract class WeeklistBaseController : ControllerBase
         _weeklistTaskLinkService = weeklistTaskLinkService;
     }
 
-    protected async Task<IActionResult> UpdateTaskStatus(int weeklistId, WeeklistTaskName taskName, WeeklistTaskStatus newTaskStatus)
+    protected async Task<IActionResult> UpdateTaskStatus(int weeklistId, WeeklistTaskNameEnum taskName, WeeklistTaskStatusEnum newTaskStatus)
     {
         try
         {
@@ -34,7 +34,7 @@ public abstract class WeeklistBaseController : ControllerBase
         }
     }
 
-    protected async Task<IActionResult> UpdateTaskStatusAndAdvanceNext(int weeklistId, WeeklistTaskName currentTask, WeeklistTaskName newTask)
+    protected async Task<IActionResult> UpdateTaskStatusAndAdvanceNext(int weeklistId, WeeklistTaskNameEnum currentTask, WeeklistTaskNameEnum newTask)
     {
         try
         {
