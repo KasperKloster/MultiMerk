@@ -1,5 +1,3 @@
-using System;
-
 namespace Domain.Entities.Weeklists.WeeklistTasks;
 
 public class WeeklistTaskUserRoleAssignment
