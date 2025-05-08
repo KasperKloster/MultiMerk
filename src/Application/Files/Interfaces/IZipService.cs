@@ -5,6 +5,7 @@ namespace Application.Files.Interfaces;
 
 public interface IZipService
 {
-    Task<byte[]> CreateZipAdminImportAsync(WeeklistDto weeklist, List<Product> products);
+    Task<byte[]> CreateZipMagentoAdminImportAsync(WeeklistDto weeklist, List<Product> products);
+    Task<byte[]> CreateZipShopifyImportAsync(WeeklistDto weeklist, List<Product> products);
 
 }
