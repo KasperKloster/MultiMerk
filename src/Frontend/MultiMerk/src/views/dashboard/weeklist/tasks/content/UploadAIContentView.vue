@@ -8,7 +8,6 @@ import ErrorAlert from '@/components/layout/alerts/ErrorAlert.vue';
 import SuccessAlert from '@/components/layout/alerts/SuccessAlert.vue';
 
 const route = useRoute();
-const weeklistId = route.params.id;
 const successMessage = ref('');
 const errorMessage = ref('');
 
@@ -32,8 +31,7 @@ const handleUpload = async () => {
     if (!selectedFile.value) return;
 
     const formData = new FormData();
-    formData.append('file', selectedFile.value);
-    formData.append('weeklistId', weeklistId);
+    formData.append('file', selectedFile.value);    
 
     await uploadFile({
         url: '/weeklist/content/upload-ai-content',

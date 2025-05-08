@@ -33,9 +33,9 @@ public class ProductService : IProductService
         List<Product> products;
         try
         {
-            if (!IsSupportedXlsFile(file))
+            if (Path.GetExtension(file.FileName) != ".xls")
             {
-                return FilesResult.Fail("Unsupported file type.");
+                return FilesResult.Fail("Must be .xls");
             }
             products = _fileParser.GetProductsFromXls(file);
         }
@@ -59,7 +59,7 @@ public class ProductService : IProductService
     {
         try
         {
-            if (!IsSupportedXlsFile(file))
+            if (Path.GetExtension(file.FileName) != ".xls")
             {
                 return FilesResult.Fail("Unsupported file type.");
             }
@@ -84,11 +84,6 @@ public class ProductService : IProductService
             return FilesResult.Fail($"Error updating with stock products: {ex.Message}");
         }
         return FilesResult.SuccessResult();
-    }
-
-    private static bool IsSupportedXlsFile(IFormFile file)
-    {
-        return string.Equals(Path.GetExtension(file.FileName), ".xls", StringComparison.OrdinalIgnoreCase);
     }
 
 

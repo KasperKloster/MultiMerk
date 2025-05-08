@@ -25,14 +25,16 @@ public class WeeklistRepository : IWeeklistRepository
             .ToListAsync();
     }
 
+    public async Task<Weeklist> GetWeeklist(int weeklistId)
+    {
+        return await _dbContext.Weeklists.FirstAsync(w => w.Id == weeklistId);        
+    }
+    
     public async Task AddAsync(Weeklist weeklist)
     {
         await _dbContext.Weeklists.AddAsync(weeklist);
         await _dbContext.SaveChangesAsync();
     }
 
-    public async Task<Weeklist> GetWeeklist(int weeklistId)
-    {
-        return await _dbContext.Weeklists.FirstAsync(w => w.Id == weeklistId);        
-    }
+
 }

@@ -245,10 +245,6 @@ public class FileParser : IFileParser
         return float.TryParse(cell?.ToString(), out var value) ? value : null;
     }
 
-    // Helpers for .csv
-
-
-
     // Both helpers
     private static Dictionary<string, string[]> GetHeaderAliases()
     {

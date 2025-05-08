@@ -47,7 +47,7 @@ namespace WebAPI.Controllers.WeeklistControllers.ContentControllers
 
         [HttpPost("upload-ai-content")]
         // [Authorize(Roles = $"{Roles.Admin}")]
-        public async Task<IActionResult> UploadAIContent([FromForm] IFormFile file, [FromForm] int weeklistId)
+        public async Task<IActionResult> UploadAIContent([FromForm] IFormFile file)
         {
             try
             {

@@ -167,20 +167,19 @@ public class ProductRepository : IProductRepository
                 }
             }
         }
-
         // Save changes to DB
         await _dbContext.SaveChangesAsync();
     }
 
     public async Task UpdateQtyFromStockProducts(Dictionary<string, int> stockProducts)
     {
-        // Step 1: Extract the SupplierSkus from the dictionary
+        // Extract the SupplierSkus from the dictionary
         var supplierSkus = stockProducts.Keys.ToList();
 
-        // Step 2: Find all matching products in the database
+        // Find all matching products in the database
         var existingProducts = await _dbContext.Products.Where(p => p.SupplierSku != null && supplierSkus.Contains(p.SupplierSku)).ToListAsync();
 
-        // Step 3: Update the Qty field
+        // Update the Qty field
         foreach (var product in existingProducts)
         {
             if (product.SupplierSku != null && stockProducts.TryGetValue(product.SupplierSku, out int stockQty))
@@ -189,8 +188,7 @@ public class ProductRepository : IProductRepository
                 product.Qty = (product.Qty ?? 0) - stockQty;
             }
         }
-
-        // Step 4: Save changes to database
+        // Save changes to database
         await _dbContext.SaveChangesAsync();
     }
 
