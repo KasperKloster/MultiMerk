@@ -18,7 +18,7 @@ public class XlsFileService : IXlsFileService
     public FilesResult GetProductsFromXls(IFormFile file)
     {
         // Is an .xls file        
-        if (!HasValidXlsFileExtension(file))
+        if (Path.GetExtension(file.FileName) != ".xls")
         {
             return FilesResult.Fail(message: "Invalid file extension.");
         }
@@ -84,15 +84,5 @@ public class XlsFileService : IXlsFileService
         using var stream = new MemoryStream();
         workbook.SaveAs(stream);
         return stream.ToArray();
-    }
-
-    private static bool HasValidXlsFileExtension(IFormFile file)
-    {
-        string FileExtension = Path.GetExtension(file.FileName);
-        if (FileExtension != ".xls")
-        {
-            return false;
-        }
-        return true;
     }
 }
