@@ -38,3 +38,7 @@ dotnet ef database update --startup-project src/WebAPI/WebAPI.csproj --project s
 "default": "Host=127.0.0.1; Port=5432; Database=testing_db; Username=wepack;Password=Password;Include Error Detail=true"
 "default": "Host=localhost; Port=5432; Database=mmultimerk; Username=kasperkloster;Password=password"
 </code>
+
+#####
+Handle,Variant SKU,Title,Body HTML,Vendor,Type,Variant Price, Variant Compare At Price,Variant Barcode, Variant Cost, Variant Weight, Variant Weight, Unit, Image Src, Image Alt Text, Image Position, 
+Metafield: PIM.master_category [list.single_line_text_field], Metafield: PIM.make [list.single_line_text_field], Metafield: PIM.model [list.single_line_text_field], Metafield: custom.color_select_ [single_line_text_field], Metafield: PIM.product_type [single_line_text_field], Metafield: custom.material_select_ [list.single_line_text_field], Metafield: PIM.supplier [single_line_text_field], Metafield: PIM.supplier_sku [single_line_text_field], Metafield: PIM.list [single_line_text_field], Metafield: custom.year_live [single_line_text_field], Metafield: custom.location [single_line_text_field], Variant Inventory Tracker, Product Category, Metafield: shopify.color-pattern [list.metaobject_reference], Command

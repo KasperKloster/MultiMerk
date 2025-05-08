@@ -80,7 +80,7 @@ namespace WebAPI.Controllers.WeeklistControllers.AdminControllers
             {
                 WeeklistDto weeklist = await _weeklistService.GetWeeklistAsync(weeklistId);
                 List<Product> products = await _productService.GetProductsFromWeeklist(weeklistId);
-                byte[] zipBytes = await _zipService.CreateZipAdminImportAsync(weeklist, products);
+                byte[] zipBytes = await _zipService.CreateZipMagentoAdminImportAsync(weeklist, products);
                 // Mark Current task as done, set next to ready                
                 await UpdateTaskStatusAndAdvanceNext(weeklistId, WeeklistTaskNameEnum.ImportProductList, WeeklistTaskNameEnum.CreateTranslations);
                 return File(zipBytes, "application/zip", $"{weeklist.Number}-Admin.zip");

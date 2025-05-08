@@ -4,6 +4,7 @@ using Application.Files.Interfaces;
 using Domain.Entities.Files;
 using Domain.Entities.Products;
 using Microsoft.AspNetCore.Http;
+using Slugify;
 
 namespace Application.Files.Services;
 
@@ -124,6 +125,52 @@ public class CsvService : ICsvService
         return Encoding.UTF8.GetBytes(sb.ToString());      
     }
 
+    
+    public byte[] GenerateShopifyDefaultImportCsv(List<Product> products){
+        var slug = new SlugHelper();
+
+        var sb = new StringBuilder();
+        sb.AppendLine(
+            "Handle,"+
+            "Variant SKU,"+
+            "Title,"+
+            "Body HTML,"+
+            "Vendor,"+
+            "Type,"+
+            "Variant Price,"+
+            "Variant Compare At Price"
+            // "Variant Barcode,"+
+            // "Variant Cost"
+            // "Variant Weight,"+            
+            // "Unit,"+
+            // "Image Src,"+ 
+            // "Image Alt Text,"+
+            // "Image Position"
+            
+            );     
+        
+        foreach (Product product in products)
+        {
+            sb.AppendLine(
+                $"{slug.GenerateSlug(product.Title)}," +
+                $"{Escape(product.Sku)}," +
+                $"{Escape(product.Title)}," +                
+                $"{Escape(product.Description)}," +
+                "Lux-case," +
+                "Type,"+
+                $"{ConvertSEKToEUR(product.Price)}"+
+                "Compare Price"
+                // $"{Escape(product.EAN)}," +
+                // $"{product.Cost},"
+                // $"{product.Weight}," +
+                // "kg,"+
+                // $"https://lux-case.com/media/catalog/product//0/8/{product.MainImage},"+
+                // $"{product.Title},"+
+                // "1"
+            );
+        }
+        return Encoding.UTF8.GetBytes(sb.ToString());        
+    }
     // Helpers
     private static string Escape(string? input)
     {

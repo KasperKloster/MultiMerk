@@ -13,6 +13,7 @@
   <ItemGroup>
     <PackageReference Include="ClosedXML" Version="0.104.2" />
     <PackageReference Include="Microsoft.AspNetCore.Http" Version="2.3.0" />
+    <PackageReference Include="Slugify" Version="0.0.0.31914" />
   </ItemGroup>
 
 </Project>

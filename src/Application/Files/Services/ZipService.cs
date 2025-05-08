@@ -14,7 +14,7 @@ public class ZipService : IZipService
         _csvService = csvService;
     }
 
-    public async Task<byte[]> CreateZipAdminImportAsync(WeeklistDto weeklist, List<Product> products)
+    public async Task<byte[]> CreateZipMagentoAdminImportAsync(WeeklistDto weeklist, List<Product> products)
     {
         // Generate files
         var files = new Dictionary<string, byte[]>
@@ -23,6 +23,7 @@ public class ZipService : IZipService
             [$"upload-{weeklist.Number}-admin-cat_loc.csv"] = _csvService.GenerateMagentoAttributeImportCsv(products),
             [$"upload-{weeklist.Number}-DK-prices.csv"] = _csvService.GenerateMagentoDKKPricesImportCsv(products),
             [$"upload-{weeklist.Number}-NO-prices.csv"] = _csvService.GenerateMagentoNOKPricesImportCsv(products),
+            [$"Shopify-upload-{weeklist.Number}-Products.csv"] = _csvService.GenerateShopifyDefaultImportCsv(products),
         };
 
         using var memoryStream = new MemoryStream();
@@ -38,5 +39,10 @@ public class ZipService : IZipService
 
         memoryStream.Position = 0;
         return memoryStream.ToArray(); // Return ZIP content as byte array
+    }
+
+    public Task<byte[]> CreateZipShopifyImportAsync(WeeklistDto weeklist, List<Product> products)
+    {
+        throw new NotImplementedException();
     }
 }
