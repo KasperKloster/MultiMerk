@@ -8,6 +8,5 @@ public enum WeeklistTaskNameEnum
     UploadAIContent = 4,
     CreateChecklist = 5,
     InsertWarehouseList = 6,    
-    ImportProductList = 7,
-    CreateTranslations = 8,
+    ImportProductList = 7    
 }

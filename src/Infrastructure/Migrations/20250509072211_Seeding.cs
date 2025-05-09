@@ -7,7 +7,7 @@
 namespace Infrastructure.Migrations
 {
     /// <inheritdoc />
-    public partial class Seed : Migration
+    public partial class Seeding : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
@@ -34,8 +34,7 @@ namespace Infrastructure.Migrations
                     { 4, "Upload AI content" },
                     { 5, "Create Checklist" },
                     { 6, "Insert warehouse list" },
-                    { 7, "Import product list" },
-                    { 8, "Create translations" }
+                    { 7, "Import product list" }
                 });
 
             migrationBuilder.InsertData(
@@ -63,8 +62,7 @@ namespace Infrastructure.Migrations
                     { 1, 4, "00000000-0000-0000-0000-000000000004", 1 },
                     { 1, 5, "00000000-0000-0000-0000-000000000005", 1 },
                     { 1, 6, "00000000-0000-0000-0000-000000000006", 1 },
-                    { 1, 7, "00000000-0000-0000-0000-000000000001", 1 },
-                    { 1, 8, "00000000-0000-0000-0000-000000000001", 1 }
+                    { 1, 7, "00000000-0000-0000-0000-000000000001", 1 }
                 });
 
             migrationBuilder.InsertData(
@@ -78,8 +76,7 @@ namespace Infrastructure.Migrations
                     { 4, "Writer", 4 },
                     { 5, "WarehouseWorker", 5 },
                     { 6, "WarehouseManager", 6 },
-                    { 7, "Admin", 7 },
-                    { 8, "Admin", 8 }
+                    { 7, "Admin", 7 }
                 });
         }
 
@@ -132,11 +129,6 @@ namespace Infrastructure.Migrations
                 keyValues: new object[] { 1, 7 });
 
             migrationBuilder.DeleteData(
-                table: "WeeklistTaskLinks",
-                keyColumns: new[] { "WeeklistId", "WeeklistTaskId" },
-                keyValues: new object[] { 1, 8 });
-
-            migrationBuilder.DeleteData(
                 table: "WeeklistTaskStatus",
                 keyColumn: "Id",
                 keyValue: 3);
@@ -182,11 +174,6 @@ namespace Infrastructure.Migrations
                 keyValue: 7);
 
             migrationBuilder.DeleteData(
-                table: "WeeklistTaskUserRoleAssignments",
-                keyColumn: "Id",
-                keyValue: 8);
-
-            migrationBuilder.DeleteData(
                 table: "WeeklistTaskStatus",
                 keyColumn: "Id",
                 keyValue: 1);
@@ -230,11 +217,6 @@ namespace Infrastructure.Migrations
                 table: "WeeklistTasks",
                 keyColumn: "Id",
                 keyValue: 7);
-
-            migrationBuilder.DeleteData(
-                table: "WeeklistTasks",
-                keyColumn: "Id",
-                keyValue: 8);
 
             migrationBuilder.DeleteData(
                 table: "Weeklists",

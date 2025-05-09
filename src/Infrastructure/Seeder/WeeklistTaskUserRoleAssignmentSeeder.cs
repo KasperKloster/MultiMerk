@@ -51,13 +51,7 @@ public class WeeklistTaskUserRoleAssignmentSeeder
                 Id = 7,
                 UserRole = Roles.Admin,
                 WeeklistTaskId = (int)WeeklistTaskNameEnum.ImportProductList
-            },
-            new WeeklistTaskUserRoleAssignment
-            {
-                Id = 8,
-                UserRole = Roles.Admin,
-                WeeklistTaskId = (int)WeeklistTaskNameEnum.CreateTranslations
-            },                   
+            }                 
         };
         builder.HasData(userRoleAssignments);
 

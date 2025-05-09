@@ -318,13 +318,6 @@ namespace Infrastructure.Migrations
                             WeeklistTaskId = 7,
                             AssignedUserId = "00000000-0000-0000-0000-000000000001",
                             WeeklistTaskStatusId = 1
-                        },
-                        new
-                        {
-                            WeeklistId = 1,
-                            WeeklistTaskId = 8,
-                            AssignedUserId = "00000000-0000-0000-0000-000000000001",
-                            WeeklistTaskStatusId = 1
                         });
                 });
 
@@ -379,11 +372,6 @@ namespace Infrastructure.Migrations
                         {
                             Id = 7,
                             Name = "Import product list"
-                        },
-                        new
-                        {
-                            Id = 8,
-                            Name = "Create translations"
                         });
                 });
 
@@ -489,12 +477,6 @@ namespace Infrastructure.Migrations
                             Id = 7,
                             UserRole = "Admin",
                             WeeklistTaskId = 7
-                        },
-                        new
-                        {
-                            Id = 8,
-                            UserRole = "Admin",
-                            WeeklistTaskId = 8
                         });
                 });
 

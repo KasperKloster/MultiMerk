@@ -82,7 +82,7 @@ namespace WebAPI.Controllers.WeeklistControllers.AdminControllers
                 List<Product> products = await _productService.GetProductsFromWeeklist(weeklistId);
                 byte[] zipBytes = await _zipService.CreateZipMagentoAdminImportAsync(weeklist, products);
                 // Mark Current task as done, set next to ready                
-                await UpdateTaskStatusAndAdvanceNext(weeklistId, WeeklistTaskNameEnum.ImportProductList, WeeklistTaskNameEnum.CreateTranslations);
+                await UpdateTaskStatus(weeklistId, WeeklistTaskNameEnum.ImportProductList, WeeklistTaskStatusEnum.Done);
                 return File(zipBytes, "application/zip", $"{weeklist.Number}-Admin.zip");
             }
             catch (Exception ex)
@@ -91,31 +91,6 @@ namespace WebAPI.Controllers.WeeklistControllers.AdminControllers
             }            
         }
 
-        [HttpPost("create-translations")]
-        // [Authorize(Roles = $"{Roles.Admin}")]
-        public async Task<IActionResult> CreateTranslations([FromForm] int weeklistId)
-        {
-            try
-            {
-                // Mark Current task as done
-                var updateResult = await _weeklistTaskLinkService.UpdateTaskStatus(
-                    weeklistId: weeklistId,
-                    currentTask: WeeklistTaskNameEnum.CreateTranslations,
-                    newTaskStatus: WeeklistTaskStatusEnum.Done);
-
-                if (!updateResult.Success)
-                {
-                    return BadRequest(updateResult.Message);
-                }
-                return Ok();
-                
-            }
-            catch (Exception ex)
-            {
-                return StatusCode(500, $"Something went wrong. Please try again. {ex.Message}");
-            }
-
-        }
 
     }
 }

@@ -58,14 +58,7 @@ public class WeeklistTaskLinkSeeder
                 WeeklistTaskId = (int)WeeklistTaskNameEnum.ImportProductList,
                 WeeklistTaskStatusId = (int)WeeklistTaskStatusEnum.Awaiting, // "Awaiting"
                 AssignedUserId = "00000000-0000-0000-0000-000000000001", // Admin
-            },   
-            new WeeklistTaskLink
-            {
-                WeeklistId = 1,
-                WeeklistTaskId = (int)WeeklistTaskNameEnum.CreateTranslations,
-                WeeklistTaskStatusId = (int)WeeklistTaskStatusEnum.Awaiting, // "Awaiting"
-                AssignedUserId = "00000000-0000-0000-0000-000000000001", // Admin
-            }                                
+            }                            
         );
     }
 }
