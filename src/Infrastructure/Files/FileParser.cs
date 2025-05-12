@@ -7,10 +7,8 @@ using NPOI.HSSF.UserModel;
 using NPOI.SS.UserModel;
 
 namespace Infrastructure.Files;
-
 public class FileParser : IFileParser
 {
-
     public List<Product> GetProductsFromXls(IFormFile file)
     {
         var products = new List<Product>();
@@ -21,7 +19,7 @@ public class FileParser : IFileParser
         var headerRow = sheet.GetRow(0) ?? throw new InvalidDataException("Excel file has no header row.");
 
         Dictionary<string, string[]> headerAliases = GetHeaderAliases();
-        // Build a column index map from Excel headers
+        
         var columnMap = new Dictionary<string, int>(StringComparer.OrdinalIgnoreCase);
         for (int i = 0; i < headerRow.LastCellNum; i++)
         {
@@ -220,7 +218,7 @@ public class FileParser : IFileParser
         return outOfStockProducts;
     }
 
-    // Helpers fpr .xls
+    // Helpers for .xls
     private static string? GetCellString(IRow row, Dictionary<string, int> map, string column)
     {
         return map.TryGetValue(column, out var idx) ? row.GetCell(idx)?.ToString()?.Trim() : null;

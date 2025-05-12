@@ -5,16 +5,13 @@ using Domain.Entities.Products;
 using Microsoft.AspNetCore.Http;
 
 namespace Application.Files.Services;
-
 public class XlsFileService : IXlsFileService
 {
     private readonly IFileParser _fileparser;
-
     public XlsFileService(IFileParser fileparser)
     {
         _fileparser = fileparser;
     }
-
     public FilesResult GetProductsFromXls(IFormFile file)
     {
         // Is an .xls file        
@@ -28,10 +25,8 @@ public class XlsFileService : IXlsFileService
         {
             return FilesResult.Fail("No products found in the file.");
         }
-
         return FilesResult.SuccessResultWithProducts(products);
     }
-
     public byte[] GetProductChecklist(List<Product> products)
     {
         using var workbook = new XLWorkbook();

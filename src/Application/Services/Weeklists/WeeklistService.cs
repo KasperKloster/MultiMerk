@@ -14,7 +14,6 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
 
 namespace Application.Services.Weeklists;
-
 public class WeeklistService : IWeeklistService
 {
     private readonly IWeeklistRepository _weeklistRepository;
@@ -26,7 +25,14 @@ public class WeeklistService : IWeeklistService
     private readonly IApplicationUserRepository _applicationUserRepository;
     private readonly UserManager<ApplicationUser> _userManager;
 
-    public WeeklistService(IWeeklistRepository weeklistRepository, IXlsFileService xlsFileService, IProductRepository productRepository, IWeeklistTaskRepository weeklistTaskRepository, IWeeklistTaskLinkRepository weeklistTaskLinkRepository, IWeeklistUserRoleAssignmentRepository weeklistUserRoleAssignmentRepository, IApplicationUserRepository applicationUserRepository, UserManager<ApplicationUser> userManager)
+    public WeeklistService(IWeeklistRepository weeklistRepository, 
+    IXlsFileService xlsFileService, 
+    IProductRepository productRepository, 
+    IWeeklistTaskRepository weeklistTaskRepository, 
+    IWeeklistTaskLinkRepository weeklistTaskLinkRepository, 
+    IWeeklistUserRoleAssignmentRepository weeklistUserRoleAssignmentRepository, 
+    IApplicationUserRepository applicationUserRepository, 
+    UserManager<ApplicationUser> userManager)
     {
         _weeklistRepository = weeklistRepository;
         _xlsFileService = xlsFileService;
@@ -37,7 +43,6 @@ public class WeeklistService : IWeeklistService
         _applicationUserRepository = applicationUserRepository;
         _userManager = userManager;
     }
-
     public async Task<List<WeeklistDto>> GetAllWeeklistsAsync()
     {
         try
