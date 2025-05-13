@@ -1,4 +1,5 @@
 <script setup>
+import { ArrowLeftIcon, XMarkIcon } from '@heroicons/vue/24/solid';
 import { ref, watch } from 'vue';
 
 const props = defineProps({
@@ -36,13 +37,22 @@ const dismiss = () => {
             {{ message }}
         </div>
         <div class="flex">
+            <a href="/weeklist/all"
+                class="px-5 py-2.5 text-center inline-flex items-center me-2 text-green-800 bg-transparent border border-green-800 hover:bg-green-900 hover:text-white focus:ring-4 focus:outline-none focus:ring-green-300 font-medium rounded-lg text-xs px-3 py-1.5 text-center dark:hover:bg-green-600 dark:border-green-600 dark:text-green-400 dark:hover:text-white dark:focus:ring-green-800 cursor-pointer">
+                <ArrowLeftIcon class="w-5 h-5 mr-2 text-green-800" />
+                Back to all Weeklists
+            </a>
+
             <button
                 @click="dismiss" 
                 type="button"
-                class="text-green-800 bg-transparent border border-green-800 hover:bg-green-900 hover:text-white focus:ring-4 focus:outline-none focus:ring-green-300 font-medium rounded-lg text-xs px-3 py-1.5 text-center dark:hover:bg-green-600 dark:border-green-600 dark:text-green-400 dark:hover:text-white dark:focus:ring-green-800 cursor-pointer"
+                class="px-5 py-2.5 text-center inline-flex items-center me-2 text-red-800 bg-transparent border border-red-800 hover:bg-red-900 hover:text-white focus:ring-4 focus:outline-none focus:ring-red-300 font-medium rounded-lg text-xs px-3 py-1.5 text-center dark:hover:bg-red-600 dark:border-red-600 dark:text-red-400 dark:hover:text-white dark:focus:ring-red-800 cursor-pointer"
                 aria-label="Close">
+                <XMarkIcon class="w-5 h-5 mr-2 hover:text-white text-red-800" />
                 Dismiss
             </button>
         </div>
     </div>
 </template>
+
+
