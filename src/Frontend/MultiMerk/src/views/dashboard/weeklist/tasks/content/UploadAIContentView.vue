@@ -4,10 +4,12 @@ import { useRoute } from 'vue-router';
 import { ref } from 'vue';
 import Header from '@/components/layout/Header.vue';
 import BackToWeeklistLink from '@/components/layout/BackToWeeklistLink.vue';
+import TaskDescriptionText from '@/components/layout/TaskDescriptionText.vue';
 import ErrorAlert from '@/components/layout/alerts/ErrorAlert.vue';
 import SuccessAlert from '@/components/layout/alerts/SuccessAlert.vue';
 
 const route = useRoute();
+const weeklistId = route.params.id;
 const successMessage = ref('');
 const errorMessage = ref('');
 
@@ -32,6 +34,7 @@ const handleUpload = async () => {
 
     const formData = new FormData();
     formData.append('file', selectedFile.value);    
+    formData.append('weeklistId', weeklistId);
 
     await uploadFile({
         url: '/weeklist/content/upload-ai-content',
@@ -51,6 +54,7 @@ const handleUpload = async () => {
 <template>
     <Header title="Upload AI Content " />
     <BackToWeeklistLink />
+    <TaskDescriptionText description="Upload products content created by AI" />
     <div class="w-full max-w-5xl mx-auto">
         <div v-if="successMessage">
             <SuccessAlert :message="successMessage" />
@@ -62,8 +66,7 @@ const handleUpload = async () => {
 
     <div class="w-full max-w-5xl mx-auto mt-10 p-6 bg-white rounded-xl shadow-md space-y-4">
         <form @submit.prevent="handleUpload">
-
-            <div class="col-span-full">
+            <div class="space-y-12">
                     <h3 class="text-base/7 font-semibold text-gray-900">Upload AI Content</h3>
                     <label for="file-upload"
                         class="flex flex-col items-center justify-center w-full h-32 border-2 border-dashed border-gray-300 rounded-lg cursor-pointer bg-gray-50 hover:bg-gray-100 transition">
@@ -86,7 +89,7 @@ const handleUpload = async () => {
             <div class="space-y-12">
                 <!-- submit Button -->
                 <button type="submit"
-                    class="w-full inline-flex justify-center items-center px-4 py-2 bg-indigo-600 hover:bg-indigo-700 text-white text-sm font-medium rounded-md shadow focus:outline-none focus:ring-2 focus:ring-indigo-500 disabled:bg-indigo-300 cursor-pointer">
+                    class="mt-5 w-full inline-flex justify-center items-center px-4 py-2 bg-indigo-600 hover:bg-indigo-700 text-white text-sm font-medium rounded-md shadow focus:outline-none focus:ring-2 focus:ring-indigo-500 disabled:bg-indigo-300 cursor-pointer">
                     Upload
                 </button>
 

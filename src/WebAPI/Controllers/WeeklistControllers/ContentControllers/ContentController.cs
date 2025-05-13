@@ -1,10 +1,12 @@
 using Application.DTOs.Weeklists;
-using Application.Files.Interfaces;
+using Application.Files.Interfaces.csv;
 using Application.Services.Interfaces.Tasks;
 using Application.Services.Interfaces.Weeklists;
+using Domain.Constants;
 using Domain.Entities.Files;
 using Domain.Entities.Products;
 using Domain.Enums;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace WebAPI.Controllers.WeeklistControllers.ContentControllers
@@ -14,16 +16,16 @@ namespace WebAPI.Controllers.WeeklistControllers.ContentControllers
     public class ContentController : WeeklistBaseController
     {
         private readonly IContentService _contentService;
-        private readonly ICsvService _csvService;        
+        private readonly IAICsvService _aiCsvService;               
 
-        public ContentController(IWeeklistService weeklistService, IWeeklistTaskLinkService weeklistTaskLinkService, IContentService contentService, ICsvService csvService) : base(weeklistService, weeklistTaskLinkService)
+        public ContentController(IWeeklistService weeklistService, IWeeklistTaskLinkService weeklistTaskLinkService, IContentService contentService, IAICsvService aiCsvService) : base(weeklistService, weeklistTaskLinkService)
         {
             _contentService = contentService;
-            _csvService = csvService;            
+            _aiCsvService = aiCsvService;            
         }
 
-        [HttpPost("get-products-ready-for-ai-content")]
-        // [Authorize(Roles = $"{Roles.Admin}")]
+        [HttpPost("get-products-ready-for-ai-content")]        
+        [Authorize(Roles = $"{Roles.Admin},{Roles.Writer}")]
         public async Task<IActionResult> GetProductsReadyForAIContent([FromForm] int weeklistId)
         {
             try
@@ -31,7 +33,7 @@ namespace WebAPI.Controllers.WeeklistControllers.ContentControllers
                 // Getting products
                 List<Product> products = await _contentService.GetProductsReadyForAI(weeklistId);
                 // Converts products to csv (byte array)
-                var csvBytes = _csvService.GenerateProductsReadyForAICSV(products);
+                var csvBytes = _aiCsvService.GenerateProductsReadyForAICSV(products);
                 // Get weeklist to create filename
                 WeeklistDto weeklist = await _weeklistService.GetWeeklistAsync(weeklistId);
                 var fileName = $"{weeklist.Number}-Ready-For-AI.csv";
@@ -46,12 +48,12 @@ namespace WebAPI.Controllers.WeeklistControllers.ContentControllers
         }
 
         [HttpPost("upload-ai-content")]
-        // [Authorize(Roles = $"{Roles.Admin}")]
-        public async Task<IActionResult> UploadAIContent([FromForm] IFormFile file)
+        [Authorize(Roles = $"{Roles.Admin},{Roles.Writer}")]
+        public async Task<IActionResult> UploadAIContent([FromForm] IFormFile file, [FromForm] int weeklistId)
         {
             try
             {
-                FilesResult aiProducts = _csvService.GetProductsFromAI(file);                
+                FilesResult aiProducts = _aiCsvService.GetProductsFromAI(file);                
                 if (!aiProducts.Success)
                 {
                     return BadRequest(aiProducts.Message);
@@ -60,7 +62,7 @@ namespace WebAPI.Controllers.WeeklistControllers.ContentControllers
                 await _contentService.InsertAIProductContent(aiProducts.Products);
 
                 // Mark Current task as done, set next to ready                
-                // var updateTaskResult = await UpdateTaskStatus(weeklistId, WeeklistTaskNameEnum.UploadAIContent, WeeklistTaskStatusEnum.Done);
+                var updateTaskResult = await UpdateTaskStatus(weeklistId, WeeklistTaskNameEnum.UploadAIContent, WeeklistTaskStatusEnum.Done);
                 return Ok();
             }
             catch (Exception ex)

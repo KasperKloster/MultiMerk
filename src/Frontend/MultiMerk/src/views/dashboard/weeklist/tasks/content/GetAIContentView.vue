@@ -4,6 +4,7 @@ import { useRoute } from 'vue-router';
 import { ref } from 'vue';
 import Header from '@/components/layout/Header.vue';
 import BackToWeeklistLink from '@/components/layout/BackToWeeklistLink.vue';
+import TaskDescriptionText from '@/components/layout/TaskDescriptionText.vue';
 import ErrorAlert from '@/components/layout/alerts/ErrorAlert.vue';
 import SuccessAlert from '@/components/layout/alerts/SuccessAlert.vue';
 
@@ -34,6 +35,7 @@ const downloadCsvFile = async () => {
 <template>
     <Header title="Get AI Content" />
     <BackToWeeklistLink />
+    <TaskDescriptionText description="Download products. with one from each series, from weeklist. Then create content with AI" />
     <div class="w-full max-w-5xl mx-auto">
         <div v-if="successMessage">
             <SuccessAlert :message="successMessage" />

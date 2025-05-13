@@ -6,6 +6,7 @@ import Header from '@/components/layout/Header.vue'
 import BackToWeeklistLink from '@/components/layout/BackToWeeklistLink.vue';
 import ErrorAlert from '@/components/layout/alerts/ErrorAlert.vue';
 import SuccessAlert from '@/components/layout/alerts/SuccessAlert.vue';
+import TaskDescriptionText from '@/components/layout/TaskDescriptionText.vue';
 
 const route = useRoute();
 const weeklistId = route.params.id;
@@ -24,7 +25,7 @@ const downloadCsvFile = async () => {
         formData,
         defaultFileName: `${weeklistId}-Admin.csv`,        
         mimeType: 'application/zip',
-        onSuccess: () => successMessage.value = 'Download successful',
+        onSuccess: () => successMessage.value = 'Download successful - Import them to Magento and Shopify',
         onError: (msg) => errorMessage.value = `Download failed: ${msg}`
     });
 };
@@ -34,16 +35,18 @@ const downloadCsvFile = async () => {
 <template>
     <Header title="Import Product List " />
     <BackToWeeklistLink />
-    <div class="w-full max-w-5xl mx-auto">
+    <TaskDescriptionText description="Download files; Then import them to Magento and Shopify" />
+    
+    <div class="w-full max-w-5xl mx-auto">        
         <div v-if="successMessage">
             <SuccessAlert :message="successMessage" />
         </div>
         <div v-if="errorMessage">
             <ErrorAlert :message="errorMessage" />
-        </div>
+        </div>        
     </div>
 
-    <div class="w-full max-w-5xl mx-auto mt-10 p-6 bg-white rounded-xl shadow-md space-y-4">
+    <div class="w-full max-w-5xl mx-auto mt-10 p-6 bg-white rounded-xl shadow-md space-y-4">        
         <form @submit.prevent="getImportLists">
             <div class="space-y-12">
                 <!-- submit Button -->
