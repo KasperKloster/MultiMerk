@@ -78,8 +78,7 @@ public class AppDbContext : IdentityDbContext<ApplicationUser>
     }
 
     private void ApplySeeders(ModelBuilder modelBuilder)
-    {        
-        
+    {           
         // Seed weeklist
         WeeklistSeeder.Seed(modelBuilder.Entity<Weeklist>());
         WeeklistTaskSeeder.Seed(modelBuilder.Entity<WeeklistTask>());

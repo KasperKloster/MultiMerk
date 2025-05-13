@@ -37,7 +37,7 @@ namespace WebAPI.Controllers.WeeklistControllers.WarehouseControllers
                 // Get weeklist to create filename
                 WeeklistDto weeklist = await _weeklistService.GetWeeklistAsync(weeklistId);
                 string fileName = $"{weeklist.Number}-{weeklist.OrderNumber}({weeklist.ShippingNumber})-Checklist.xls";
-                return File(xlsBytes, "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet", fileName);
+                return File(xlsBytes, "application/vnd.ms-excel", fileName);
             }
             catch (Exception ex)
             {
@@ -77,9 +77,9 @@ namespace WebAPI.Controllers.WeeklistControllers.WarehouseControllers
                 byte[] xlsBytes = _xlsFileService.GetProductWarehouselist(products);
                 // Get weeklist to create filename
                 WeeklistDto weeklist = await _weeklistService.GetWeeklistAsync(weeklistId);
-                string fileName = $"{weeklist.Number}-Warehouselist.xls";
+                string fileName = $"{weeklist.Number}-Warehouselist.xls";                
                 // Mark Current task as done, set next to ready                
-                return File(xlsBytes, "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet", fileName);
+                return File(xlsBytes, "application/vnd.ms-excel", fileName);
             }
             catch (Exception ex)
             {
@@ -102,8 +102,6 @@ namespace WebAPI.Controllers.WeeklistControllers.WarehouseControllers
                 return StatusCode(500, $"Something went wrong. Please try again. {ex.Message}");
             }
         }  
-
-
 
     }
 }

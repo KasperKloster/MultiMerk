@@ -12,7 +12,7 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 namespace Infrastructure.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    [Migration("20250513100654_Seeding")]
+    [Migration("20250513132357_Seeding")]
     partial class Seeding
     {
         /// <inheritdoc />

@@ -3,6 +3,9 @@ using ClosedXML.Excel;
 using Domain.Entities.Files;
 using Domain.Entities.Products;
 using Microsoft.AspNetCore.Http;
+using NPOI.HSSF.UserModel; // For .xls format
+using NPOI.SS.UserModel;
+using System.IO;
 
 namespace Application.Files.Services;
 public class XlsFileService : IXlsFileService
@@ -29,55 +32,69 @@ public class XlsFileService : IXlsFileService
     }
     public byte[] GetProductChecklist(List<Product> products)
     {
-        using var workbook = new XLWorkbook();
-        var worksheet = workbook.Worksheets.Add("Products");
+        IWorkbook workbook = new HSSFWorkbook();
+        var sheet = workbook.CreateSheet("Products");
 
-        // Header
-        worksheet.Cell(1, 1).Value = "Supplier SKU";
-        worksheet.Cell(1, 2).Value = "Title";
-        worksheet.Cell(1, 3).Value = "SKU";
-        worksheet.Cell(1, 4).Value = "Description";
-        worksheet.Cell(1, 5).Value = "Qty";
+        // Header row
+        IRow headerRow = sheet.CreateRow(0);
+        headerRow.CreateCell(0).SetCellValue("Supplier SKU");
+        headerRow.CreateCell(1).SetCellValue("Title");
+        headerRow.CreateCell(2).SetCellValue("SKU");
+        headerRow.CreateCell(3).SetCellValue("Description");
+        headerRow.CreateCell(4).SetCellValue("Qty");                       
 
         // Data
         for (int i = 0; i < products.Count; i++)
         {
-            var row = i + 2;
+            var row = sheet.CreateRow(i + 1);
             var product = products[i];
-            worksheet.Cell(row, 1).Value = product.SupplierSku;
-            worksheet.Cell(row, 2).Value = product.Title;
-            worksheet.Cell(row, 3).Value = product.Sku;
-            worksheet.Cell(row, 4).Value = product.Description;
-            worksheet.Cell(row, 5).Value = product.Qty;            
+            row.CreateCell(0).SetCellValue(product.SupplierSku ?? "");
+            row.CreateCell(1).SetCellValue(product.Title ?? "");
+            row.CreateCell(2).SetCellValue(product.Sku);
+            row.CreateCell(3).SetCellValue(product.Description ?? "");
+            if (product.Qty.HasValue){
+                row.CreateCell(4).SetCellValue((double)product.Qty.Value);
+            }
+            else{
+                row.CreateCell(4).SetCellType(CellType.Blank);
+            }
         }
 
         using var stream = new MemoryStream();
-        workbook.SaveAs(stream);
+        workbook.Write(stream);
         return stream.ToArray();
     }
 
     public byte[] GetProductWarehouselist(List<Product> products)
     {
-        using var workbook = new XLWorkbook();
-        var worksheet = workbook.Worksheets.Add("Products");
+        IWorkbook workbook = new HSSFWorkbook(); // HSSF = .xls
+        ISheet sheet = workbook.CreateSheet("Products");
 
-        // Header        
-        worksheet.Cell(1, 1).Value = "SKU";
-        worksheet.Cell(1, 2).Value = "Title";        
-        worksheet.Cell(1, 3).Value = "Qty";
+        // Header row
+        IRow headerRow = sheet.CreateRow(0);
+        headerRow.CreateCell(0).SetCellValue("SKU");
+        headerRow.CreateCell(1).SetCellValue("Title");
+        headerRow.CreateCell(2).SetCellValue("Qty");
+        headerRow.CreateCell(3).SetCellValue("Location");
 
-        // Data
+        // Data rows
         for (int i = 0; i < products.Count; i++)
         {
-            var row = i + 2;
-            var product = products[i];            
-            worksheet.Cell(row, 1).Value = product.Sku;
-            worksheet.Cell(row, 2).Value = product.Title;            
-            worksheet.Cell(row, 3).Value = product.Qty;            
+            var row = sheet.CreateRow(i + 1);
+            var product = products[i];
+            row.CreateCell(0).SetCellValue(product.Sku ?? "");
+            row.CreateCell(1).SetCellValue(product.Title ?? "");
+            if (product.Qty.HasValue){
+                row.CreateCell(2).SetCellValue((double)product.Qty.Value);
+            }
+            else{
+                row.CreateCell(2).SetCellType(CellType.Blank);
+            }
+            row.CreateCell(3).SetCellValue(product.Location ?? "");
         }
 
         using var stream = new MemoryStream();
-        workbook.SaveAs(stream);
+        workbook.Write(stream);
         return stream.ToArray();
     }
 }
