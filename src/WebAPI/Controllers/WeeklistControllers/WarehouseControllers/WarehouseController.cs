@@ -3,8 +3,10 @@ using Application.Files.Interfaces;
 using Application.Services.Interfaces.Products;
 using Application.Services.Interfaces.Tasks;
 using Application.Services.Interfaces.Weeklists;
+using Domain.Constants;
 using Domain.Entities.Products;
 using Domain.Enums;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace WebAPI.Controllers.WeeklistControllers.WarehouseControllers
@@ -24,6 +26,7 @@ namespace WebAPI.Controllers.WeeklistControllers.WarehouseControllers
         }
 
         [HttpPost("get-checklist")]
+        [Authorize(Roles = $"{Roles.Admin},{Roles.WarehouseManager}, {Roles.WarehouseWorker}")]
         public async Task<IActionResult> GetChecklist([FromForm] int weeklistId)
         {
             try
@@ -43,7 +46,7 @@ namespace WebAPI.Controllers.WeeklistControllers.WarehouseControllers
         }  
 
         [HttpPost("upload-checklist")]
-        // [Authorize(Roles = $"{Roles.Admin}")]
+        [Authorize(Roles = $"{Roles.Admin},{Roles.WarehouseManager}, {Roles.WarehouseWorker}")]
         public async Task<IActionResult> UploadChecklist([FromForm] IFormFile file, [FromForm] int weeklistId)
         {
             try
@@ -65,7 +68,7 @@ namespace WebAPI.Controllers.WeeklistControllers.WarehouseControllers
         }
 
         [HttpPost("get-warehouse-list")]
-        // [Authorize(Roles = $"{Roles.Admin}")]
+        [Authorize(Roles = $"{Roles.Admin},{Roles.WarehouseManager}, {Roles.WarehouseWorker}")]
         public async Task<IActionResult> GetWarehouselist([FromForm] int weeklistId)
         {
             try
@@ -85,7 +88,7 @@ namespace WebAPI.Controllers.WeeklistControllers.WarehouseControllers
         }  
 
         [HttpPost("mark-as-complete")]
-        // [Authorize(Roles = $"{Roles.Admin}")]
+        [Authorize(Roles = $"{Roles.Admin},{Roles.WarehouseManager}")]
         public async Task<IActionResult> MarkTaskAsComplete([FromForm] int weeklistId)
         {
             try

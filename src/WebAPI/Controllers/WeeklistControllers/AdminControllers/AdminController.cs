@@ -3,9 +3,11 @@ using Application.Files.Interfaces;
 using Application.Services.Interfaces.Products;
 using Application.Services.Interfaces.Tasks;
 using Application.Services.Interfaces.Weeklists;
+using Domain.Constants;
 using Domain.Entities.Files;
 using Domain.Entities.Products;
 using Domain.Enums;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace WebAPI.Controllers.WeeklistControllers.AdminControllers
@@ -24,7 +26,8 @@ namespace WebAPI.Controllers.WeeklistControllers.AdminControllers
         }
 
         [HttpPost("assign-ean")]
-        // [Authorize(Roles = $"{Roles.Admin}")]
+        [Authorize(Roles = $"{Roles.Admin}")]
+        
         public async Task<IActionResult> AssignEan([FromForm] IFormFile file, [FromForm] int weeklistId)
         {
             try
@@ -47,7 +50,7 @@ namespace WebAPI.Controllers.WeeklistControllers.AdminControllers
         }
 
         [HttpPost("insert-out-of-stock")]
-        // [Authorize(Roles = $"{Roles.Admin}")]
+        [Authorize(Roles = $"{Roles.Admin}")]
         public async Task<IActionResult> UploadOutOfStock([FromForm] IFormFile file, [FromForm] int weeklistId)
         {
             try
@@ -73,7 +76,7 @@ namespace WebAPI.Controllers.WeeklistControllers.AdminControllers
         }
 
         [HttpPost("import-product-list")]
-        // [Authorize(Roles = $"{Roles.Admin}")]
+        [Authorize(Roles = $"{Roles.Admin}")]
         public async Task<IActionResult> ImportProductList([FromForm] int weeklistId)
         {
             try            
@@ -82,7 +85,7 @@ namespace WebAPI.Controllers.WeeklistControllers.AdminControllers
                 List<Product> products = await _productService.GetProductsFromWeeklist(weeklistId);
                 byte[] zipBytes = await _zipService.CreateZipAdminImportAsync(weeklist, products);
                 // Mark Current task as done, set next to ready                
-                // await UpdateTaskStatus(weeklistId, WeeklistTaskNameEnum.ImportProductList, WeeklistTaskStatusEnum.Done);
+                await UpdateTaskStatus(weeklistId, WeeklistTaskNameEnum.ImportProductList, WeeklistTaskStatusEnum.Done);
                 return File(zipBytes, "application/zip", $"{weeklist.Number}-Admin.zip");
             }
             catch (Exception ex)
@@ -90,7 +93,5 @@ namespace WebAPI.Controllers.WeeklistControllers.AdminControllers
                 return StatusCode(500, $"Something went wrong. Please try again. {ex.Message}");
             }            
         }
-
-
     }
 }
