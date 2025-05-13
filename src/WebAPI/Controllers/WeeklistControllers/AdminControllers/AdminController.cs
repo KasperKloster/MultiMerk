@@ -36,7 +36,7 @@ namespace WebAPI.Controllers.WeeklistControllers.AdminControllers
                     return BadRequest(result.Message);
                 }
 
-                // Mark Current task as done, set next to ready                
+                // Mark Current task as done
                 var updateTaskResult = await UpdateTaskStatus(weeklistId, WeeklistTaskNameEnum.AssignEAN, WeeklistTaskStatusEnum.Done);
                 return Ok();
             }
@@ -80,9 +80,9 @@ namespace WebAPI.Controllers.WeeklistControllers.AdminControllers
             {
                 WeeklistDto weeklist = await _weeklistService.GetWeeklistAsync(weeklistId);
                 List<Product> products = await _productService.GetProductsFromWeeklist(weeklistId);
-                byte[] zipBytes = await _zipService.CreateZipMagentoAdminImportAsync(weeklist, products);
+                byte[] zipBytes = await _zipService.CreateZipAdminImportAsync(weeklist, products);
                 // Mark Current task as done, set next to ready                
-                await UpdateTaskStatus(weeklistId, WeeklistTaskNameEnum.ImportProductList, WeeklistTaskStatusEnum.Done);
+                // await UpdateTaskStatus(weeklistId, WeeklistTaskNameEnum.ImportProductList, WeeklistTaskStatusEnum.Done);
                 return File(zipBytes, "application/zip", $"{weeklist.Number}-Admin.zip");
             }
             catch (Exception ex)

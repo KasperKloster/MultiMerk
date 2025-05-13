@@ -1,5 +1,5 @@
 using Application.DTOs.Weeklists;
-using Application.Files.Interfaces;
+using Application.Files.Interfaces.csv;
 using Application.Services.Interfaces.Tasks;
 using Application.Services.Interfaces.Weeklists;
 using Domain.Entities.Files;
@@ -14,12 +14,13 @@ namespace WebAPI.Controllers.WeeklistControllers.ContentControllers
     public class ContentController : WeeklistBaseController
     {
         private readonly IContentService _contentService;
-        private readonly ICsvService _csvService;        
+        private readonly IAICsvService _aiCsvService;
+        // private readonly ICsvService _csvService;        
 
-        public ContentController(IWeeklistService weeklistService, IWeeklistTaskLinkService weeklistTaskLinkService, IContentService contentService, ICsvService csvService) : base(weeklistService, weeklistTaskLinkService)
+        public ContentController(IWeeklistService weeklistService, IWeeklistTaskLinkService weeklistTaskLinkService, IContentService contentService, IAICsvService aiCsvService) : base(weeklistService, weeklistTaskLinkService)
         {
             _contentService = contentService;
-            _csvService = csvService;            
+            _aiCsvService = aiCsvService;            
         }
 
         [HttpPost("get-products-ready-for-ai-content")]
@@ -31,7 +32,7 @@ namespace WebAPI.Controllers.WeeklistControllers.ContentControllers
                 // Getting products
                 List<Product> products = await _contentService.GetProductsReadyForAI(weeklistId);
                 // Converts products to csv (byte array)
-                var csvBytes = _csvService.GenerateProductsReadyForAICSV(products);
+                var csvBytes = _aiCsvService.GenerateProductsReadyForAICSV(products);
                 // Get weeklist to create filename
                 WeeklistDto weeklist = await _weeklistService.GetWeeklistAsync(weeklistId);
                 var fileName = $"{weeklist.Number}-Ready-For-AI.csv";
@@ -51,7 +52,7 @@ namespace WebAPI.Controllers.WeeklistControllers.ContentControllers
         {
             try
             {
-                FilesResult aiProducts = _csvService.GetProductsFromAI(file);                
+                FilesResult aiProducts = _aiCsvService.GetProductsFromAI(file);                
                 if (!aiProducts.Success)
                 {
                     return BadRequest(aiProducts.Message);

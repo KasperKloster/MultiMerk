@@ -1,29 +1,32 @@
 using System.IO.Compression;
 using Application.DTOs.Weeklists;
 using Application.Files.Interfaces;
+using Application.Files.Interfaces.csv;
 using Domain.Entities.Products;
 
 namespace Application.Files.Services;
 
 public class ZipService : IZipService
-{
-    private readonly ICsvService _csvService;
+{    
+    private readonly IShopifyCsvService _shopifyCsvService;
+    private readonly IMagentoCsvService _magentoCsvService;
 
-    public ZipService(ICsvService csvService)
-    {
-        _csvService = csvService;
+    public ZipService(IShopifyCsvService shopifyCsvService, IMagentoCsvService magentoCsvService)
+    {        
+        _shopifyCsvService = shopifyCsvService;
+        _magentoCsvService = magentoCsvService;
     }
 
-    public async Task<byte[]> CreateZipMagentoAdminImportAsync(WeeklistDto weeklist, List<Product> products)
+    public async Task<byte[]> CreateZipAdminImportAsync(WeeklistDto weeklist, List<Product> products)
     {
         // Generate files
         var files = new Dictionary<string, byte[]>
         {
-            [$"1-OnlyAdd_Upload-{weeklist.Number}-admin.csv"] = _csvService.GenerateMagentoAdminImportCsv(products),
-            [$"upload-{weeklist.Number}-admin-cat_loc.csv"] = _csvService.GenerateMagentoAttributeImportCsv(products),
-            [$"upload-{weeklist.Number}-DK-prices.csv"] = _csvService.GenerateMagentoDKKPricesImportCsv(products),
-            [$"upload-{weeklist.Number}-NO-prices.csv"] = _csvService.GenerateMagentoNOKPricesImportCsv(products),
-            [$"Shopify-upload-{weeklist.Number}-Products.csv"] = _csvService.GenerateShopifyDefaultImportCsv(products),
+            [$"1-OnlyAdd_Upload-{weeklist.Number}-admin.csv"] = _magentoCsvService.GenerateMagentoAdminImportCsv(products),
+            [$"upload-{weeklist.Number}-admin-cat_loc.csv"] = _magentoCsvService.GenerateMagentoAttributeImportCsv(products),
+            [$"upload-{weeklist.Number}-DK-prices.csv"] = _magentoCsvService.GenerateMagentoDKKPricesImportCsv(products),
+            [$"upload-{weeklist.Number}-NO-prices.csv"] = _magentoCsvService.GenerateMagentoNOKPricesImportCsv(products),
+            [$"Shopify-upload-{weeklist.Number}-Products.csv"] = _shopifyCsvService.GenerateShopifyDefaultImportCsv(products),            
         };
 
         using var memoryStream = new MemoryStream();
@@ -39,10 +42,5 @@ public class ZipService : IZipService
 
         memoryStream.Position = 0;
         return memoryStream.ToArray(); // Return ZIP content as byte array
-    }
-
-    public Task<byte[]> CreateZipShopifyImportAsync(WeeklistDto weeklist, List<Product> products)
-    {
-        throw new NotImplementedException();
     }
 }

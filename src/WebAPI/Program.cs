@@ -2,7 +2,9 @@ using System.Security.Claims;
 using System.Text;
 using Application.Authentication.Interfaces;
 using Application.Files.Interfaces;
+using Application.Files.Interfaces.csv;
 using Application.Files.Services;
+using Application.Files.Services.csv;
 using Application.Repositories;
 using Application.Repositories.ApplicationUsers;
 using Application.Repositories.Weeklists;
@@ -67,7 +69,9 @@ builder.Services.AddAuthentication(options =>
     );
 
 // Files
-builder.Services.AddScoped<ICsvService, CsvService>();
+builder.Services.AddScoped<IAICsvService, AICsvService>();
+builder.Services.AddScoped<IMagentoCsvService, MagentoCsvService>();
+builder.Services.AddScoped<IShopifyCsvService, ShopifyCsvService>();
 builder.Services.AddScoped<IFileParser, FileParser>();
 builder.Services.AddScoped<IXlsFileService, XlsFileService>();
 // Repositories

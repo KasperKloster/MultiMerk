@@ -8,6 +8,8 @@ import Header from '@/components/layout/Header.vue';
 import BackToWeeklistLink from '@/components/layout/BackToWeeklistLink.vue';
 import ErrorAlert from '@/components/layout/alerts/ErrorAlert.vue';
 import SuccessAlert from '@/components/layout/alerts/SuccessAlert.vue';
+import TaskDescriptionText from '@/components/layout/TaskDescriptionText.vue';
+
 
 const route = useRoute();
 const weeklistId = route.params.id;
@@ -55,6 +57,7 @@ const MarkAsTaskComplete = async () => {
 <template>
     <Header title="Insert Warehouse list " />
     <BackToWeeklistLink />
+    <TaskDescriptionText description="Download the file, update ongoing and mark this task as complete" />
     <div class="w-full max-w-5xl mx-auto">
         <div v-if="successMessage">
             <SuccessAlert :message="successMessage" />

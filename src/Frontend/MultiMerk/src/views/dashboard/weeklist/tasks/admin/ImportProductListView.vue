@@ -25,7 +25,7 @@ const downloadCsvFile = async () => {
         formData,
         defaultFileName: `${weeklistId}-Admin.csv`,        
         mimeType: 'application/zip',
-        onSuccess: () => successMessage.value = 'Download successful',
+        onSuccess: () => successMessage.value = 'Download successful - Import them to Magento and Shopify',
         onError: (msg) => errorMessage.value = `Download failed: ${msg}`
     });
 };
