@@ -27,7 +27,6 @@ public class AICsvService : CsvBaseService, IAICsvService
         {
             return FilesResult.Fail("No products found in the file.");
         }
-
         return FilesResult.SuccessResultWithProducts(products);
     }
 
@@ -41,8 +40,6 @@ public class AICsvService : CsvBaseService, IAICsvService
         }
         return Encoding.UTF8.GetBytes(sb.ToString());
     }
-
-
 }
 
 

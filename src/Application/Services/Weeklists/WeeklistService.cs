@@ -146,7 +146,7 @@ public class WeeklistService : IWeeklistService
             await SaveProducts(result.Products, weeklist.Id);
 
             // Associate tasks with user roles
-            var taskLinks = await CreateTaskLinksForWeeklist(weeklist.Id);                    
+            List<WeeklistTaskLink> taskLinks = await CreateTaskLinksForWeeklist(weeklist.Id);                    
             await _weeklistTaskLinkRepository.AddWeeklistTaskLinksAsync(taskLinks);
 
             return FilesResult.SuccessResult();

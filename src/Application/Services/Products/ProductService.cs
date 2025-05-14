@@ -29,30 +29,23 @@ public class ProductService : IProductService
 
     public async Task<FilesResult> UpdateProductsFromFile(IFormFile file)
     {
-        // Getting products from file
-        List<Product> products;
+        if (Path.GetExtension(file.FileName) != ".xls")
+        {
+            return FilesResult.Fail("Must be .xls");
+        }
+        
         try
         {
-            if (Path.GetExtension(file.FileName) != ".xls")
-            {
-                return FilesResult.Fail("Must be .xls");
-            }
-            products = _fileParser.GetProductsFromXls(file);
+            // Getting products from file
+            List<Product> products = _fileParser.GetProductsFromXls(file);
+            // Update products
+            await _productRepository.UpdateRangeAsync(products);
+            return FilesResult.SuccessResult();
         }
         catch (Exception ex)
         {
             return FilesResult.Fail($"Error getting products from file: {ex.Message}");
         }
-        // Update products
-        try
-        {
-            await _productRepository.UpdateRangeAsync(products);
-        }
-        catch (Exception ex)
-        {
-            return FilesResult.Fail($"Could not update products: {ex.Message}");
-        }
-        return FilesResult.SuccessResult();
     }
 
     public FilesResult GetProductsFromOutOfStock(IFormFile file)
@@ -78,12 +71,12 @@ public class ProductService : IProductService
         try
         {
             await _productRepository.UpdateQtyFromStockProducts(stockProducts);
+            return FilesResult.SuccessResult();
         }
         catch (Exception ex)
         {
             return FilesResult.Fail($"Error updating with stock products: {ex.Message}");
         }
-        return FilesResult.SuccessResult();
     }
 
 
