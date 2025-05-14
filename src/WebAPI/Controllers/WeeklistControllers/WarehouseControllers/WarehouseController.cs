@@ -41,7 +41,7 @@ namespace WebAPI.Controllers.WeeklistControllers.WarehouseControllers
             }
             catch (Exception ex)
             {
-                return StatusCode(500, $"Something went wrong. Please try again. {ex.Message}");
+                return BadRequest(ex.Message);
             }            
         }  
 
@@ -59,12 +59,12 @@ namespace WebAPI.Controllers.WeeklistControllers.WarehouseControllers
 
                 // Mark Current task as done, set next to ready
                 var updateTaskResult = await UpdateTaskStatusAndAdvanceNext(weeklistId, WeeklistTaskNameEnum.CreateChecklist, WeeklistTaskNameEnum.InsertWarehouseList);                
+                return Ok();
             }
             catch (Exception ex)
             {
-                return StatusCode(500, $"Something went wrong. Please try again. {ex.Message}");
+                return BadRequest(ex.Message);
             }
-            return Ok();
         }
 
         [HttpPost("get-warehouse-list")]
@@ -83,7 +83,7 @@ namespace WebAPI.Controllers.WeeklistControllers.WarehouseControllers
             }
             catch (Exception ex)
             {
-                return StatusCode(500, $"Something went wrong. Please try again. {ex.Message}");
+                return BadRequest(ex.Message);
             }
         }  
 
@@ -99,7 +99,7 @@ namespace WebAPI.Controllers.WeeklistControllers.WarehouseControllers
             }
             catch (Exception ex)
             {
-                return StatusCode(500, $"Something went wrong. Please try again. {ex.Message}");
+                return BadRequest(ex.Message);
             }
         }  
 
