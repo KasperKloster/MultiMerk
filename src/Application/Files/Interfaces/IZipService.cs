@@ -5,6 +5,6 @@ namespace Application.Files.Interfaces;
 
 public interface IZipService
 {
-    Task<byte[]> CreateZipAdminImportAsync(WeeklistDto weeklist, List<Product> products);    
+    Task<byte[]> CreateZipAdminImportAsync(WeeklistDto weeklist, List<Product> products);
 
 }
