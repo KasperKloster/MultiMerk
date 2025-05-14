@@ -45,7 +45,7 @@ namespace WebAPI.Controllers.WeeklistControllers.AdminControllers
             }
             catch (Exception ex)
             {
-                return StatusCode(500, $"Something went wrong. Please try again. {ex.Message}");
+                return BadRequest(ex.Message);
             }
         }
 
