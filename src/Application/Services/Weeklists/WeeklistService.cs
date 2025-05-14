@@ -1,9 +1,9 @@
 using Application.DTOs.Authentication;
 using Application.DTOs.Weeklists;
-using Application.Files.Interfaces;
 using Application.Repositories;
 using Application.Repositories.ApplicationUsers;
 using Application.Repositories.Weeklists;
+using Application.Services.Interfaces.Files;
 using Application.Services.Interfaces.Weeklists;
 using Domain.Entities.Authentication;
 using Domain.Entities.Files;

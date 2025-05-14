@@ -1,5 +1,5 @@
-using Application.Files.Interfaces;
 using Application.Repositories;
+using Application.Services.Interfaces.Files;
 using Application.Services.Interfaces.Products;
 using Domain.Entities.Files;
 using Domain.Entities.Products;

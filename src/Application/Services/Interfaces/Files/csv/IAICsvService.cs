@@ -2,7 +2,7 @@ using Domain.Entities.Files;
 using Domain.Entities.Products;
 using Microsoft.AspNetCore.Http;
 
-namespace Application.Files.Interfaces.csv;
+namespace Application.Services.Interfaces.Files.csv;
 
 public interface IAICsvService
 {

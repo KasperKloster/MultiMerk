@@ -1,10 +1,10 @@
 using System.IO.Compression;
 using Application.DTOs.Weeklists;
-using Application.Files.Interfaces;
-using Application.Files.Interfaces.csv;
+using Application.Services.Interfaces.Files;
+using Application.Services.Interfaces.Files.csv;
 using Domain.Entities.Products;
 
-namespace Application.Files.Services;
+namespace Application.Services.Files;
 
 public class ZipService : IZipService
 {    

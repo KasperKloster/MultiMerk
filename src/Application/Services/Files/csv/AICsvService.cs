@@ -1,11 +1,11 @@
 using System.Text;
-using Application.Files.Interfaces;
-using Application.Files.Interfaces.csv;
+using Application.Services.Interfaces.Files;
+using Application.Services.Interfaces.Files.csv;
 using Domain.Entities.Files;
 using Domain.Entities.Products;
 using Microsoft.AspNetCore.Http;
 
-namespace Application.Files.Services.csv;
+namespace Application.Services.Files.csv;
 
 public class AICsvService : CsvBaseService, IAICsvService
 {

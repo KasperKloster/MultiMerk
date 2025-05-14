@@ -1,7 +1,7 @@
 using Domain.Entities.Products;
 using Microsoft.AspNetCore.Http;
 
-namespace Application.Files.Interfaces;
+namespace Application.Services.Interfaces.Files;
 
 public interface IFileParser
 {        

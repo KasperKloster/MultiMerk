@@ -1,6 +1,6 @@
 using System.Globalization;
 
-namespace Application.Files.Services.csv;
+namespace Application.Services.Files.csv;
 
 public class CsvBaseService
 {
