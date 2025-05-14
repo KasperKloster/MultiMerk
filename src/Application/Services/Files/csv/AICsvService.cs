@@ -17,17 +17,20 @@ public class AICsvService : CsvBaseService, IAICsvService
 
     public FilesResult GetProductsFromAI(IFormFile file)
     {
-        if (Path.GetExtension(file.FileName) != ".csv")
+        try
         {
-            return FilesResult.Fail(message: "Invalid file extension.");
+            List<Product> products = _fileParser.GetProductsFromAI(file);
+            if (products.Count == 0)
+            {
+                return FilesResult.Fail("No products found in the file.");
+            }
+            return FilesResult.SuccessResultWithProducts(products);
+            
         }
-        // Getting products from .xls
-        List<Product> products = _fileParser.GetProductsFromAI(file);
-        if (products.Count == 0)
-        {
-            return FilesResult.Fail("No products found in the file.");
+        catch (Exception ex)
+        {            
+            return FilesResult.Fail($"Error {ex.Message}");
         }
-        return FilesResult.SuccessResultWithProducts(products);
     }
 
     public byte[] GenerateProductsReadyForAICSV(List<Product> products)

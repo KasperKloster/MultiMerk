@@ -8,18 +8,13 @@ using NPOI.SS.UserModel;
 namespace Application.Services.Files;
 public class XlsFileService : IXlsFileService
 {
-    private readonly IFileParser _fileparser;
+    private readonly IFileParser _fileparser;    
     public XlsFileService(IFileParser fileparser)
     {
-        _fileparser = fileparser;
+        _fileparser = fileparser;        
     }
     public FilesResult GetProductsFromXls(IFormFile file)
-    {
-        // Is an .xls file        
-        if (Path.GetExtension(file.FileName) != ".xls")
-        {
-            return FilesResult.Fail(message: "Invalid file extension.");
-        }
+    {        
         // Getting products from .xls
         List<Product> products = _fileparser.GetProductsFromXls(file);
         if (products is null || products.Count == 0)

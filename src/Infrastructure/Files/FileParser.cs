@@ -1,4 +1,3 @@
-using System.Globalization;
 using Application.Services.Interfaces.Files;
 using Domain.Entities.Products;
 using Microsoft.AspNetCore.Http;
@@ -11,6 +10,10 @@ public class FileParser : IFileParser
 {
     public List<Product> GetProductsFromXls(IFormFile file)
     {
+        // Validate the file
+        ValidateXlsFile(file);
+
+        // Getting products
         var products = new List<Product>();
 
         using var stream = file.OpenReadStream();
@@ -76,6 +79,9 @@ public class FileParser : IFileParser
 
     public List<Product> GetProductsFromAI(IFormFile file)
     {
+        // Validate the file
+        ValidateCsvFile(file);
+
         // List to hold the final Product objects        
         var products = new List<Product>();
         
@@ -132,6 +138,8 @@ public class FileParser : IFileParser
 
     public Dictionary<string, int> GetProductsFromOutOfStock(IFormFile file)
     {
+        ValidateXlsFile(file);
+
         var outOfStockProducts = new Dictionary<string, int>(StringComparer.OrdinalIgnoreCase);
 
         using var stream = file.OpenReadStream();
@@ -242,8 +250,7 @@ public class FileParser : IFileParser
         var cell = row.GetCell(idx);
         return float.TryParse(cell?.ToString(), out var value) ? value : null;
     }
-
-    // Both helpers
+    
     private static Dictionary<string, string[]> GetHeaderAliases()
     {
         // Define aliases for headers, if a column name is spelled differently
@@ -269,5 +276,20 @@ public class FileParser : IFileParser
         return headerAliases;
     }
 
+    private void ValidateXlsFile(IFormFile file)
+    {
+        var ext = Path.GetExtension(file.FileName).ToLowerInvariant();
+        if (ext != ".xls") {
+            throw new InvalidDataException("File must be .xls");
+        }
+    }
+
+    private void ValidateCsvFile(IFormFile file)
+    {
+        var ext = Path.GetExtension(file.FileName).ToLowerInvariant();
+        if (ext != ".csv") {
+            throw new InvalidDataException("File must be .xls");
+        }
+    }
 
 }

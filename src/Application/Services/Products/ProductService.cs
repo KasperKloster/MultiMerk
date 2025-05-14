@@ -10,12 +10,12 @@ namespace Application.Services.Products;
 public class ProductService : IProductService
 {
     private readonly IFileParser _fileParser;
-    private readonly IProductRepository _productRepository;
+    private readonly IProductRepository _productRepository;    
 
     public ProductService(IFileParser fileParser, IProductRepository productRepository)
     {
         _fileParser = fileParser;
-        _productRepository = productRepository;
+        _productRepository = productRepository;        
     }
     public async Task<List<Product>> GetProductsFromWeeklist(int weeklistId)
     {
@@ -28,12 +28,7 @@ public class ProductService : IProductService
     }
 
     public async Task<FilesResult> UpdateProductsFromFile(IFormFile file)
-    {
-        if (Path.GetExtension(file.FileName) != ".xls")
-        {
-            return FilesResult.Fail("Must be .xls");
-        }
-        
+    {      
         try
         {
             // Getting products from file
@@ -52,11 +47,6 @@ public class ProductService : IProductService
     {
         try
         {
-            if (Path.GetExtension(file.FileName) != ".xls")
-            {
-                return FilesResult.Fail("Unsupported file type.");
-            }
-
             Dictionary<string, int> stockProducts = _fileParser.GetProductsFromOutOfStock(file);
             return FilesResult.SuccessResultWithOutOfStock(stockProducts);
         }
