@@ -1,13 +1,13 @@
 using System.Security.Claims;
 using System.Text;
 using Application.Authentication.Interfaces;
-using Application.Files.Interfaces;
-using Application.Files.Interfaces.csv;
-using Application.Files.Services;
-using Application.Files.Services.csv;
 using Application.Repositories;
 using Application.Repositories.ApplicationUsers;
 using Application.Repositories.Weeklists;
+using Application.Services.Files;
+using Application.Services.Files.csv;
+using Application.Services.Interfaces.Files;
+using Application.Services.Interfaces.Files.csv;
 using Application.Services.Interfaces.Products;
 using Application.Services.Interfaces.Tasks;
 using Application.Services.Interfaces.Weeklists;

@@ -1,15 +1,16 @@
 using Application.DTOs.Authentication;
 using Application.DTOs.Weeklists;
-using Application.Files.Interfaces;
 using Application.Repositories;
 using Application.Repositories.ApplicationUsers;
 using Application.Repositories.Weeklists;
+using Application.Services.Interfaces.Files;
 using Application.Services.Interfaces.Weeklists;
 using Domain.Entities.Authentication;
 using Domain.Entities.Files;
+using Domain.Entities.Products;
 using Domain.Entities.Weeklists.Entities;
 using Domain.Entities.Weeklists.Factories;
-using Domain.Entities.Weeklists.WeeklistTasks;
+using Domain.Entities.Weeklists.WeeklistTaskLinks;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
 
@@ -105,57 +106,6 @@ public class WeeklistService : IWeeklistService
         }
     }
 
-    public async Task<FilesResult> CreateWeeklist(IFormFile file, Weeklist weeklist)
-    {
-        try
-        {
-            // Parse products from file
-            var result = _xlsFileService.GetProductsFromXls(file);
-            if (!result.Success)
-            {
-                return result;
-            }
-
-            if (result.Products is null || result.Products.Count == 0)
-            {
-                return FilesResult.Fail("No products found in the file.");
-            }
-
-            // Save weeklist
-            await _weeklistRepository.AddAsync(weeklist);
-
-            // Assign foreign keys
-            result.Products.ForEach(p => p.WeeklistId = weeklist.Id);
-            await _productRepository.AddRangeAsync(result.Products);
-
-            // Fetch tasks and roles
-            var tasks = await _weeklistTaskRepository.GetAllAsync();
-            var roleAssignments = await _weeklistUserRoleAssignmentRepository.GetAsync();
-            var taskIdToRole = roleAssignments.ToDictionary(x => x.WeeklistTaskId, x => x.UserRole);
-
-            // Resolve one user per role
-            var userRoleToUserId = new Dictionary<string, string>();
-            foreach (var role in taskIdToRole.Values.Distinct())
-            {
-                var user = await _applicationUserRepository.GetFirstUserByRoleAsync(role);
-                if (user != null)
-                {
-                    userRoleToUserId[role] = user.Id;
-                }
-            }
-
-            // Create and save task links
-            var links = WeeklistTaskLinkFactory.CreateLinks(weeklist.Id, tasks, userRoleToUserId, taskIdToRole);
-            await _weeklistTaskLinkRepository.AddWeeklistTaskLinksAsync(links);
-
-            return FilesResult.SuccessResult();
-        }
-        catch (Exception ex)
-        {
-            return FilesResult.Fail($"An error occurred while creating the weeklist: {ex.Message}");
-        }
-    }
-
     public async Task<WeeklistDto> GetWeeklistAsync(int weeklistId)
     {
         try
@@ -176,5 +126,66 @@ public class WeeklistService : IWeeklistService
         {
             throw new Exception("Could not fetch weeklist", ex);
         }
+    }
+
+    public async Task<FilesResult> CreateWeeklist(IFormFile file, Weeklist weeklist)
+    {
+        try
+        {
+            // Parse products from file
+            var result = _xlsFileService.GetProductsFromXls(file);
+            if (!result.Success)
+            {
+                return result;
+            }
+
+            // Save weeklist
+            await _weeklistRepository.AddAsync(weeklist);
+
+            // Assign weeklist id to products (foreign keys)
+            await SaveProducts(result.Products, weeklist.Id);
+
+            // Associate tasks with user roles
+            List<WeeklistTaskLink> taskLinks = await CreateTaskLinksForWeeklist(weeklist.Id);                    
+            await _weeklistTaskLinkRepository.AddWeeklistTaskLinksAsync(taskLinks);
+
+            return FilesResult.SuccessResult();
+        }
+        catch (Exception ex)
+        {
+            return FilesResult.Fail($"An error occurred while creating the weeklist: {ex.Message}");
+        }
+    }
+
+    private async Task SaveProducts(List<Product> products, int weeklistId)
+    {
+        products.ForEach(p => p.WeeklistId = weeklistId);
+        await _productRepository.AddRangeAsync(products);
+    }
+
+    private async Task<List<WeeklistTaskLink>> CreateTaskLinksForWeeklist(int weeklistId)
+    {        
+        var tasks = await _weeklistTaskRepository.GetAllAsync();
+        var roleAssignments = await _weeklistUserRoleAssignmentRepository.GetAsync();
+
+        var taskIdToRole = roleAssignments.ToDictionary(x => x.WeeklistTaskId, x => x.UserRole);
+        var userRoleToUserId = await ResolveUserIdsByRole(taskIdToRole.Values.Distinct()); // Distinct: Removes duplicates
+        // Create WeeklistTaskLink
+        return WeeklistTaskLinkFactory.CreateLinks(weeklistId, tasks, userRoleToUserId, taskIdToRole);
+    }
+
+    // Getting first user for each role
+    private async Task<Dictionary<string, string>> ResolveUserIdsByRole(IEnumerable<string> roles)
+    {
+        var userRoleToUserId = new Dictionary<string, string>();
+        foreach (var role in roles)
+        {
+            var user = await _applicationUserRepository.GetFirstUserByRoleAsync(role);
+            if (user != null)
+            {
+                userRoleToUserId[role] = user.Id;
+            }
+        }
+        return userRoleToUserId;
     }
 }

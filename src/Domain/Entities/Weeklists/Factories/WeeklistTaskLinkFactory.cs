@@ -10,8 +10,8 @@ public static class WeeklistTaskLinkFactory
     {
         // Define which task IDs should get ready status        
         var readyTaskIds = new HashSet<int> { (int)WeeklistTaskNameEnum.AssignEAN, (int)WeeklistTaskNameEnum.InsertOutOfStock, (int)WeeklistTaskNameEnum.GetAIContentList };
-        int readyStatusId = (int)WeeklistTaskStatusEnum.Ready;
-        int defaultStatusId = (int)WeeklistTaskStatusEnum.Awaiting;
+        const int readyStatusId = (int)WeeklistTaskStatusEnum.Ready;
+        const int defaultStatusId = (int)WeeklistTaskStatusEnum.Awaiting;
 
         return tasks.Select(task =>
         {
