@@ -1,10 +1,10 @@
 using System.Globalization;
 using System.Text;
-using Application.Files.Interfaces.csv;
+using Application.Services.Interfaces.Files.csv;
 using Domain.Entities.Products;
 using Slugify;
 
-namespace Application.Files.Services.csv;
+namespace Application.Services.Files.csv;
 
 public class ShopifyCsvService : CsvBaseService, IShopifyCsvService
 {

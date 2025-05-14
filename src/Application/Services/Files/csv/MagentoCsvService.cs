@@ -1,9 +1,9 @@
 using System.Globalization;
 using System.Text;
-using Application.Files.Interfaces.csv;
+using Application.Services.Interfaces.Files.csv;
 using Domain.Entities.Products;
 
-namespace Application.Files.Services.csv;
+namespace Application.Services.Files.csv;
 
 public class MagentoCsvService : CsvBaseService, IMagentoCsvService
 {

@@ -1,6 +1,6 @@
 using Domain.Entities.Products;
 
-namespace Application.Files.Interfaces.csv;
+namespace Application.Services.Interfaces.Files.csv;
 
 public interface IShopifyCsvService
 {

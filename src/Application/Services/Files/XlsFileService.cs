@@ -1,13 +1,11 @@
-using Application.Files.Interfaces;
-using ClosedXML.Excel;
+using Application.Services.Interfaces.Files;
 using Domain.Entities.Files;
 using Domain.Entities.Products;
 using Microsoft.AspNetCore.Http;
-using NPOI.HSSF.UserModel; // For .xls format
+using NPOI.HSSF.UserModel;
 using NPOI.SS.UserModel;
-using System.IO;
 
-namespace Application.Files.Services;
+namespace Application.Services.Files;
 public class XlsFileService : IXlsFileService
 {
     private readonly IFileParser _fileparser;
@@ -24,7 +22,7 @@ public class XlsFileService : IXlsFileService
         }
         // Getting products from .xls
         List<Product> products = _fileparser.GetProductsFromXls(file);
-        if (products.Count == 0)
+        if (products is null || products.Count == 0)
         {
             return FilesResult.Fail("No products found in the file.");
         }
@@ -53,7 +51,7 @@ public class XlsFileService : IXlsFileService
             row.CreateCell(2).SetCellValue(product.Sku);
             row.CreateCell(3).SetCellValue(product.Description ?? "");
             if (product.Qty.HasValue){
-                row.CreateCell(4).SetCellValue((double)product.Qty.Value);
+                row.CreateCell(4).SetCellValue(product.Qty.Value);
             }
             else{
                 row.CreateCell(4).SetCellType(CellType.Blank);
@@ -85,7 +83,7 @@ public class XlsFileService : IXlsFileService
             row.CreateCell(0).SetCellValue(product.Sku ?? "");
             row.CreateCell(1).SetCellValue(product.Title ?? "");
             if (product.Qty.HasValue){
-                row.CreateCell(2).SetCellValue((double)product.Qty.Value);
+                row.CreateCell(2).SetCellValue(product.Qty.Value);
             }
             else{
                 row.CreateCell(2).SetCellType(CellType.Blank);
