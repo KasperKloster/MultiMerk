@@ -22,7 +22,7 @@ public class XlsFileService : IXlsFileService
         }
         // Getting products from .xls
         List<Product> products = _fileparser.GetProductsFromXls(file);
-        if (products.Count == 0)
+        if (products is null || products.Count == 0)
         {
             return FilesResult.Fail("No products found in the file.");
         }
