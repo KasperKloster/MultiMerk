@@ -86,6 +86,7 @@ builder.Services.AddScoped<IWeeklistService, WeeklistService>();
 builder.Services.AddScoped<IProductService, ProductService>();
 builder.Services.AddScoped<IWeeklistTaskLinkService, WeeklistTaskLinkService>();
 builder.Services.AddScoped<IContentService, ContentService>();
+builder.Services.AddScoped<IWarehouseService, WarehouseService>();
 builder.Services.AddScoped<IZipService, ZipService>();
 
 
