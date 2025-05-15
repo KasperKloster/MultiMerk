@@ -1,10 +1,6 @@
-using Application.DTOs.Weeklists;
-using Application.Services.Interfaces.Files;
-using Application.Services.Interfaces.Products;
-using Application.Services.Interfaces.Tasks;
 using Application.Services.Interfaces.Weeklists;
 using Domain.Constants;
-using Domain.Entities.Products;
+using Domain.Entities.Files;
 using Domain.Enums;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
@@ -13,16 +9,12 @@ namespace WebAPI.Controllers.WeeklistControllers.WarehouseControllers
 {
     [Route("api/weeklist/warehouse/")]
     [ApiController]
-    public class WarehouseController : WeeklistBaseController
+    public class WarehouseController : ControllerBase
     {
-        
-        private readonly IProductService _productService;
-        private readonly IXlsFileService _xlsFileService;        
-
-        public WarehouseController(IWeeklistService weeklistService, IWeeklistTaskLinkService weeklistTaskLinkService, IProductService productService, IXlsFileService xlsFileService) : base(weeklistService, weeklistTaskLinkService)
+        private readonly IWarehouseService _warehouseService;
+        public WarehouseController(IWarehouseService warehouseService)
         {
-            _productService = productService;            
-            _xlsFileService = xlsFileService;            
+            _warehouseService = warehouseService;
         }
 
         [HttpPost("get-checklist")]
@@ -31,19 +23,19 @@ namespace WebAPI.Controllers.WeeklistControllers.WarehouseControllers
         {
             try
             {
-                // Getting products
-                List<Product> products = await _productService.GetProductsFromWeeklist(weeklistId);
-                byte[] xlsBytes = _xlsFileService.GetProductChecklist(products);
-                // Get weeklist to create filename
-                WeeklistDto weeklist = await _weeklistService.GetWeeklistAsync(weeklistId);
-                string fileName = $"{weeklist.Number}-{weeklist.OrderNumber}({weeklist.ShippingNumber})-Checklist.xls";
-                return File(xlsBytes, "application/vnd.ms-excel", fileName);
+                FilesResult result = await _warehouseService.GetChecklist(weeklistId);
+                if (!result.Success)
+                {
+                    return BadRequest();
+                }
+
+                return File(result.FileBytes, "application/vnd.ms-excel", result.FileName);
             }
             catch (Exception ex)
             {
                 return BadRequest(ex.Message);
-            }            
-        }  
+            }
+        }
 
         [HttpPost("upload-checklist")]
         [Authorize(Roles = $"{Roles.Admin},{Roles.WarehouseManager}, {Roles.WarehouseWorker}")]
@@ -51,14 +43,16 @@ namespace WebAPI.Controllers.WeeklistControllers.WarehouseControllers
         {
             try
             {
-                var result = await _productService.UpdateProductsFromFile(file);
+                FilesResult result = await _warehouseService.UploadChecklistAndTaskAdvance(
+                    file,
+                    weeklistId,
+                    WeeklistTaskNameEnum.CreateChecklist,
+                    WeeklistTaskNameEnum.InsertWarehouseList);
+
                 if (!result.Success)
                 {
                     return BadRequest(result.Message);
                 }
-
-                // Mark Current task as done, set next to ready
-                var updateTaskResult = await UpdateTaskStatusAndAdvanceNext(weeklistId, WeeklistTaskNameEnum.CreateChecklist, WeeklistTaskNameEnum.InsertWarehouseList);                
                 return Ok();
             }
             catch (Exception ex)
@@ -73,19 +67,19 @@ namespace WebAPI.Controllers.WeeklistControllers.WarehouseControllers
         {
             try
             {
-                List<Product> products = await _productService.GetProductsFromWeeklist(weeklistId);
-                byte[] xlsBytes = _xlsFileService.GetProductWarehouselist(products);
-                // Get weeklist to create filename
-                WeeklistDto weeklist = await _weeklistService.GetWeeklistAsync(weeklistId);
-                string fileName = $"{weeklist.Number}-Warehouselist.xls";                
-                // Mark Current task as done, set next to ready                
-                return File(xlsBytes, "application/vnd.ms-excel", fileName);
+                FilesResult result = await _warehouseService.GetWarehouselist(weeklistId);
+                if (!result.Success)
+                {
+                    return BadRequest();
+                }
+
+                return File(result.FileBytes, "application/vnd.ms-excel", result.FileName);
             }
             catch (Exception ex)
             {
                 return BadRequest(ex.Message);
             }
-        }  
+        }
 
         [HttpPost("mark-as-complete")]
         [Authorize(Roles = $"{Roles.Admin},{Roles.WarehouseManager}")]
@@ -94,14 +88,21 @@ namespace WebAPI.Controllers.WeeklistControllers.WarehouseControllers
             try
             {
                 // Mark Current task as done, set next to ready
-                var updateTaskResult = await UpdateTaskStatusAndAdvanceNext(weeklistId, WeeklistTaskNameEnum.InsertWarehouseList, WeeklistTaskNameEnum.ImportProductList);
+                FilesResult result = await _warehouseService.MarkCompleteAdvanceNext(
+                    weeklistId,
+                    WeeklistTaskNameEnum.InsertWarehouseList,
+                    WeeklistTaskNameEnum.ImportProductList);
+                if (!result.Success)
+                {
+                    return BadRequest(result.Message);
+                }
                 return Ok();
             }
             catch (Exception ex)
             {
                 return BadRequest(ex.Message);
             }
-        }  
+        }
 
     }
 }

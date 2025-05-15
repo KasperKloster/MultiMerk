@@ -1,10 +1,6 @@
-using Application.DTOs.Weeklists;
-using Application.Services.Interfaces.Files.csv;
-using Application.Services.Interfaces.Tasks;
 using Application.Services.Interfaces.Weeklists;
 using Domain.Constants;
 using Domain.Entities.Files;
-using Domain.Entities.Products;
 using Domain.Enums;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
@@ -13,15 +9,13 @@ namespace WebAPI.Controllers.WeeklistControllers.ContentControllers
 {
     [Route("api/weeklist/content/")]
     [ApiController]
-    public class ContentController : WeeklistBaseController
+    public class ContentController : ControllerBase
     {
-        private readonly IContentService _contentService;
-        private readonly IAICsvService _aiCsvService;               
+        private readonly IContentService _contentService;             
 
-        public ContentController(IWeeklistService weeklistService, IWeeklistTaskLinkService weeklistTaskLinkService, IContentService contentService, IAICsvService aiCsvService) : base(weeklistService, weeklistTaskLinkService)
+        public ContentController(IContentService contentService)
         {
-            _contentService = contentService;
-            _aiCsvService = aiCsvService;            
+            _contentService = contentService;            
         }
 
         [HttpPost("get-products-ready-for-ai-content")]        
@@ -30,16 +24,16 @@ namespace WebAPI.Controllers.WeeklistControllers.ContentControllers
         {
             try
             {
-                // Getting products
-                List<Product> products = await _contentService.GetProductsReadyForAI(weeklistId);
-                // Converts products to csv (byte array)
-                var csvBytes = _aiCsvService.GenerateProductsReadyForAICSV(products);
-                // Get weeklist to create filename
-                WeeklistDto weeklist = await _weeklistService.GetWeeklistAsync(weeklistId);
-                var fileName = $"{weeklist.Number}-Ready-For-AI.csv";
-                // Mark Current task as done, set next to ready                
-                var updateTaskResult = await UpdateTaskStatusAndAdvanceNext(weeklistId, WeeklistTaskNameEnum.GetAIContentList, WeeklistTaskNameEnum.UploadAIContent);
-                return File(csvBytes, "text/csv", fileName);
+                FilesResult result = await _contentService.GetAIProductsAndTaskAdvance(
+                    weeklistId,
+                    WeeklistTaskNameEnum.GetAIContentList,
+                    WeeklistTaskNameEnum.UploadAIContent);
+
+                if (!result.Success){
+                    return BadRequest();
+                }
+
+                return File(result.FileBytes, "text/csv", result.FileName);
             }
             catch (Exception ex)
             {
@@ -53,16 +47,14 @@ namespace WebAPI.Controllers.WeeklistControllers.ContentControllers
         {
             try
             {
-                FilesResult aiProducts = _aiCsvService.GetProductsFromAI(file);                
-                if (!aiProducts.Success)
-                {
-                    return BadRequest(aiProducts.Message);
+                FilesResult result = await _contentService.InsertAIProductsUpdateStatus(
+                    file,
+                    weeklistId,
+                    WeeklistTaskNameEnum.UploadAIContent,
+                    WeeklistTaskStatusEnum.Done);
+                if (!result.Success){
+                    return BadRequest();
                 }
-                
-                await _contentService.InsertAIProductContent(aiProducts.Products);
-
-                // Mark Current task as done, set next to ready                
-                var updateTaskResult = await UpdateTaskStatus(weeklistId, WeeklistTaskNameEnum.UploadAIContent, WeeklistTaskStatusEnum.Done);
                 return Ok();
             }
             catch (Exception ex)
