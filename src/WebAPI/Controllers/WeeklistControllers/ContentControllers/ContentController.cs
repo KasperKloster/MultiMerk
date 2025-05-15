@@ -11,8 +11,7 @@ namespace WebAPI.Controllers.WeeklistControllers.ContentControllers
     [ApiController]
     public class ContentController : ControllerBase
     {
-        private readonly IContentService _contentService;             
-
+        private readonly IContentService _contentService;
         public ContentController(IContentService contentService)
         {
             _contentService = contentService;            

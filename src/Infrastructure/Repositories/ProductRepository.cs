@@ -151,18 +151,19 @@ public class ProductRepository : IProductRepository
         foreach (var aiProduct in aiProducts)
         {
             // Prefer match by Series if available, otherwise by SKU
-            var existingProduct = !string.IsNullOrWhiteSpace(aiProduct.Series)
-                ? existingProducts.FirstOrDefault(p => p.Series == aiProduct.Series)
-                : existingProducts.FirstOrDefault(p => p.Sku == aiProduct.Sku);
+            var matchedProducts = !string.IsNullOrWhiteSpace(aiProduct.Series)
+                ? existingProducts.Where(p => p.Series == aiProduct.Series)
+                : existingProducts.Where(p => p.Sku == aiProduct.Sku);
 
-            if (existingProduct != null)
+            foreach (var existingProduct in matchedProducts)
             {
-                // Update fields only if AI version has a value
-                if (!string.IsNullOrWhiteSpace(aiProduct.Title)){
+                if (!string.IsNullOrWhiteSpace(aiProduct.Title))
+                {
                     existingProduct.Title = aiProduct.Title;
                 }
 
-                if (!string.IsNullOrWhiteSpace(aiProduct.Description)){
+                if (!string.IsNullOrWhiteSpace(aiProduct.Description))
+                {
                     existingProduct.Description = aiProduct.Description;
                 }
             }
@@ -191,7 +192,6 @@ public class ProductRepository : IProductRepository
         // Save changes to database
         await _dbContext.SaveChangesAsync();
     }
-
     public async Task<List<Product>> GetProductsFromWeeklist(int weeklistId)
     {
         return await _dbContext.Products.Where(p => p.WeeklistId == weeklistId).ToListAsync();
