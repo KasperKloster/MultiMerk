@@ -32,7 +32,7 @@ public class ProductService : ServiceBase, IProductService
         }
     }
 
-    public async Task<FilesResult> UpdateProductsFromXlsUpdateStatus(IFormFile file, int weeklistId, WeeklistTaskNameEnum currentTask, WeeklistTaskStatusEnum taskStatus)
+    public async Task<FilesResult> UpdateProductsFromXlsUpdateStatus(IFormFile file, int weeklistId, TaskNameEnum currentTask, TaskStatusEnum taskStatus)
     {
         try
         {
@@ -46,7 +46,7 @@ public class ProductService : ServiceBase, IProductService
         }
     }
 
-    public async Task<FilesResult> UpdateProductsFromXlsTaskAdvance(IFormFile file, int weeklistId, WeeklistTaskNameEnum currentTask, WeeklistTaskNameEnum nextTask)
+    public async Task<FilesResult> UpdateProductsFromXlsTaskAdvance(IFormFile file, int weeklistId, TaskNameEnum currentTask, TaskNameEnum nextTask)
     {
         try
         {
@@ -60,7 +60,7 @@ public class ProductService : ServiceBase, IProductService
         }
     }
 
-    public async Task<FilesResult> UpdateOutOfStockAndTaskAdvance(IFormFile file, int weeklistId, WeeklistTaskNameEnum currentTask, WeeklistTaskNameEnum nextTask)
+    public async Task<FilesResult> UpdateOutOfStockAndTaskAdvance(IFormFile file, int weeklistId, TaskNameEnum currentTask, TaskNameEnum nextTask)
     {
         try
         {

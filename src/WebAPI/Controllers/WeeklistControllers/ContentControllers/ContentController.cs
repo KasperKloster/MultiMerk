@@ -25,8 +25,8 @@ namespace WebAPI.Controllers.WeeklistControllers.ContentControllers
             {
                 FilesResult result = await _contentService.GetAIProductsAndTaskAdvance(
                     weeklistId,
-                    WeeklistTaskNameEnum.GetAIContentList,
-                    WeeklistTaskNameEnum.UploadAIContent);
+                    TaskNameEnum.GetAIContentList,
+                    TaskNameEnum.UploadAIContent);
 
                 if (!result.Success){
                     return BadRequest();
@@ -49,8 +49,8 @@ namespace WebAPI.Controllers.WeeklistControllers.ContentControllers
                 FilesResult result = await _contentService.InsertAIProductsUpdateStatus(
                     file,
                     weeklistId,
-                    WeeklistTaskNameEnum.UploadAIContent,
-                    WeeklistTaskStatusEnum.Done);
+                    TaskNameEnum.UploadAIContent,
+                    TaskStatusEnum.Done);
                 if (!result.Success){
                     return BadRequest();
                 }

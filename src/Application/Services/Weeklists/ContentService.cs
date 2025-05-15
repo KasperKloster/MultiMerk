@@ -23,18 +23,18 @@ public class ContentService : ServiceBase, IContentService
         _weeklistService = weeklistService;
     }
 
-    public async Task<FilesResult> GetAIProductsAndTaskAdvance(int weeklistId, WeeklistTaskNameEnum currentTask, WeeklistTaskNameEnum nextTask)
+    public async Task<FilesResult> GetAIProductsAndTaskAdvance(int weeklistId, TaskNameEnum currentTask, TaskNameEnum nextTask)
     {
         List<Product> products = await GetProductsReadyForAI(weeklistId);
         var csvBytes = _aiCsvService.GenerateProductsReadyForAICSV(products);
         WeeklistDto weeklist = await _weeklistService.GetWeeklistAsync(weeklistId);
         var fileName = $"{weeklist.Number}-Ready-For-AI.csv";
         // Mark Current task as done, set next to ready                
-        await UpdateTaskStatusAndAdvanceNext(weeklistId, WeeklistTaskNameEnum.GetAIContentList, WeeklistTaskNameEnum.UploadAIContent);
+        await UpdateTaskStatusAndAdvanceNext(weeklistId, TaskNameEnum.GetAIContentList, TaskNameEnum.UploadAIContent);
         return FilesResult.SuccessWithFileExport(csvBytes, fileName);
     }
 
-    public async Task<FilesResult> InsertAIProductsUpdateStatus(IFormFile file, int weeklistId, WeeklistTaskNameEnum currentTask, WeeklistTaskStatusEnum taskStatus)
+    public async Task<FilesResult> InsertAIProductsUpdateStatus(IFormFile file, int weeklistId, TaskNameEnum currentTask, TaskStatusEnum taskStatus)
     {
         try
         {
@@ -47,7 +47,7 @@ public class ContentService : ServiceBase, IContentService
             await UpdateProductsToAIContent(aiProducts.Products);
 
             // Mark Current task as done
-            var updateTaskResult = await UpdateTaskStatus(weeklistId, WeeklistTaskNameEnum.UploadAIContent, WeeklistTaskStatusEnum.Done);
+            var updateTaskResult = await UpdateTaskStatus(weeklistId, TaskNameEnum.UploadAIContent, TaskStatusEnum.Done);
             return FilesResult.SuccessResult();
         }
         catch (Exception ex)

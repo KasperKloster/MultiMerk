@@ -25,7 +25,7 @@ public class ZipService : ServiceBase, IZipService
         _shopifyCsvService = shopifyCsvService;
     }
 
-    public async Task<byte[]> GetZipAdminImportUpdateStatus(int weeklistId, WeeklistTaskNameEnum currentTask, WeeklistTaskStatusEnum taskStatus)
+    public async Task<byte[]> GetZipAdminImportUpdateStatus(int weeklistId, TaskNameEnum currentTask, TaskStatusEnum taskStatus)
     {
         WeeklistDto weeklist = await _weeklistService.GetWeeklistAsync(weeklistId);
         List<Product> products = await _productService.GetProductsFromWeeklist(weeklistId);

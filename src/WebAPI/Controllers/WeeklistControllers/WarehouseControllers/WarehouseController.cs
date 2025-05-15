@@ -46,8 +46,8 @@ namespace WebAPI.Controllers.WeeklistControllers.WarehouseControllers
                 FilesResult result = await _warehouseService.UploadChecklistAndTaskAdvance(
                     file,
                     weeklistId,
-                    WeeklistTaskNameEnum.CreateChecklist,
-                    WeeklistTaskNameEnum.InsertWarehouseList);
+                    TaskNameEnum.CreateChecklist,
+                    TaskNameEnum.InsertWarehouseList);
 
                 if (!result.Success)
                 {
@@ -90,8 +90,8 @@ namespace WebAPI.Controllers.WeeklistControllers.WarehouseControllers
                 // Mark Current task as done, set next to ready
                 FilesResult result = await _warehouseService.MarkCompleteAdvanceNext(
                     weeklistId,
-                    WeeklistTaskNameEnum.InsertWarehouseList,
-                    WeeklistTaskNameEnum.ImportProductList);
+                    TaskNameEnum.InsertWarehouseList,
+                    TaskNameEnum.ImportProductList);
                 if (!result.Success)
                 {
                     return BadRequest(result.Message);

@@ -9,9 +9,9 @@ public static class WeeklistTaskLinkFactory
     public static List<WeeklistTaskLink> CreateLinks(int weeklistId, List<WeeklistTask> tasks, Dictionary<string, string> userRoleToUserId, Dictionary<int, string> taskIdToRole)
     {
         // Define which task IDs should get ready status        
-        var readyTaskIds = new HashSet<int> { (int)WeeklistTaskNameEnum.AssignEAN, (int)WeeklistTaskNameEnum.InsertOutOfStock, (int)WeeklistTaskNameEnum.GetAIContentList };
-        const int readyStatusId = (int)WeeklistTaskStatusEnum.Ready;
-        const int defaultStatusId = (int)WeeklistTaskStatusEnum.Awaiting;
+        var readyTaskIds = new HashSet<int> { (int)TaskNameEnum.AssignEAN, (int)TaskNameEnum.InsertOutOfStock, (int)TaskNameEnum.GetAIContentList };
+        const int readyStatusId = (int)TaskStatusEnum.Ready;
+        const int defaultStatusId = (int)TaskStatusEnum.Awaiting;
 
         return tasks.Select(task =>
         {

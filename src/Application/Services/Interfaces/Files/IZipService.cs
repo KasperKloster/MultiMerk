@@ -4,5 +4,5 @@ namespace Application.Services.Interfaces.Files;
 
 public interface IZipService
 {
-    Task<byte[]> GetZipAdminImportUpdateStatus(int weeklistId, WeeklistTaskNameEnum currentTask, WeeklistTaskStatusEnum taskStatus);    
+    Task<byte[]> GetZipAdminImportUpdateStatus(int weeklistId, TaskNameEnum currentTask, TaskStatusEnum taskStatus);    
 }

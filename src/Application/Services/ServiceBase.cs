@@ -13,7 +13,7 @@ public abstract class ServiceBase
         _weeklistTaskLinkService = weeklistTaskLinkService;
     }
 
-    protected async Task<FilesResult> UpdateTaskStatusAndAdvanceNext(int weeklistId, WeeklistTaskNameEnum currentTask, WeeklistTaskNameEnum newTask)
+    protected async Task<FilesResult> UpdateTaskStatusAndAdvanceNext(int weeklistId, TaskNameEnum currentTask, TaskNameEnum newTask)
     {
         try
         {
@@ -34,7 +34,7 @@ public abstract class ServiceBase
         }
     }
 
-    protected async Task<FilesResult> UpdateTaskStatus(int weeklistId, WeeklistTaskNameEnum currentTask, WeeklistTaskStatusEnum newTaskStatus)
+    protected async Task<FilesResult> UpdateTaskStatus(int weeklistId, TaskNameEnum currentTask, TaskStatusEnum newTaskStatus)
     {
         try
         {

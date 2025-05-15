@@ -32,7 +32,7 @@ public class WarehouseService : ServiceBase, IWarehouseService
         return FilesResult.SuccessWithFileExport(xlsBytes, fileName);
     }
 
-    public async Task<FilesResult> UploadChecklistAndTaskAdvance(IFormFile file, int weeklistId, WeeklistTaskNameEnum currentTask, WeeklistTaskNameEnum nextTask)
+    public async Task<FilesResult> UploadChecklistAndTaskAdvance(IFormFile file, int weeklistId, TaskNameEnum currentTask, TaskNameEnum nextTask)
     {
         FilesResult result = await _productService.UpdateProductsFromXlsTaskAdvance(file, weeklistId, currentTask, nextTask);
         if (!result.Success)
@@ -50,7 +50,7 @@ public class WarehouseService : ServiceBase, IWarehouseService
         string fileName = $"{weeklist.Number}-Warehouselist.xls";
         return FilesResult.SuccessWithFileExport(xlsBytes, fileName);
     }
-    public async Task<FilesResult> MarkCompleteAdvanceNext(int weeklistId, WeeklistTaskNameEnum currentTask, WeeklistTaskNameEnum nextTask)
+    public async Task<FilesResult> MarkCompleteAdvanceNext(int weeklistId, TaskNameEnum currentTask, TaskNameEnum nextTask)
     {
         // Update task
         FilesResult taskUpdateResult = await UpdateTaskStatusAndAdvanceNext(weeklistId: weeklistId, currentTask: currentTask, newTask: nextTask);

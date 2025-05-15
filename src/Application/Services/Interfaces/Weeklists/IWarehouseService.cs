@@ -9,10 +9,10 @@ public interface IWarehouseService
 {
     Task<FilesResult> GetChecklist(int weeklistId);
 
-    Task<FilesResult> UploadChecklistAndTaskAdvance(IFormFile file, int weeklistId, WeeklistTaskNameEnum currentTask, WeeklistTaskNameEnum nextTask);    
+    Task<FilesResult> UploadChecklistAndTaskAdvance(IFormFile file, int weeklistId, TaskNameEnum currentTask, TaskNameEnum nextTask);    
 
     Task<FilesResult> GetWarehouselist(int weeklistId);
     
-    Task<FilesResult> MarkCompleteAdvanceNext(int weeklistId, WeeklistTaskNameEnum currentTask, WeeklistTaskNameEnum nextTask);
+    Task<FilesResult> MarkCompleteAdvanceNext(int weeklistId, TaskNameEnum currentTask, TaskNameEnum nextTask);
     
 }

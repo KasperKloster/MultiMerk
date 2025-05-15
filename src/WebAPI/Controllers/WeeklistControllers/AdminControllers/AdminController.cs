@@ -30,8 +30,8 @@ namespace WebAPI.Controllers.WeeklistControllers.AdminControllers
             FilesResult result = await _productService.UpdateProductsFromXlsUpdateStatus(
                 file,
                 weeklistId,
-                WeeklistTaskNameEnum.AssignEAN,
-                WeeklistTaskStatusEnum.Done);
+                TaskNameEnum.AssignEAN,
+                TaskStatusEnum.Done);
             
             return result.Success ? Ok() : BadRequest(result.Message);            
         }
@@ -44,8 +44,8 @@ namespace WebAPI.Controllers.WeeklistControllers.AdminControllers
             FilesResult result = await _productService.UpdateOutOfStockAndTaskAdvance(
                 file,
                 weeklistId,
-                WeeklistTaskNameEnum.InsertOutOfStock,
-                WeeklistTaskNameEnum.CreateChecklist);
+                TaskNameEnum.InsertOutOfStock,
+                TaskNameEnum.CreateChecklist);
 
             return result.Success ? Ok() : BadRequest(result.Message);            
         }
@@ -58,8 +58,8 @@ namespace WebAPI.Controllers.WeeklistControllers.AdminControllers
             {
                 byte[] zipBytes = await _zipService.GetZipAdminImportUpdateStatus(
                     weeklistId,
-                    WeeklistTaskNameEnum.ImportProductList,
-                    WeeklistTaskStatusEnum.Done);
+                    TaskNameEnum.ImportProductList,
+                    TaskStatusEnum.Done);
 
                 return File(zipBytes, "application/zip", $"Weeklist-{weeklistId}-Admin.zip");
             }
