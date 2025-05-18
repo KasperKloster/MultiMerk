@@ -1,6 +1,5 @@
 using Domain.Entities.Products;
 namespace Domain.Entities.Files;
-
 public class FilesResult
 {
     public bool Success { get; set; }

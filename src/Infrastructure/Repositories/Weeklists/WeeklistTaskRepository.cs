@@ -4,11 +4,9 @@ using Domain.Entities.Weeklists.WeeklistTasks;
 using Infrastructure.Data;
 
 namespace Infrastructure.Repositories.Weeklists;
-
 public class WeeklistTaskRepository : IWeeklistTaskRepository
 {
     private readonly AppDbContext _dbContext;
-
     public WeeklistTaskRepository(AppDbContext dbContext)
     {
         _dbContext = dbContext;

@@ -4,7 +4,6 @@ using Infrastructure.Data;
 using Microsoft.EntityFrameworkCore;
 
 namespace Infrastructure.Repositories.Weeklists;
-
 public class WeeklistRepository : IWeeklistRepository
 {
     private readonly AppDbContext _dbContext;
@@ -35,6 +34,4 @@ public class WeeklistRepository : IWeeklistRepository
         await _dbContext.Weeklists.AddAsync(weeklist);
         await _dbContext.SaveChangesAsync();
     }
-
-
 }
