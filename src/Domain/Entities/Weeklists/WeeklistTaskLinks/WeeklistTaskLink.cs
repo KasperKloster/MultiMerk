@@ -3,7 +3,6 @@ using Domain.Entities.Weeklists.Entities;
 using Domain.Entities.Weeklists.WeeklistTasks;
 
 namespace Domain.Entities.Weeklists.WeeklistTaskLinks;
-
 public class WeeklistTaskLink
 {
     public int WeeklistId { get; set; }

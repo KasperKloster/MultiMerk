@@ -4,7 +4,6 @@ import Header from '@/components/layout/Header.vue';
 import BackToWeeklistLink from '@/components/layout/BackToWeeklistLink.vue';
 import ErrorAlert from '@/components/layout/alerts/ErrorAlert.vue';
 import SuccessAlert from '@/components/layout/alerts/SuccessAlert.vue';
-
 import api from '@/utils/api';
 
 const successMessage = ref('');
@@ -24,6 +23,7 @@ const onFileChange = (event) => {
 }
 
 const handleUpload = async () => {
+    
     // Reset messages
     successMessage.value = '';
     errorMessage.value = '';
@@ -34,13 +34,11 @@ const handleUpload = async () => {
     // Getting the file
     const formData = new FormData();
     formData.append('file', selectedFile.value);
-
     // Values from form to weeklist
     const weeklistNumber = document.getElementById('weeklist-number').value;
     const orderNumber = document.getElementById('order-number').value;
     const supplier = document.getElementById('supplier').value;
     const shippingNumber = document.getElementById('shippingNumber').value;
-
     // Append extra fields
     formData.append('Number', weeklistNumber);
     formData.append('OrderNumber', orderNumber);
@@ -53,22 +51,17 @@ const handleUpload = async () => {
                 'Content-Type': 'multipart/form-data'
             }
         });
-        successMessage.value = `Weeklist ${weeklistNumber} has been created`
-        console.info("Upload success");
+        successMessage.value = `Weeklist ${weeklistNumber} has been created`;        
         // Reset form
         weeklistNumber.value = '';
         orderNumber.value = '';
         supplier.value = '';
         shippingNumber.value = '';
         selectedFile.value = null;
-
-    } catch (error) {
-        console.log(error);
+    } catch (error) {        
         errorMessage.value = `Upload failed: ${error.response.data}`;
     }
 };
-
-
 </script>
 
 <template>

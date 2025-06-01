@@ -2,7 +2,6 @@ using System.ComponentModel.DataAnnotations;
 using Domain.Entities.Weeklists.Entities;
 
 namespace Domain.Entities.Products;
-
 public class Product
 {
     public Product(string sku)
@@ -11,8 +10,7 @@ public class Product
     }
     
     [Required]
-    public int Id { get; set; }
-    
+    public int Id { get; set; }    
     [Required]
     public string Sku { get; set; }    
     // Optionals
@@ -31,9 +29,7 @@ public class Product
     public string? MainImage { get; set; }
     public int? TemplateId { get; set; }
     public string? Location { get; set; }
-
-    // Relationsship
-    // Has one weeklist
+    // Relationsship - Has one weeklist    
     public int? WeeklistId { get; set; } // Foreign key
     public Weeklist? Weeklist { get; set; }
 }
