@@ -1,4 +1,4 @@
-using Application.Repositories;
+using Application.Repositories.Products;
 using Application.Services.Interfaces.Files;
 using Application.Services.Interfaces.Products;
 using Application.Services.Interfaces.Tasks;

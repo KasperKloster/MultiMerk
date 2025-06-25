@@ -1,7 +1,7 @@
 using Application.DTOs.Authentication;
 using Application.DTOs.Weeklists;
-using Application.Repositories;
 using Application.Repositories.ApplicationUsers;
+using Application.Repositories.Products;
 using Application.Repositories.Weeklists;
 using Application.Services.Interfaces.Files;
 using Application.Services.Interfaces.Weeklists;

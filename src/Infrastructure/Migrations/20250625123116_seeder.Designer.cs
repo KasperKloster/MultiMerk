@@ -12,8 +12,8 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 namespace Infrastructure.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    [Migration("20250601084957_Seed")]
-    partial class Seed
+    [Migration("20250625123116_seeder")]
+    partial class seeder
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -205,6 +205,53 @@ namespace Infrastructure.Migrations
                             Title = "Product Two",
                             WeeklistId = 1
                         });
+                });
+
+            modelBuilder.Entity("Domain.Entities.Products.ProductTemplate", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("integer");
+
+                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
+
+                    b.Property<int>("TemplateNumber")
+                        .HasColumnType("integer");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("ProductTemplates");
+                });
+
+            modelBuilder.Entity("Domain.Entities.Products.ProductTemplateTranslation", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("integer");
+
+                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
+
+                    b.Property<string>("Description")
+                        .IsRequired()
+                        .HasColumnType("text");
+
+                    b.Property<string>("LanguageCode")
+                        .IsRequired()
+                        .HasColumnType("text");
+
+                    b.Property<string>("Name")
+                        .IsRequired()
+                        .HasColumnType("text");
+
+                    b.Property<int>("ProductTemplateId")
+                        .HasColumnType("integer");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("ProductTemplateId", "LanguageCode")
+                        .IsUnique();
+
+                    b.ToTable("ProductTemplateTranslation");
                 });
 
             modelBuilder.Entity("Domain.Entities.Weeklists.Entities.Weeklist", b =>
@@ -625,6 +672,17 @@ namespace Infrastructure.Migrations
                     b.Navigation("Weeklist");
                 });
 
+            modelBuilder.Entity("Domain.Entities.Products.ProductTemplateTranslation", b =>
+                {
+                    b.HasOne("Domain.Entities.Products.ProductTemplate", "ProductTemplate")
+                        .WithMany("Translations")
+                        .HasForeignKey("ProductTemplateId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("ProductTemplate");
+                });
+
             modelBuilder.Entity("Domain.Entities.Weeklists.WeeklistTaskLinks.WeeklistTaskLink", b =>
                 {
                     b.HasOne("Domain.Entities.Authentication.ApplicationUser", "AssignedUser")
@@ -718,6 +776,11 @@ namespace Infrastructure.Migrations
                         .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
+                });
+
+            modelBuilder.Entity("Domain.Entities.Products.ProductTemplate", b =>
+                {
+                    b.Navigation("Translations");
                 });
 
             modelBuilder.Entity("Domain.Entities.Weeklists.Entities.Weeklist", b =>

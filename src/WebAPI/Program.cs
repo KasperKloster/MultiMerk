@@ -1,11 +1,12 @@
 using System.Security.Claims;
 using System.Text;
 using Application.Authentication.Interfaces;
-using Application.Repositories;
 using Application.Repositories.ApplicationUsers;
+using Application.Repositories.Products;
 using Application.Repositories.Weeklists;
 using Application.Services.Files;
 using Application.Services.Files.csv;
+using Application.Services.Interfaces.External.Google;
 using Application.Services.Interfaces.Files;
 using Application.Services.Interfaces.Files.csv;
 using Application.Services.Interfaces.Products;
@@ -19,9 +20,11 @@ using Infrastructure.Data;
 using Infrastructure.Files;
 using Infrastructure.Repositories;
 using Infrastructure.Repositories.ApplicationUsers;
+using Infrastructure.Repositories.Products;
 using Infrastructure.Repositories.Weeklists;
 using Infrastructure.Seeder;
 using Infrastructure.Services.Authentication;
+using Infrastructure.Services.External.Google;
 using Infrastructure.Services.Token;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Identity;
@@ -29,7 +32,18 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
 using Scalar.AspNetCore;
 
-var builder = WebApplication.CreateBuilder(args);
+// var builder = WebApplication.CreateBuilder(args);
+var builder = WebApplication.CreateBuilder(new WebApplicationOptions
+{
+  Args = args,
+  ContentRootPath = Directory.GetCurrentDirectory()
+
+});
+
+builder.Configuration
+  .AddJsonFile("appsettings.json", optional: false, reloadOnChange: true)
+  .AddJsonFile($"appsettings.{builder.Environment.EnvironmentName}.json", optional: true)
+  .AddEnvironmentVariables();
 
 // Add services to the container.
 string connectionString = builder.Configuration.GetConnectionString("default")!;
@@ -44,6 +58,7 @@ builder.Services.AddScoped<ITokenService, TokenService>();
 builder.Services.AddScoped<IAuthService, AuthService>();
 
 var jwtSecret = builder.Configuration["JWT:secret"] ?? throw new InvalidOperationException("JWT secret is not configured.");
+
 builder.Services.AddAuthentication(options =>
     {
       options.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
@@ -76,6 +91,7 @@ builder.Services.AddScoped<IFileParser, FileParser>();
 builder.Services.AddScoped<IXlsFileService, XlsFileService>();
 // Repositories
 builder.Services.AddScoped<IProductRepository, ProductRepository>();
+builder.Services.AddScoped<IProductTemplateRepository, ProductTemplateRepository>();
 builder.Services.AddScoped<IWeeklistRepository, WeeklistRepository>();
 builder.Services.AddScoped<IWeeklistTaskRepository, WeeklistTaskRepository>();
 builder.Services.AddScoped<IWeeklistTaskLinkRepository, WeeklistTaskLinkRepository>();
@@ -84,10 +100,12 @@ builder.Services.AddScoped<IApplicationUserRepository, ApplicationUserRepository
 // Services
 builder.Services.AddScoped<IWeeklistService, WeeklistService>();
 builder.Services.AddScoped<IProductService, ProductService>();
+builder.Services.AddScoped<IProductTemplateService, ProductTemplateService>();
 builder.Services.AddScoped<IWeeklistTaskLinkService, WeeklistTaskLinkService>();
 builder.Services.AddScoped<IContentService, ContentService>();
 builder.Services.AddScoped<IWarehouseService, WarehouseService>();
 builder.Services.AddScoped<IZipService, ZipService>();
+builder.Services.AddScoped<IGoogleSheetsService, GoogleSheetsService>();
 
 
 // Allow CORS for your frontend

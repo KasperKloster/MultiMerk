@@ -1,5 +1,5 @@
 using Application.DTOs.Weeklists;
-using Application.Repositories;
+using Application.Repositories.Products;
 using Application.Services.Interfaces.Files.csv;
 using Application.Services.Interfaces.Tasks;
 using Application.Services.Interfaces.Weeklists;

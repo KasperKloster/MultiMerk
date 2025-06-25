@@ -1,4 +1,4 @@
-using Application.Repositories;
+using Application.Repositories.Products;
 using Domain.Entities.Products;
 using Infrastructure.Data;
 using Microsoft.EntityFrameworkCore;

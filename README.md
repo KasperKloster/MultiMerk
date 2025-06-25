@@ -29,7 +29,7 @@ UPDATE "WeeklistTaskLinks" SET "WeeklistTaskStatusId" = 2 WHERE "WeeklistId" = 2
 ### CLI
 <code>
 dotnet ef database drop --startup-project src/WebAPI/WebAPI.csproj --project src/Infrastructure
-dotnet ef migrations add <NAME> --startup-project src/WebAPI/WebAPI.csproj --project src/Infrastructure
+dotnet ef migrations <NAME> seeder --startup-project src/WebAPI/WebAPI.csproj --project src/Infrastructure
 dotnet ef database update --startup-project src/WebAPI/WebAPI.csproj --project src/Infrastructure
 </code>
 
