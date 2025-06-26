@@ -1,20 +1,75 @@
-using Application.Repositories;
+using Application.DTOs.Weeklists;
+using Application.Repositories.Products;
+using Application.Services.Interfaces.Files.csv;
+using Application.Services.Interfaces.Tasks;
 using Application.Services.Interfaces.Weeklists;
 using Domain.Entities.Files;
 using Domain.Entities.Products;
+using Domain.Enums;
+using Microsoft.AspNetCore.Http;
 
 namespace Application.Services.Weeklists;
 
-public class ContentService : IContentService
+public class ContentService : ServiceBase, IContentService
 {
     private readonly IProductRepository _productRepository;
+    private readonly IAICsvService _aiCsvService;
+    private readonly IWeeklistService _weeklistService;
 
-    public ContentService(IProductRepository productRepository)
+    public ContentService(IProductRepository productRepository, IAICsvService aiCsvService, IWeeklistService weeklistService, IWeeklistTaskLinkService weeklistTaskLinkService) : base(weeklistTaskLinkService)
     {
         _productRepository = productRepository;
+        _aiCsvService = aiCsvService;
+        _weeklistService = weeklistService;
     }
 
-    public async Task<List<Product>> GetProductsReadyForAI(int weeklistId)
+    public async Task<FilesResult> GetAIProductsAndTaskAdvance(int weeklistId, TaskNameEnum currentTask, TaskNameEnum nextTask)
+    {
+        List<Product> products = await GetProductsReadyForAI(weeklistId);
+        var csvBytes = _aiCsvService.GenerateProductsReadyForAICSV(products);
+        WeeklistDto weeklist = await _weeklistService.GetWeeklistAsync(weeklistId);
+        var fileName = $"{weeklist.Number}-Ready-For-AI.csv";
+        // Mark Current task as done, set next to ready                
+        await UpdateTaskStatusAndAdvanceNext(weeklistId, TaskNameEnum.GetAIContentList, TaskNameEnum.UploadAIContent);
+        return FilesResult.SuccessWithFileExport(csvBytes, fileName);
+    }
+
+    public async Task<FilesResult> InsertAIProductsUpdateStatus(IFormFile file, int weeklistId, TaskNameEnum currentTask, TaskStatusEnum taskStatus)
+    {
+        try
+        {
+            FilesResult aiProducts = _aiCsvService.GetProductsFromAI(file);
+            if (!aiProducts.Success)
+            {
+                return FilesResult.Fail($"{aiProducts.Message}");
+            }
+
+            await UpdateProductsToAIContent(aiProducts.Products);
+
+            // Mark Current task as done
+            var updateTaskResult = await UpdateTaskStatus(weeklistId, TaskNameEnum.UploadAIContent, TaskStatusEnum.Done);
+            return FilesResult.SuccessResult();
+        }
+        catch (Exception ex)
+        {
+            return FilesResult.Fail($"{ex.Message}");
+        }
+    }
+
+    private async Task<FilesResult> UpdateProductsToAIContent(List<Product> aiProducts)
+    {
+        try
+        {
+            await _productRepository.UpdateProductsFromAI(aiProducts);
+            return FilesResult.SuccessResult();
+        }
+        catch (Exception ex)
+        {
+            throw new Exception(ex.Message);
+        }
+    }
+
+    private async Task<List<Product>> GetProductsReadyForAI(int weeklistId)
     {
         try
         {
@@ -27,17 +82,6 @@ public class ContentService : IContentService
         }
     }
 
-    public async Task<FilesResult> InsertAIProductContent(List<Product> aiProducts)
-    {
-        try
-        {
-            await _productRepository.UpdateProductsFromAI(aiProducts);            
-            return FilesResult.SuccessResult();
-        }
-        catch (Exception ex)
-        {
-            throw new Exception(ex.Message);
-        }
-    }
+
 }
 

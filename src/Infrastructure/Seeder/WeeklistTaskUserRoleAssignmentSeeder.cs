@@ -14,43 +14,43 @@ public class WeeklistTaskUserRoleAssignmentSeeder
             new WeeklistTaskUserRoleAssignment{
                 Id = 1,
                 UserRole = Roles.Admin,
-                WeeklistTaskId = (int)WeeklistTaskNameEnum.AssignEAN
+                WeeklistTaskId = (int)TaskNameEnum.AssignEAN
             },
             new WeeklistTaskUserRoleAssignment
             {
                 Id = 2,
                 UserRole = Roles.Admin,
-                WeeklistTaskId = (int)WeeklistTaskNameEnum.InsertOutOfStock
+                WeeklistTaskId = (int)TaskNameEnum.InsertOutOfStock
             },
             new WeeklistTaskUserRoleAssignment
             {
                 Id = 3,
                 UserRole = Roles.Writer,
-                WeeklistTaskId = (int)WeeklistTaskNameEnum.GetAIContentList
+                WeeklistTaskId = (int)TaskNameEnum.GetAIContentList
             },
             new WeeklistTaskUserRoleAssignment
             {
                 Id = 4,
                 UserRole = Roles.Writer,
-                WeeklistTaskId = (int)WeeklistTaskNameEnum.UploadAIContent
+                WeeklistTaskId = (int)TaskNameEnum.UploadAIContent
             },
             new WeeklistTaskUserRoleAssignment
             {
                 Id = 5,
                 UserRole = Roles.WarehouseWorker,
-                WeeklistTaskId = (int)WeeklistTaskNameEnum.CreateChecklist
+                WeeklistTaskId = (int)TaskNameEnum.CreateChecklist
             },
             new WeeklistTaskUserRoleAssignment
             {
                 Id = 6,
                 UserRole = Roles.WarehouseManager,
-                WeeklistTaskId = (int)WeeklistTaskNameEnum.InsertWarehouseList
+                WeeklistTaskId = (int)TaskNameEnum.InsertWarehouseList
             },
             new WeeklistTaskUserRoleAssignment
             {
                 Id = 7,
                 UserRole = Roles.Admin,
-                WeeklistTaskId = (int)WeeklistTaskNameEnum.ImportProductList
+                WeeklistTaskId = (int)TaskNameEnum.ImportProductList
             }                 
         };
         builder.HasData(userRoleAssignments);

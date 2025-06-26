@@ -7,7 +7,7 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 namespace Infrastructure.Migrations
 {
     /// <inheritdoc />
-    public partial class Init : Migration
+    public partial class init : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
@@ -50,6 +50,19 @@ namespace Infrastructure.Migrations
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_AspNetUsers", x => x.Id);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "ProductTemplates",
+                columns: table => new
+                {
+                    Id = table.Column<int>(type: "integer", nullable: false)
+                        .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn),
+                    TemplateNumber = table.Column<int>(type: "integer", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_ProductTemplates", x => x.Id);
                 });
 
             migrationBuilder.CreateTable(
@@ -216,6 +229,28 @@ namespace Infrastructure.Migrations
                 });
 
             migrationBuilder.CreateTable(
+                name: "ProductTemplateTranslation",
+                columns: table => new
+                {
+                    Id = table.Column<int>(type: "integer", nullable: false)
+                        .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn),
+                    ProductTemplateId = table.Column<int>(type: "integer", nullable: false),
+                    LanguageCode = table.Column<string>(type: "text", nullable: false),
+                    Name = table.Column<string>(type: "text", nullable: false),
+                    Description = table.Column<string>(type: "text", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_ProductTemplateTranslation", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_ProductTemplateTranslation_ProductTemplates_ProductTemplate~",
+                        column: x => x.ProductTemplateId,
+                        principalTable: "ProductTemplates",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                });
+
+            migrationBuilder.CreateTable(
                 name: "Products",
                 columns: table => new
                 {
@@ -356,6 +391,12 @@ namespace Infrastructure.Migrations
                 column: "WeeklistId");
 
             migrationBuilder.CreateIndex(
+                name: "IX_ProductTemplateTranslation_ProductTemplateId_LanguageCode",
+                table: "ProductTemplateTranslation",
+                columns: new[] { "ProductTemplateId", "LanguageCode" },
+                unique: true);
+
+            migrationBuilder.CreateIndex(
                 name: "IX_Weeklists_Number",
                 table: "Weeklists",
                 column: "Number",
@@ -404,6 +445,9 @@ namespace Infrastructure.Migrations
                 name: "Products");
 
             migrationBuilder.DropTable(
+                name: "ProductTemplateTranslation");
+
+            migrationBuilder.DropTable(
                 name: "TokenInfos");
 
             migrationBuilder.DropTable(
@@ -414,6 +458,9 @@ namespace Infrastructure.Migrations
 
             migrationBuilder.DropTable(
                 name: "AspNetRoles");
+
+            migrationBuilder.DropTable(
+                name: "ProductTemplates");
 
             migrationBuilder.DropTable(
                 name: "AspNetUsers");

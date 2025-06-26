@@ -1,7 +1,6 @@
 using System.ComponentModel.DataAnnotations;
 
 namespace Domain.Entities.Weeklists.WeeklistTasks;
-
 public class WeeklistTask
 {
     [Required]

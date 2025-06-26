@@ -1,11 +1,11 @@
-using System;
 using Domain.Entities.Files;
-using Domain.Entities.Products;
+using Domain.Enums;
+using Microsoft.AspNetCore.Http;
 
 namespace Application.Services.Interfaces.Weeklists;
 
 public interface IContentService
 {
-    Task<List<Product>> GetProductsReadyForAI(int weeklistId);
-    Task<FilesResult> InsertAIProductContent(List<Product> aiProducts);
+    Task<FilesResult> GetAIProductsAndTaskAdvance(int weeklistId, TaskNameEnum currentTask, TaskNameEnum nextTask);    
+    Task<FilesResult> InsertAIProductsUpdateStatus(IFormFile file, int weeklistId, TaskNameEnum currentTask, TaskStatusEnum taskStatus);        
 }

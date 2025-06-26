@@ -25,11 +25,12 @@ public class AppDbContext : IdentityDbContext<ApplicationUser>
     public DbSet<WeeklistTaskUserRoleAssignment> WeeklistTaskUserRoleAssignments { get; set; } = null!;
     // Products
     public DbSet<Product> Products { get; set; } = null!;
+    public DbSet<ProductTemplate> ProductTemplates { get; set; } = null!;
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
         base.OnModelCreating(modelBuilder);
-        
+
         // Unique index on SKU
         modelBuilder.Entity<Product>()
             .HasIndex(p => p.Sku)
@@ -64,7 +65,7 @@ public class AppDbContext : IdentityDbContext<ApplicationUser>
         modelBuilder.Entity<WeeklistTaskLink>()
             .HasOne(x => x.WeeklistTaskStatus)
             .WithMany()
-            .HasForeignKey(x => x.WeeklistTaskStatusId);    
+            .HasForeignKey(x => x.WeeklistTaskStatusId);
 
         // WeeklistTaskUserRoleAssignment
         modelBuilder.Entity<WeeklistTaskUserRoleAssignment>()
@@ -72,6 +73,17 @@ public class AppDbContext : IdentityDbContext<ApplicationUser>
             .WithMany(t => t.UserRoleAssignments)
             .HasForeignKey(x => x.WeeklistTaskId)
             .OnDelete(DeleteBehavior.Cascade);
+
+        // Templates
+        modelBuilder.Entity<ProductTemplate>()
+            .HasMany(t => t.Translations)
+            .WithOne(tr => tr.ProductTemplate)
+            .HasForeignKey(tr => tr.ProductTemplateId)
+            .OnDelete(DeleteBehavior.Cascade);
+
+        modelBuilder.Entity<ProductTemplateTranslation>()
+            .HasIndex(t => new { t.ProductTemplateId, t.LanguageCode })
+            .IsUnique();
 
         // Seed database
         ApplySeeders(modelBuilder);

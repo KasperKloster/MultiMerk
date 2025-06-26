@@ -3,6 +3,7 @@ using Domain.Constants;
 using Domain.Entities.Weeklists.Entities;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+
 namespace WebAPI.Controllers.WeeklistControllers;
 [Route("api/weeklist/")]
 [ApiController]

@@ -29,7 +29,7 @@ UPDATE "WeeklistTaskLinks" SET "WeeklistTaskStatusId" = 2 WHERE "WeeklistId" = 2
 ### CLI
 <code>
 dotnet ef database drop --startup-project src/WebAPI/WebAPI.csproj --project src/Infrastructure
-dotnet ef migrations add --startup-project src/WebAPI/WebAPI.csproj --project src/Infrastructure
+dotnet ef migrations <NAME> seeder --startup-project src/WebAPI/WebAPI.csproj --project src/Infrastructure
 dotnet ef database update --startup-project src/WebAPI/WebAPI.csproj --project src/Infrastructure
 </code>
 
@@ -38,16 +38,3 @@ dotnet ef database update --startup-project src/WebAPI/WebAPI.csproj --project s
 "default": "Host=127.0.0.1; Port=5432; Database=testing_db; Username=wepack;Password=Password;Include Error Detail=true"
 "default": "Host=localhost; Port=5432; Database=mmultimerk; Username=kasperkloster;Password=password"
 </code>
-
-#####
-
-Metafield: PIM.master_category [list.single_line_text_field], 
-Metafield: PIM.make [list.single_line_text_field], 
-Metafield: PIM.model [list.single_line_text_field], 
-Metafield: custom.color_select_ [single_line_text_field], 
-Metafield: PIM.product_type [single_line_text_field], 
-Metafield: custom.material_select_ [list.single_line_text_field], 
-Metafield: custom.year_live [single_line_text_field], 
-Metafield: custom.location [single_line_text_field],  
-Product Category, 
-Metafield: shopify.color-pattern [list.metaobject_reference], Command

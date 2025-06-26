@@ -1,10 +1,8 @@
-using Application.DTOs.Weeklists;
-using Domain.Entities.Products;
+using Domain.Enums;
 
 namespace Application.Services.Interfaces.Files;
 
 public interface IZipService
 {
-    Task<byte[]> CreateZipAdminImportAsync(WeeklistDto weeklist, List<Product> products);
-
+    Task<byte[]> GetZipAdminImportUpdateStatus(int weeklistId, TaskNameEnum currentTask, TaskStatusEnum taskStatus);    
 }

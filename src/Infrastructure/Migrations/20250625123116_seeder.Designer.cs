@@ -12,8 +12,8 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 namespace Infrastructure.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    [Migration("20250513132258_Init")]
-    partial class Init
+    [Migration("20250625123116_seeder")]
+    partial class seeder
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -187,6 +187,71 @@ namespace Infrastructure.Migrations
                     b.HasIndex("WeeklistId");
 
                     b.ToTable("Products");
+
+                    b.HasData(
+                        new
+                        {
+                            Id = 1,
+                            Qty = 0,
+                            Sku = "LC01-1001-1",
+                            Title = "Product One",
+                            WeeklistId = 1
+                        },
+                        new
+                        {
+                            Id = 2,
+                            Qty = 3,
+                            Sku = "LC01-1001-2",
+                            Title = "Product Two",
+                            WeeklistId = 1
+                        });
+                });
+
+            modelBuilder.Entity("Domain.Entities.Products.ProductTemplate", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("integer");
+
+                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
+
+                    b.Property<int>("TemplateNumber")
+                        .HasColumnType("integer");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("ProductTemplates");
+                });
+
+            modelBuilder.Entity("Domain.Entities.Products.ProductTemplateTranslation", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("integer");
+
+                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
+
+                    b.Property<string>("Description")
+                        .IsRequired()
+                        .HasColumnType("text");
+
+                    b.Property<string>("LanguageCode")
+                        .IsRequired()
+                        .HasColumnType("text");
+
+                    b.Property<string>("Name")
+                        .IsRequired()
+                        .HasColumnType("text");
+
+                    b.Property<int>("ProductTemplateId")
+                        .HasColumnType("integer");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("ProductTemplateId", "LanguageCode")
+                        .IsUnique();
+
+                    b.ToTable("ProductTemplateTranslation");
                 });
 
             modelBuilder.Entity("Domain.Entities.Weeklists.Entities.Weeklist", b =>
@@ -218,6 +283,16 @@ namespace Infrastructure.Migrations
                         .IsUnique();
 
                     b.ToTable("Weeklists");
+
+                    b.HasData(
+                        new
+                        {
+                            Id = 1,
+                            Number = 101,
+                            OrderNumber = "E123",
+                            ShippingNumber = "Shipment101",
+                            Supplier = "TVC"
+                        });
                 });
 
             modelBuilder.Entity("Domain.Entities.Weeklists.WeeklistTaskLinks.WeeklistTaskLink", b =>
@@ -243,6 +318,57 @@ namespace Infrastructure.Migrations
                     b.HasIndex("WeeklistTaskStatusId");
 
                     b.ToTable("WeeklistTaskLinks");
+
+                    b.HasData(
+                        new
+                        {
+                            WeeklistId = 1,
+                            WeeklistTaskId = 1,
+                            AssignedUserId = "00000000-0000-0000-0000-000000000001",
+                            WeeklistTaskStatusId = 2
+                        },
+                        new
+                        {
+                            WeeklistId = 1,
+                            WeeklistTaskId = 2,
+                            AssignedUserId = "00000000-0000-0000-0000-000000000001",
+                            WeeklistTaskStatusId = 2
+                        },
+                        new
+                        {
+                            WeeklistId = 1,
+                            WeeklistTaskId = 3,
+                            AssignedUserId = "00000000-0000-0000-0000-000000000004",
+                            WeeklistTaskStatusId = 2
+                        },
+                        new
+                        {
+                            WeeklistId = 1,
+                            WeeklistTaskId = 4,
+                            AssignedUserId = "00000000-0000-0000-0000-000000000004",
+                            WeeklistTaskStatusId = 1
+                        },
+                        new
+                        {
+                            WeeklistId = 1,
+                            WeeklistTaskId = 5,
+                            AssignedUserId = "00000000-0000-0000-0000-000000000005",
+                            WeeklistTaskStatusId = 1
+                        },
+                        new
+                        {
+                            WeeklistId = 1,
+                            WeeklistTaskId = 6,
+                            AssignedUserId = "00000000-0000-0000-0000-000000000006",
+                            WeeklistTaskStatusId = 1
+                        },
+                        new
+                        {
+                            WeeklistId = 1,
+                            WeeklistTaskId = 7,
+                            AssignedUserId = "00000000-0000-0000-0000-000000000001",
+                            WeeklistTaskStatusId = 1
+                        });
                 });
 
             modelBuilder.Entity("Domain.Entities.Weeklists.WeeklistTasks.WeeklistTask", b =>
@@ -260,6 +386,43 @@ namespace Infrastructure.Migrations
                     b.HasKey("Id");
 
                     b.ToTable("WeeklistTasks");
+
+                    b.HasData(
+                        new
+                        {
+                            Id = 1,
+                            Name = "Assign EAN"
+                        },
+                        new
+                        {
+                            Id = 2,
+                            Name = "Insert out of stock"
+                        },
+                        new
+                        {
+                            Id = 3,
+                            Name = "Get AI content list"
+                        },
+                        new
+                        {
+                            Id = 4,
+                            Name = "Upload AI content"
+                        },
+                        new
+                        {
+                            Id = 5,
+                            Name = "Create Checklist"
+                        },
+                        new
+                        {
+                            Id = 6,
+                            Name = "Insert warehouse list"
+                        },
+                        new
+                        {
+                            Id = 7,
+                            Name = "Import product list"
+                        });
                 });
 
             modelBuilder.Entity("Domain.Entities.Weeklists.WeeklistTasks.WeeklistTaskStatus", b =>
@@ -277,6 +440,28 @@ namespace Infrastructure.Migrations
                     b.HasKey("Id");
 
                     b.ToTable("WeeklistTaskStatus");
+
+                    b.HasData(
+                        new
+                        {
+                            Id = 1,
+                            Status = "Awaiting"
+                        },
+                        new
+                        {
+                            Id = 2,
+                            Status = "Ready"
+                        },
+                        new
+                        {
+                            Id = 3,
+                            Status = "In Progress"
+                        },
+                        new
+                        {
+                            Id = 4,
+                            Status = "Done"
+                        });
                 });
 
             modelBuilder.Entity("Domain.Entities.Weeklists.WeeklistTasks.WeeklistTaskUserRoleAssignment", b =>
@@ -299,6 +484,50 @@ namespace Infrastructure.Migrations
                     b.HasIndex("WeeklistTaskId");
 
                     b.ToTable("WeeklistTaskUserRoleAssignments");
+
+                    b.HasData(
+                        new
+                        {
+                            Id = 1,
+                            UserRole = "Admin",
+                            WeeklistTaskId = 1
+                        },
+                        new
+                        {
+                            Id = 2,
+                            UserRole = "Admin",
+                            WeeklistTaskId = 2
+                        },
+                        new
+                        {
+                            Id = 3,
+                            UserRole = "Writer",
+                            WeeklistTaskId = 3
+                        },
+                        new
+                        {
+                            Id = 4,
+                            UserRole = "Writer",
+                            WeeklistTaskId = 4
+                        },
+                        new
+                        {
+                            Id = 5,
+                            UserRole = "WarehouseWorker",
+                            WeeklistTaskId = 5
+                        },
+                        new
+                        {
+                            Id = 6,
+                            UserRole = "WarehouseManager",
+                            WeeklistTaskId = 6
+                        },
+                        new
+                        {
+                            Id = 7,
+                            UserRole = "Admin",
+                            WeeklistTaskId = 7
+                        });
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRole", b =>
@@ -443,6 +672,17 @@ namespace Infrastructure.Migrations
                     b.Navigation("Weeklist");
                 });
 
+            modelBuilder.Entity("Domain.Entities.Products.ProductTemplateTranslation", b =>
+                {
+                    b.HasOne("Domain.Entities.Products.ProductTemplate", "ProductTemplate")
+                        .WithMany("Translations")
+                        .HasForeignKey("ProductTemplateId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("ProductTemplate");
+                });
+
             modelBuilder.Entity("Domain.Entities.Weeklists.WeeklistTaskLinks.WeeklistTaskLink", b =>
                 {
                     b.HasOne("Domain.Entities.Authentication.ApplicationUser", "AssignedUser")
@@ -536,6 +776,11 @@ namespace Infrastructure.Migrations
                         .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
+                });
+
+            modelBuilder.Entity("Domain.Entities.Products.ProductTemplate", b =>
+                {
+                    b.Navigation("Translations");
                 });
 
             modelBuilder.Entity("Domain.Entities.Weeklists.Entities.Weeklist", b =>

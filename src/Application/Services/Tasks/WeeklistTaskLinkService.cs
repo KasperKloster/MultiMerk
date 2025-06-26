@@ -13,12 +13,12 @@ public class WeeklistTaskLinkService : IWeeklistTaskLinkService
     {
         _weeklistTaskLinkRepository = weeklistTaskLinkRepository;
     }
-    public async Task<OperationResult> UpdateTaskStatus(int weeklistId, WeeklistTaskNameEnum currentTask, WeeklistTaskStatusEnum newTaskStatus)
+    public async Task<OperationResult> UpdateTaskStatus(int weeklistId, TaskNameEnum currentTask, TaskStatusEnum newTaskStatus)
     {
         return await _weeklistTaskLinkRepository.UpdateTaskStatus(weeklistId, currentTask, newTaskStatus);
     }
 
-    public async Task<OperationResult> UpdateTaskStatusAndAdvanceNext(int weeklistId, WeeklistTaskNameEnum currentTask, WeeklistTaskNameEnum newTask)
+    public async Task<OperationResult> UpdateTaskStatusAndAdvanceNext(int weeklistId, TaskNameEnum currentTask, TaskNameEnum newTask)
     {
         return await _weeklistTaskLinkRepository.UpdateTaskStatusAndAdvanceNext(weeklistId, currentTask, newTask);
     }

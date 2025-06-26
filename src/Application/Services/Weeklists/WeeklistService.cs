@@ -1,7 +1,7 @@
 using Application.DTOs.Authentication;
 using Application.DTOs.Weeklists;
-using Application.Repositories;
 using Application.Repositories.ApplicationUsers;
+using Application.Repositories.Products;
 using Application.Repositories.Weeklists;
 using Application.Services.Interfaces.Files;
 using Application.Services.Interfaces.Weeklists;
@@ -105,7 +105,6 @@ public class WeeklistService : IWeeklistService
             throw new Exception("Could not fetch weeklists", ex);
         }
     }
-
     public async Task<WeeklistDto> GetWeeklistAsync(int weeklistId)
     {
         try
@@ -127,7 +126,6 @@ public class WeeklistService : IWeeklistService
             throw new Exception("Could not fetch weeklist", ex);
         }
     }
-
     public async Task<FilesResult> CreateWeeklist(IFormFile file, Weeklist weeklist)
     {
         try
@@ -156,24 +154,22 @@ public class WeeklistService : IWeeklistService
             return FilesResult.Fail($"An error occurred while creating the weeklist: {ex.Message}");
         }
     }
-
     private async Task SaveProducts(List<Product> products, int weeklistId)
     {
         products.ForEach(p => p.WeeklistId = weeklistId);
         await _productRepository.AddRangeAsync(products);
     }
-
+    
     private async Task<List<WeeklistTaskLink>> CreateTaskLinksForWeeklist(int weeklistId)
     {        
         var tasks = await _weeklistTaskRepository.GetAllAsync();
         var roleAssignments = await _weeklistUserRoleAssignmentRepository.GetAsync();
 
         var taskIdToRole = roleAssignments.ToDictionary(x => x.WeeklistTaskId, x => x.UserRole);
-        var userRoleToUserId = await ResolveUserIdsByRole(taskIdToRole.Values.Distinct()); // Distinct: Removes duplicates
+        var userRoleToUserId = await ResolveUserIdsByRole(taskIdToRole.Values.Distinct());
         // Create WeeklistTaskLink
         return WeeklistTaskLinkFactory.CreateLinks(weeklistId, tasks, userRoleToUserId, taskIdToRole);
     }
-
     // Getting first user for each role
     private async Task<Dictionary<string, string>> ResolveUserIdsByRole(IEnumerable<string> roles)
     {
