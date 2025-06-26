@@ -1,5 +1,4 @@
 using Application.Services.Interfaces.Products;
-using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 
 namespace WebAPI.Controllers.ProductControllers;
@@ -13,17 +12,14 @@ public class TemplateController : ControllerBase
     {
         _productTemplateService = productTemplateService;
     }
-
-    // [HttpPost("sync-templates")]
-    [HttpGet("sync-templates")]
+    
     // [Authorize(Roles = Roles.Admin)]
-    // public async Task<IActionResult> SyncTemplates()
-    public IActionResult SyncTemplates()
+    [HttpGet("sync-templates")]
+    public async Task<IActionResult> SyncTemplates()    
     {
         try
         {
-            _productTemplateService.SyncTemplatesFromGoogleSheetsAsync();
-            // await _productTemplateService.SyncTemplatesFromGoogleSheetsAsync();
+            await _productTemplateService.SyncTemplatesFromGoogleSheetsAsync();            
             return Ok("Templates synced successfully.");
         }
         catch (Exception ex)
