@@ -2,20 +2,38 @@ using System.ComponentModel.DataAnnotations;
 using Domain.Entities.Weeklists.Entities;
 
 namespace Domain.Entities.Products;
+
 public class Product
 {
     public Product(string sku)
     {
+        if (string.IsNullOrWhiteSpace(sku))
+        {
+            throw new ArgumentException("SKU cannot be null or empty.", nameof(sku));
+        }
         Sku = sku;
     }
+
+    [Required]
+    public int Id { get; set; }
+    [Required]
+    public string Sku { get; set; }
+    // public string? Title { get; set; }
+    private string? _title;
+    public string? Title
+    {
+        get => _title;
+        set
+        {
+            _title = value;
+            AfterLastDash = ExtractAfterLastDash(value);
+        }
+    }
+
+    public string? AfterLastDash { get; private set; }
     
-    [Required]
-    public int Id { get; set; }    
-    [Required]
-    public string Sku { get; set; }    
     // Optionals
     public string? SupplierSku { get; set; }
-    public string? Title { get; set; }
     public string? Description { get; set; }
     public string? EAN { get; set; }
     public string? CategoryId { get; set; }
@@ -32,4 +50,18 @@ public class Product
     // Relationsship - Has one weeklist    
     public int? WeeklistId { get; set; } // Foreign key
     public Weeklist? Weeklist { get; set; }
+    
+    private string? ExtractAfterLastDash(string? input)
+    {
+        if (string.IsNullOrWhiteSpace(input))
+        {
+            return null;
+        }
+        var lastDashIndex = input.LastIndexOf('-');
+        if (lastDashIndex == -1 || lastDashIndex == input.Length - 1)
+        {
+            return null;
+        }
+        return input.Substring(lastDashIndex + 1).Trim();
+    }
 }
