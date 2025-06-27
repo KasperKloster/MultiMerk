@@ -1,3 +1,4 @@
+using System.Threading.Tasks;
 using Application.Services.Interfaces.Files;
 using Domain.Entities.Files;
 using Domain.Entities.Products;
@@ -13,10 +14,10 @@ public class XlsFileService : IXlsFileService
     {
         _fileparser = fileparser;        
     }
-    public FilesResult GetProductsFromXls(IFormFile file)
+    public async Task<FilesResult> GetProductsFromXls(IFormFile file)
     {        
         // Getting products from .xls
-        List<Product> products = _fileparser.GetProductsFromXls(file);
+        List<Product> products = await _fileparser.GetProductsFromXls(file);
         if (products is null || products.Count == 0)
         {
             return FilesResult.Fail("No products found in the file.");

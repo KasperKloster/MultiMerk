@@ -1,30 +1,11 @@
 using System.Security.Claims;
 using System.Text;
 using Application.Authentication.Interfaces;
-using Application.Repositories.ApplicationUsers;
-using Application.Repositories.Products;
-using Application.Repositories.Weeklists;
-using Application.Services.Files;
-using Application.Services.Files.csv;
-using Application.Services.Interfaces.External.Google;
-using Application.Services.Interfaces.Files;
-using Application.Services.Interfaces.Files.csv;
-using Application.Services.Interfaces.Products;
-using Application.Services.Interfaces.Tasks;
-using Application.Services.Interfaces.Weeklists;
-using Application.Services.Products;
-using Application.Services.Tasks;
-using Application.Services.Weeklists;
 using Domain.Entities.Authentication;
 using Infrastructure.Data;
-using Infrastructure.Files;
-using Infrastructure.Repositories;
-using Infrastructure.Repositories.ApplicationUsers;
-using Infrastructure.Repositories.Products;
-using Infrastructure.Repositories.Weeklists;
+using Infrastructure.Extensions;
 using Infrastructure.Seeder;
 using Infrastructure.Services.Authentication;
-using Infrastructure.Services.External.Google;
 using Infrastructure.Services.Token;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Identity;
@@ -40,12 +21,17 @@ var builder = WebApplication.CreateBuilder(new WebApplicationOptions
 
 });
 
+builder.WebHost.ConfigureKestrel(serverOptions =>
+{
+    serverOptions.Limits.MaxRequestBodySize = 100 * 1024 * 1024; // Acceipts files up to 100MB globally
+});
+
 builder.Configuration
   .AddJsonFile("appsettings.json", optional: false, reloadOnChange: true)
   .AddJsonFile($"appsettings.{builder.Environment.EnvironmentName}.json", optional: true)
   .AddEnvironmentVariables();
 
-// Add services to the container.
+
 string connectionString = builder.Configuration.GetConnectionString("default")!;
 
 builder.Services.AddDbContext<AppDbContext>(options => options.UseNpgsql(connectionString));
@@ -83,30 +69,8 @@ builder.Services.AddAuthentication(options =>
      }
     );
 
-// Files
-builder.Services.AddScoped<IAICsvService, AICsvService>();
-builder.Services.AddScoped<IMagentoCsvService, MagentoCsvService>();
-builder.Services.AddScoped<IShopifyCsvService, ShopifyCsvService>();
-builder.Services.AddScoped<IFileParser, FileParser>();
-builder.Services.AddScoped<IXlsFileService, XlsFileService>();
-// Repositories
-builder.Services.AddScoped<IProductRepository, ProductRepository>();
-builder.Services.AddScoped<IProductTemplateRepository, ProductTemplateRepository>();
-builder.Services.AddScoped<IWeeklistRepository, WeeklistRepository>();
-builder.Services.AddScoped<IWeeklistTaskRepository, WeeklistTaskRepository>();
-builder.Services.AddScoped<IWeeklistTaskLinkRepository, WeeklistTaskLinkRepository>();
-builder.Services.AddScoped<IWeeklistUserRoleAssignmentRepository, WeeklistUserRoleAssignmentRepository>();
-builder.Services.AddScoped<IApplicationUserRepository, ApplicationUserRepository>();
-// Services
-builder.Services.AddScoped<IWeeklistService, WeeklistService>();
-builder.Services.AddScoped<IProductService, ProductService>();
-builder.Services.AddScoped<IProductTemplateService, ProductTemplateService>();
-builder.Services.AddScoped<IWeeklistTaskLinkService, WeeklistTaskLinkService>();
-builder.Services.AddScoped<IContentService, ContentService>();
-builder.Services.AddScoped<IWarehouseService, WarehouseService>();
-builder.Services.AddScoped<IZipService, ZipService>();
-builder.Services.AddScoped<IGoogleSheetsService, GoogleSheetsService>();
-
+// // Add services/dependencies
+builder.Services.AddApplicationServices();
 
 // Allow CORS for your frontend
 builder.Services.AddCors(options =>

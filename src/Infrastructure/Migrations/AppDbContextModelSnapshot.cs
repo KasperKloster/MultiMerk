@@ -124,6 +124,9 @@ namespace Infrastructure.Migrations
 
                     NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
 
+                    b.Property<string>("AfterLastDash")
+                        .HasColumnType("text");
+
                     b.Property<string>("CategoryId")
                         .HasColumnType("text");
 
@@ -164,8 +167,14 @@ namespace Infrastructure.Migrations
                     b.Property<string>("SupplierSku")
                         .HasColumnType("text");
 
+                    b.Property<string>("TemplateDescription")
+                        .HasColumnType("text");
+
                     b.Property<int?>("TemplateId")
                         .HasColumnType("integer");
+
+                    b.Property<string>("TemplateTitle")
+                        .HasColumnType("text");
 
                     b.Property<string>("Title")
                         .HasColumnType("text");
@@ -189,6 +198,7 @@ namespace Infrastructure.Migrations
                         new
                         {
                             Id = 1,
+                            AfterLastDash = "",
                             Qty = 0,
                             Sku = "LC01-1001-1",
                             Title = "Product One",
@@ -197,6 +207,7 @@ namespace Infrastructure.Migrations
                         new
                         {
                             Id = 2,
+                            AfterLastDash = "",
                             Qty = 3,
                             Sku = "LC01-1001-2",
                             Title = "Product Two",
@@ -236,12 +247,12 @@ namespace Infrastructure.Migrations
                         .IsRequired()
                         .HasColumnType("text");
 
-                    b.Property<string>("Name")
-                        .IsRequired()
-                        .HasColumnType("text");
-
                     b.Property<int>("ProductTemplateId")
                         .HasColumnType("integer");
+
+                    b.Property<string>("Title")
+                        .IsRequired()
+                        .HasColumnType("text");
 
                     b.HasKey("Id");
 

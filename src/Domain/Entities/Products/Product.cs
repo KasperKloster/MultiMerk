@@ -18,7 +18,7 @@ public class Product
     public int Id { get; set; }
     [Required]
     public string Sku { get; set; }
-    // public string? Title { get; set; }
+    
     private string? _title;
     public string? Title
     {
@@ -29,7 +29,6 @@ public class Product
             AfterLastDash = ExtractAfterLastDash(value);
         }
     }
-
     public string? AfterLastDash { get; private set; }
     
     // Optionals
@@ -44,23 +43,29 @@ public class Product
     public float? Cost { get; set; }
     public int? Qty { get; set; }
     public float? Weight { get; set; }
-    public string? MainImage { get; set; }
-    public int? TemplateId { get; set; }
+    public string? MainImage { get; set; }    
     public string? Location { get; set; }
+
+    // Templates
+    public int? TemplateId { get; set; }
+    public string? TemplateTitle { get; set; }
+    public string? TemplateDescription { get; set; }
+
     // Relationsship - Has one weeklist    
     public int? WeeklistId { get; set; } // Foreign key
     public Weeklist? Weeklist { get; set; }
-    
+
+    // Entity helpers
     private string? ExtractAfterLastDash(string? input)
     {
         if (string.IsNullOrWhiteSpace(input))
         {
-            return null;
+            return string.Empty;
         }
         var lastDashIndex = input.LastIndexOf('-');
         if (lastDashIndex == -1 || lastDashIndex == input.Length - 1)
         {
-            return null;
+            return string.Empty;
         }
         return input.Substring(lastDashIndex + 1).Trim();
     }

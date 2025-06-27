@@ -131,7 +131,7 @@ public class WeeklistService : IWeeklistService
         try
         {
             // Parse products from file
-            var result = _xlsFileService.GetProductsFromXls(file);
+            var result = await _xlsFileService.GetProductsFromXls(file);
             if (!result.Success)
             {
                 return result;

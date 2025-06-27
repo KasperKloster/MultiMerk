@@ -45,6 +45,7 @@ public class WeeklistController : ControllerBase
     }
 
     [HttpPost("create")]
+    // [RequestSizeLimit(100 * 1024 * 1024)] // 100MB limit for this action
     [Authorize(Roles = $"{Roles.Admin},{Roles.Freelancer}")]
     public async Task<IActionResult> CreateWeeklist(
         [FromForm] IFormFile file, 

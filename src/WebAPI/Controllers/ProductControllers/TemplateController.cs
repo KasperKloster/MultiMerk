@@ -1,5 +1,7 @@
 using Application.Services.Interfaces.Products;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Authorization;
+using Domain.Constants;
 
 namespace WebAPI.Controllers.ProductControllers;
 [Route("api/products/templates")]
@@ -13,7 +15,7 @@ public class TemplateController : ControllerBase
         _productTemplateService = productTemplateService;
     }
     
-    // [Authorize(Roles = Roles.Admin)]
+    [Authorize(Roles = Roles.Admin)]
     [HttpGet("sync-templates")]
     public async Task<IActionResult> SyncTemplates()    
     {

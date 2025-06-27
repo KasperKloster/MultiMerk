@@ -93,7 +93,7 @@ public class ProductService : ServiceBase, IProductService
         try
         {
             // Getting products from file
-            List<Product> products = _fileParser.GetProductsFromXls(file);
+            List<Product> products = await _fileParser.GetProductsFromXls(file);
             // Update products
             await _productRepository.UpdateRangeAsync(products);
             return FilesResult.SuccessResult();

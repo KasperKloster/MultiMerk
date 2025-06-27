@@ -1,5 +1,6 @@
 <script setup>
 import { ref } from 'vue';
+import SyncProductTemplatesModal from '@/components/layout/modals/SyncProductTemplatesModal.vue';
 import Header from '@/components/layout/Header.vue';
 import BackToWeeklistLink from '@/components/layout/BackToWeeklistLink.vue';
 import ErrorAlert from '@/components/layout/alerts/ErrorAlert.vue';
@@ -9,12 +10,22 @@ import api from '@/utils/api';
 const successMessage = ref('');
 const errorMessage = ref('');
 const selectedFile = ref(null);
+const showSyncModal = ref(false);
+let resolveModal; // To control promise externally
+
+// Form fields as refs
+const weeklistNumber = ref('');
+const orderNumber = ref('');
+const supplier = ref('');
+const shippingNumber = ref('');
 
 const onFileChange = (event) => {
     const file = event.target.files[0];
 
     if (file && file.type === 'application/vnd.ms-excel') {
         selectedFile.value = file;
+        errorMessage.value = '';
+    
     } else {
         errorMessage.value = 'Please, upload an .xls file..';
         console.error('Please, upload an .xls file')
@@ -22,46 +33,69 @@ const onFileChange = (event) => {
     }
 }
 
-const handleUpload = async () => {
-    
+const handleUpload = async () => {    
     // Reset messages
     successMessage.value = '';
     errorMessage.value = '';
 
     // Check if file is selected
-    if (!selectedFile.value) return;
+    if (!selectedFile.value) {
+        errorMessage.value = 'No file selected.';
+        return;
+    }
 
-    // Getting the file
-    const formData = new FormData();
-    formData.append('file', selectedFile.value);
-    // Values from form to weeklist
-    const weeklistNumber = document.getElementById('weeklist-number').value;
-    const orderNumber = document.getElementById('order-number').value;
-    const supplier = document.getElementById('supplier').value;
-    const shippingNumber = document.getElementById('shippingNumber').value;
-    // Append extra fields
-    formData.append('Number', weeklistNumber);
-    formData.append('OrderNumber', orderNumber);
-    formData.append('Supplier', supplier);
-    formData.append('ShippingNumber', shippingNumber);
+    const confirmed = await openSyncModal();
 
-    try {
-        const response = await api.post(`/weeklist/create`, formData, {
+    if (!confirmed) {
+        console.log('User cancelled sync.');
+        return;
+    }
+    
+    try {    
+        // Getting the file
+        const formData = new FormData();
+        formData.append('file', selectedFile.value);    
+        // Append extra fields
+        formData.append('Number', weeklistNumber.value);
+        formData.append('OrderNumber', orderNumber.value);
+        formData.append('Supplier', supplier.value);
+        formData.append('ShippingNumber', shippingNumber.value);
+        
+        await api.post(`/weeklist/create`, formData, {
             headers: {
                 'Content-Type': 'multipart/form-data'
             }
         });
-        successMessage.value = `Weeklist ${weeklistNumber} has been created`;        
+        successMessage.value = `Weeklist ${weeklistNumber.value} has been created`;        
         // Reset form
         weeklistNumber.value = '';
         orderNumber.value = '';
         supplier.value = '';
         shippingNumber.value = '';
         selectedFile.value = null;
+
     } catch (error) {        
-        errorMessage.value = `Upload failed: ${error.response.data}`;
+        errorMessage.value = `Upload failed: ${error.response?.data || error.message}`;
     }
 };
+
+const openSyncModal = () => {
+    showSyncModal.value = true;
+    return new Promise((resolve) => {
+        resolveModal = resolve;
+    });
+};
+
+const handleConfirmed = () => {
+    showSyncModal.value = false;
+    resolveModal(true);
+};
+
+const handleCancelled = () => {
+    showSyncModal.value = false;
+    resolveModal(false);
+};
+
 </script>
 
 <template>
@@ -84,22 +118,20 @@ const handleUpload = async () => {
                     <!-- file info -->
                     <div class="flex gap-4">
                         <div class="flex-1">
-                            <label for="weeklist-number" class="block text-sm/6 font-medium text-gray-900">Weeklist
-                                number</label>
+                            <label for="weeklistNumber" class="block text-sm/6 font-medium text-gray-900">Weeklist number</label>
                             <div class="mt-2">
-                                <input type="text" name="weeklist-number" id="weeklist-number" placeholder="463"
-                                    required class="block w-full rounded-md bg-white px-3 py-1.5 text-base text-gray-900 
+                                <input type="text" id="weeklistNumber" v-model="weeklistNumber" placeholder="463" required 
+                                class="block w-full rounded-md bg-white px-3 py-1.5 text-base text-gray-900 
                                 outline-1 -outline-offset-1 outline-gray-300 placeholder:text-gray-400 
                                 focus:outline-2 focus:-outline-offset-2 focus:outline-indigo-600 sm:text-sm/6">
                             </div>
                         </div>
 
                         <div class="flex-1">
-                            <label for="order-number" class="block text-sm/6 font-medium text-gray-900">Order
-                                Number</label>
+                            <label for="orderNumber" class="block text-sm/6 font-medium text-gray-900">Order number</label>
                             <div class="mt-2">
-                                <input type="text" name="order-number" id="order-number" placeholder="E24120400130"
-                                    required class="block w-full rounded-md bg-white px-3 py-1.5 text-base text-gray-900 
+                                <input type="text" id="orderNumber" v-model="orderNumber" placeholder="E24120400130" required 
+                                class="block w-full rounded-md bg-white px-3 py-1.5 text-base text-gray-900 
                                 outline-1 -outline-offset-1 outline-gray-300 placeholder:text-gray-400 
                                 focus:outline-2 focus:-outline-offset-2 focus:outline-indigo-600 sm:text-sm/6">
                             </div>
@@ -108,18 +140,18 @@ const handleUpload = async () => {
                         <div class="flex-1">
                             <label for="supplier" class="block text-sm/6 font-medium text-gray-900">Supplier</label>
                             <div class="mt-2">
-                                <input type="text" name="supplier" id="supplier" placeholder="TVC" required class="block w-full rounded-md bg-white px-3 py-1.5 text-base text-gray-900 
+                                <input type="text" id="supplier" v-model="supplier" placeholder="TVC" required 
+                                class="block w-full rounded-md bg-white px-3 py-1.5 text-base text-gray-900 
                                 outline-1 -outline-offset-1 outline-gray-300 placeholder:text-gray-400 
                                 focus:outline-2 focus:-outline-offset-2 focus:outline-indigo-600 sm:text-sm/6">
                             </div>
                         </div>
 
                         <div class="flex-1">
-                            <label for="shippingNumber" class="block text-sm/6 font-medium text-gray-900">Shipping
-                                Number</label>
+                            <label for="shippingNumber" class="block text-sm/6 font-medium text-gray-900">Shipping Number</label>
                             <div class="mt-2">
-                                <input type="text" name="shippingNumber" id="shippingNumber" placeholder="Shipment001"
-                                    required class="block w-full rounded-md bg-white px-3 py-1.5 text-base text-gray-900 
+                                <input type="text" id="shippingNumber" v-model="shippingNumber" placeholder="Shipment001" required 
+                                class="block w-full rounded-md bg-white px-3 py-1.5 text-base text-gray-900 
                                 outline-1 -outline-offset-1 outline-gray-300 placeholder:text-gray-400 
                                 focus:outline-2 focus:-outline-offset-2 focus:outline-indigo-600 sm:text-sm/6">
                             </div>
@@ -157,5 +189,6 @@ const handleUpload = async () => {
 
             </div>
         </form>
-    </div>
+    </div>        
+    <SyncProductTemplatesModal v-model="showSyncModal" @confirmed="handleConfirmed" @cancelled="handleCancelled" />
 </template>

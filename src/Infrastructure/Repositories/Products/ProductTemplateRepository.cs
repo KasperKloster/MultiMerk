@@ -48,4 +48,25 @@ public class ProductTemplateRepository(AppDbContext dbContext) : IProductTemplat
         await _dbContext.SaveChangesAsync();
     }
 
+
+    public async Task<string?> GetTemplateTitleAsync(int templateId, string? languageCode = "en")
+    {
+        var template = await _dbContext.ProductTemplates
+        .Include(t => t.Translations)
+        .FirstOrDefaultAsync(t => t.Id == templateId);
+
+        var title = template?.Translations.FirstOrDefault(t => t.LanguageCode == languageCode)?.Title;
+        return title;
+    }
+
+    public async Task<string?> GetTemplateDescriptionAsync(int templateId, string? languageCode = "en")
+    {
+        var template = await _dbContext.ProductTemplates
+        .Include(t => t.Translations)
+        .FirstOrDefaultAsync(t => t.Id == templateId);
+
+        var description = template?.Translations.FirstOrDefault(t => t.LanguageCode == languageCode)?.Description;
+        return description;
+    }
+
 }

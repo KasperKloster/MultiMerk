@@ -5,7 +5,7 @@ namespace Application.Services.Interfaces.Files;
 
 public interface IFileParser
 {        
-    public List<Product> GetProductsFromXls(IFormFile file);
+    public Task<List<Product>> GetProductsFromXls(IFormFile file);
     public List<Product> GetProductsFromAI(IFormFile file);
     public Dictionary<string, int> GetProductsFromOutOfStock(IFormFile file);    
 }

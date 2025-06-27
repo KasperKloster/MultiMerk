@@ -12,7 +12,7 @@ public class ProductTemplateTranslation
     [Required]
     public string LanguageCode { get; set; } = string.Empty; // e.g., "en", "da", "sv"
     [Required]
-    public string Name { get; set; } = string.Empty;
+    public string Title { get; set; } = string.Empty;
     [Required]
     public string Description { get; set; } = string.Empty;
     [Required]

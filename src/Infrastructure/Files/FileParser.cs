@@ -1,3 +1,4 @@
+using Application.Repositories.Products;
 using Application.Services.Interfaces.Files;
 using Domain.Entities.Products;
 using Microsoft.AspNetCore.Http;
@@ -6,9 +7,11 @@ using NPOI.HSSF.UserModel;
 using NPOI.SS.UserModel;
 
 namespace Infrastructure.Files;
-public class FileParser : IFileParser
+public class FileParser(IProductTemplateRepository productTemplateRepository) : IFileParser
 {
-    public List<Product> GetProductsFromXls(IFormFile file)
+    private readonly IProductTemplateRepository _productTemplateRepository = productTemplateRepository;
+    
+    public async Task<List<Product>> GetProductsFromXls(IFormFile file)
     {
         // Validate the file
         ValidateXlsFile(file);
@@ -22,7 +25,7 @@ public class FileParser : IFileParser
         var headerRow = sheet.GetRow(0) ?? throw new InvalidDataException("Excel file has no header row.");
 
         Dictionary<string, string[]> headerAliases = GetHeaderAliases();
-        
+
         var columnMap = new Dictionary<string, int>(StringComparer.OrdinalIgnoreCase);
         for (int i = 0; i < headerRow.LastCellNum; i++)
         {
@@ -71,6 +74,24 @@ public class FileParser : IFileParser
                 TemplateId = GetCellInt(row, columnMap, "Template"),
                 Location = GetCellString(row, columnMap, "Location"),
             };
+
+            // Setting Default Template Content
+            if (product.TemplateId.HasValue)
+            {
+                var templateTitle = await _productTemplateRepository.GetTemplateTitleAsync(product.TemplateId.Value);
+                var templateDescription = await _productTemplateRepository.GetTemplateDescriptionAsync(product.TemplateId.Value);
+
+                if (!string.IsNullOrWhiteSpace(templateTitle))
+                {
+                    product.TemplateTitle = templateTitle;
+                }
+
+                if (!string.IsNullOrWhiteSpace(templateDescription))
+                {
+                    product.TemplateDescription = templateDescription;
+                }
+            }
+
             products.Add(product);
         }
 
@@ -262,7 +283,7 @@ public class FileParser : IFileParser
             { "description", new[] { "description", "product description" } },
             { "ean", new[] { "ean" } },
             { "categoryId", new[] { "categoryId", "category id", "category_id", "cat id" } },
-            { "series", new[] { "series" } },
+            { "series", new[] { "series", "seriesid", "series id" } },
             { "color", new[] { "color", "colour" } },
             { "material", new[] { "material" } },
             { "price", new[] { "price" } },
@@ -270,7 +291,7 @@ public class FileParser : IFileParser
             { "qty", new[] { "qty", "qty (unit)", "quantity" } },
             { "weight", new[] { "weight" } },
             { "mainImage", new[] { "mainImage", "main_image", "main image" } },
-            { "template", new[] { "template" } },
+            { "template", new[] { "template", "templateid", "template id" } },
             { "location", new[] { "location" } },
         };
         return headerAliases;
